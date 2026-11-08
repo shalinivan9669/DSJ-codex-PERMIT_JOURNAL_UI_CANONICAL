@@ -25,6 +25,7 @@ export function useTeachingContext({
   groupId = "",
   groupCourseId = "",
   excludeCourseId = "",
+  coursesOnly = false,
   refresh = 0,
 }: {
   userId?: string;
@@ -32,6 +33,7 @@ export function useTeachingContext({
   groupId?: string;
   groupCourseId?: string;
   excludeCourseId?: string;
+  coursesOnly?: boolean;
   refresh?: number;
 } = {}) {
   const [context, setContext] = useState<TeachingContext | null>(null);
@@ -55,29 +57,36 @@ export function useTeachingContext({
     setLoading(true);
     const timer = setTimeout(() => {
       const params = new URLSearchParams({
-        search: query.userSearch,
         courseSearch: query.courseSearch,
-        groupSearch: query.groupSearch,
-        userPage: String(query.userPage),
         coursePage: String(query.coursePage),
-        groupPage: String(query.groupPage),
         pageSize: "25",
       });
-      if (groupCourseId) params.set("groupCourseId", groupCourseId);
+      if (!coursesOnly) {
+        params.set("search", query.userSearch);
+        params.set("groupSearch", query.groupSearch);
+        params.set("userPage", String(query.userPage));
+        params.set("groupPage", String(query.groupPage));
+        if (groupCourseId) params.set("groupCourseId", groupCourseId);
+      }
       if (excludeCourseId) params.set("excludeCourseId", excludeCourseId);
-      void api<TeachingContext>(`/lms/teaching-context?${params}`)
+      const endpoint = coursesOnly
+        ? "/lms/course-options"
+        : "/lms/teaching-context";
+      void api<TeachingContext>(`${endpoint}?${params}`)
         .then((value) => {
           if (!live) return;
           setContext((previous) => ({
             ...value,
-            users: [
-              ...value.users,
-              ...(previous?.users.filter(
-                (item) =>
-                  item.id === selected.current.userId &&
-                  !value.users.some((next) => next.id === item.id),
-              ) || []),
-            ],
+            users: coursesOnly
+              ? []
+              : [
+                  ...value.users,
+                  ...(previous?.users.filter(
+                    (item) =>
+                      item.id === selected.current.userId &&
+                      !value.users.some((next) => next.id === item.id),
+                  ) || []),
+                ],
             courses: [
               ...value.courses,
               ...(previous?.courses.filter(
@@ -86,14 +95,16 @@ export function useTeachingContext({
                   !value.courses.some((next) => next.id === item.id),
               ) || []),
             ],
-            groups: [
-              ...value.groups,
-              ...(previous?.groups.filter(
-                (item) =>
-                  item.id === selected.current.groupId &&
-                  !value.groups.some((next) => next.id === item.id),
-              ) || []),
-            ],
+            groups: coursesOnly
+              ? []
+              : [
+                  ...value.groups,
+                  ...(previous?.groups.filter(
+                    (item) =>
+                      item.id === selected.current.groupId &&
+                      !value.groups.some((next) => next.id === item.id),
+                  ) || []),
+                ],
           }));
           setError(null);
         })
@@ -108,7 +119,7 @@ export function useTeachingContext({
       live = false;
       clearTimeout(timer);
     };
-  }, [query, groupCourseId, excludeCourseId, refresh]);
+  }, [query, groupCourseId, excludeCourseId, coursesOnly, refresh]);
   function search(kind: Choice, value: string) {
     setQuery((previous) => ({
       ...previous,

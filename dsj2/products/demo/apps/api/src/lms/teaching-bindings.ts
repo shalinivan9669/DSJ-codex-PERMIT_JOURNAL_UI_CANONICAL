@@ -1,4 +1,4 @@
-import { canManageLearning, z } from "@demo/contracts";
+import { canAuthorPrograms, canManageLearning, z } from "@demo/contracts";
 import { Prisma } from "@demo/database";
 import {
   audit,
@@ -13,6 +13,7 @@ import {
   courseScopeSql,
   effectiveTeachingPermissions,
   groupScopeSql,
+  isTeachingRole,
   teachingRolePermissions,
 } from "./learning-permissions";
 
@@ -88,6 +89,43 @@ export async function listTeachingBindings(c: Context, input: unknown) {
   };
 }
 
+const courseOptionsSchema = z.object({
+  courseSearch: z.string().trim().max(300).default(""),
+  excludeCourseId: z.string().max(100).optional(),
+  page: z.coerce.number().int().min(1).max(100000).default(1),
+  coursePage: z.coerce.number().int().min(1).max(100000).optional(),
+  pageSize: z.coerce.number().int().min(1).max(100).default(100),
+}).strict();
+
+async function scopedCourseOptions(c: Context, q: z.infer<typeof courseOptionsSchema>) {
+  const coursePage = q.coursePage ?? q.page;
+  // Share the exact scope/search/exclusion predicates with teachingContext.
+  const where = Prisma.sql`${courseScopeSql(c)} AND NOT c.archived
+    AND (${q.courseSearch}='' OR POSITION(LOWER(${q.courseSearch}) IN LOWER(c."titleRu"))>0 OR POSITION(LOWER(${q.courseSearch}) IN LOWER(c."titleKz"))>0)
+    ${q.excludeCourseId ? Prisma.sql`AND c.id<>${q.excludeCourseId}` : Prisma.empty}`;
+  const [courses, count] = await Promise.all([
+    db.$queryRaw<Array<{ id: string; titleRu: string; titleKz: string }>>(
+      Prisma.sql`SELECT c.id,c."titleRu",c."titleKz" FROM "Course" c WHERE ${where} ORDER BY c."createdAt" DESC,c.id LIMIT ${q.pageSize} OFFSET ${(coursePage - 1) * q.pageSize}`,
+    ),
+    db.$queryRaw<Array<{ total: bigint }>>(
+      Prisma.sql`SELECT COUNT(*)::bigint AS total FROM "Course" c WHERE ${where}`,
+    ),
+  ]);
+  return { courses, coursesTotal: Number(count[0]?.total || 0), coursePage };
+}
+
+/** Prerequisite choices only: never query staff identities or teaching groups. */
+export async function courseOptions(c: Context, input: unknown) {
+  if (c.learningMode || (!canAuthorPrograms(c.role) && !isTeachingRole(c)))
+    fail(403, "LEARNING_PERMISSION_DENIED", "Выбор программ доступен автору и преподавателю");
+  const q = parse(courseOptionsSchema, input);
+  return {
+    ...await scopedCourseOptions(c, q),
+    users: [], groups: [], usersTotal: 0, groupsTotal: 0,
+    canManage: canManageBindings(c), page: q.page, pageSize: q.pageSize,
+  };
+}
+
 export async function teachingContext(c: Context, input: unknown) {
   const q = parse(
     z
@@ -119,14 +157,10 @@ export async function teachingContext(c: Context, input: unknown) {
       { email: { contains: q.search, mode: "insensitive" } },
     ],
   };
-  // The same scope and search predicates are applied to totals and visible pages.
-  const coursesWhere = Prisma.sql`${courseScopeSql(c)} AND NOT c.archived
-    AND (${q.courseSearch}='' OR POSITION(LOWER(${q.courseSearch}) IN LOWER(c."titleRu"))>0 OR POSITION(LOWER(${q.courseSearch}) IN LOWER(c."titleKz"))>0)
-    ${q.excludeCourseId ? Prisma.sql`AND c.id<>${q.excludeCourseId}` : Prisma.empty}`;
   const groupsWhere = Prisma.sql`${groupScopeSql(c)}
     AND (${q.groupSearch}='' OR POSITION(LOWER(${q.groupSearch}) IN LOWER(g.name))>0)
     ${q.groupCourseId ? Prisma.sql`AND v."courseId"=${q.groupCourseId}` : Prisma.empty}`;
-  const [users, usersTotal, courses, courseCount, groups, groupCount] =
+  const [users, usersTotal, courseChoices, groups, groupCount] =
     await Promise.all([
       canManage
         ? db.user.findMany({
@@ -138,12 +172,7 @@ export async function teachingContext(c: Context, input: unknown) {
           })
         : [],
       canManage ? db.user.count({ where: usersWhere }) : 0,
-      db.$queryRaw<Array<{ id: string; titleRu: string; titleKz: string }>>(
-        Prisma.sql`SELECT c.id,c."titleRu",c."titleKz" FROM "Course" c WHERE ${coursesWhere} ORDER BY c."createdAt" DESC,c.id LIMIT ${q.pageSize} OFFSET ${(coursePage - 1) * q.pageSize}`,
-      ),
-      db.$queryRaw<Array<{ total: bigint }>>(
-        Prisma.sql`SELECT COUNT(*)::bigint AS total FROM "Course" c WHERE ${coursesWhere}`,
-      ),
+      scopedCourseOptions(c, q),
       db.$queryRaw<
         Array<{
           id: string;
@@ -160,10 +189,10 @@ export async function teachingContext(c: Context, input: unknown) {
     ]);
   return {
     users,
-    courses,
+    courses: courseChoices.courses,
     groups,
     usersTotal,
-    coursesTotal: Number(courseCount[0]?.total || 0),
+    coursesTotal: courseChoices.coursesTotal,
     groupsTotal: Number(groupCount[0]?.total || 0),
     canManage,
     page: q.page,

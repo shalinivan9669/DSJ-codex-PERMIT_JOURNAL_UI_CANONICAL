@@ -7,9 +7,15 @@ import { join } from "node:path";
 import { bootstrap } from "../../apps/api/src/main";
 import { db } from "../../apps/api/src/core";
 import { personalDataLocations } from "../../packages/contracts/src/lms/deployment-gates";
-import { lmsHttp, lmsJson, lmsSession, lmsTenant } from "./lms-fixture";
+import {
+  lmsCourse,
+  lmsHttp,
+  lmsJson,
+  lmsSession,
+  lmsTenant,
+} from "./lms-fixture";
 
-test("readiness is read-only and center-admin scoped while non-demo LMS stays closed until this tenant has valid evidence", async () => {
+test("non-demo content authoring works without learner-data evidence while tenant, roles, CSRF and learning gates remain enforced", async () => {
   const previous = process.env.DEMO_LMS_DEPLOYMENT_EVIDENCE;
   const directory = await mkdtemp(join(tmpdir(), "demo-lms-readiness-http-"));
   process.env.PORT = "0";
@@ -27,7 +33,8 @@ test("readiness is read-only and center-admin scoped while non-demo LMS stays cl
   });
   const app = await bootstrap();
   const base = await app.getUrl();
-  const director = lmsHttp(base, await lmsSession(base, center.user.email));
+  const session = await lmsSession(base, center.user.email);
+  const director = lmsHttp(base, session);
   const foreignDirector = lmsHttp(
     base,
     await lmsSession(base, foreign.user.email),
@@ -76,18 +83,150 @@ test("readiness is read-only and center-admin scoped while non-demo LMS stays cl
       where: { id: center.user.id },
       data: { role: "METHODIST" },
     });
-    for (const [route, method, body] of [
-      ["/lms/courses?page=1&search=", "GET", undefined],
-      ["/lms/courses", "POST", {}],
-      ["/learn/profile", "GET", undefined],
-    ] as const) {
-      const blocked = await lmsJson(await director(route, method, body), 503);
-      assert.equal(blocked.code, "LMS_DEPLOYMENT_REVIEW_REQUIRED");
-    }
+    assert.equal((await anonymous("/lms/courses")).status, 401);
+    assert.equal((await lmsJson(await director("/lms/courses"))).total, 0);
+    const noCsrf = lmsHttp(base, { ...session, "x-csrf-token": "" });
+    assert.equal(
+      (await noCsrf("/lms/courses", "POST", lmsCourse())).status,
+      403,
+    );
+    const input = lmsCourse({ kind: "PRACTICE" });
+    input.profile.synthetic = false;
+    input.profile.status = "NEEDS_LEGAL_REVIEW";
+    input.profile.sources = [];
+    input.profile.reviewReference = "";
+    const created = await lmsJson(
+      await director("/lms/courses", "POST", input),
+      201,
+    );
+    assert.equal((await lmsJson(await director("/lms/courses"))).total, 1);
+    const options = await lmsJson(
+      await director("/lms/course-options?pageSize=25"),
+    );
+    assert.deepEqual(
+      options.courses.map((course: { id: string }) => course.id),
+      [created.course.id],
+    );
+    assert.deepEqual(options.users, []);
+    assert.deepEqual(options.groups, []);
+    assert.equal(options.usersTotal, 0);
+    assert.equal(options.groupsTotal, 0);
+    assert.equal(JSON.stringify(options).includes(center.user.email), false);
+    assert.equal(
+      (
+        await lmsJson(
+          await director(
+            `/lms/course-options?excludeCourseId=${created.course.id}`,
+          ),
+        )
+      ).coursesTotal,
+      0,
+    );
+    assert.equal(
+      (await lmsJson(await foreignDirector("/lms/course-options")))
+        .coursesTotal,
+      0,
+    );
+    assert.equal(
+      (await director("/lms/course-options?userPage=1")).status,
+      400,
+    );
+    assert.equal(
+      (await foreignDirector(`/lms/courses/${created.course.id}`)).status,
+      404,
+    );
+    const revised = await lmsJson(
+      await director(`/lms/course-versions/${created.version.id}`, "PUT", {
+        revision: created.version.revision,
+        content: {
+          ...input.content,
+          titleRu: "Сохранённая программа без данных слушателей",
+        },
+        profile: input.profile,
+      }),
+    );
+    assert.equal(
+      revised.content.titleRu,
+      "Сохранённая программа без данных слушателей",
+    );
+    assert.equal(
+      (
+        await foreignDirector(
+          `/lms/course-versions/${created.version.id}`,
+          "PUT",
+          {
+            revision: revised.revision,
+            content: revised.content,
+            profile: input.profile,
+          },
+        )
+      ).status,
+      404,
+    );
+    const submitted = await lmsJson(
+      await director(
+        `/lms/course-versions/${created.version.id}/review`,
+        "POST",
+        {
+          revision: revised.revision,
+          action: "SUBMIT",
+        },
+      ),
+      201,
+    );
+    assert.equal(submitted.review.state, "PENDING");
+    assert.equal(
+      (
+        await director(
+          `/lms/course-versions/${created.version.id}/review`,
+          "POST",
+          {
+            revision: submitted.revision,
+            action: "APPROVE",
+          },
+        )
+      ).status,
+      403,
+    );
     await db.user.update({
       where: { id: center.user.id },
       data: { role: "DIRECTOR" },
     });
+    const approved = await lmsJson(
+      await director(
+        `/lms/course-versions/${created.version.id}/review`,
+        "POST",
+        {
+          revision: submitted.revision,
+          action: "APPROVE",
+        },
+      ),
+      201,
+    );
+    const published = await lmsJson(
+      await director(
+        `/lms/course-versions/${created.version.id}/publish`,
+        "POST",
+        {
+          revision: approved.revision,
+        },
+      ),
+      201,
+    );
+    assert.equal(published.status, "PUBLISHED");
+    for (const [route, method, body] of [
+      ["/lms/enrollments", "GET", undefined],
+      ["/lms/enrollments", "POST", {}],
+      [
+        "/lms/calendar?from=2026-11-01T00:00:00.000Z&to=2026-12-01T00:00:00.000Z",
+        "GET",
+        undefined,
+      ],
+      ["/lms/material-library", "GET", undefined],
+    ] as const) {
+      const blocked = await lmsJson(await director(route, method, body), 503);
+      assert.equal(blocked.code, "LMS_DEPLOYMENT_REVIEW_REQUIRED", route);
+    }
     const evidence = {
       tenantId: center.tenant.id,
       operator: "SYNTHETIC PRIVATE OPERATOR",
@@ -128,14 +267,15 @@ test("readiness is read-only and center-admin scoped while non-demo LMS stays cl
     const courses = await lmsJson(
       await director("/lms/courses?page=1&search="),
     );
-    assert.equal(courses.total, 0);
+    assert.equal(courses.total, 1);
+    assert.equal((await foreignDirector("/lms/enrollments")).status, 503);
     assert.equal(
-      (await foreignDirector("/lms/courses?page=1&search=")).status,
-      503,
+      (await lmsJson(await foreignDirector("/lms/courses"))).total,
+      0,
     );
     assert.equal(
       await db.course.count({ where: { tenantId: center.tenant.id } }),
-      0,
+      1,
     );
     assert.equal(
       await db.enrollment.count({ where: { tenantId: center.tenant.id } }),

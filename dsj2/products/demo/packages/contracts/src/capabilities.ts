@@ -58,6 +58,8 @@ export function knownRole(role: string): boolean {
 export function roleRouteAllowed(role: string, path: string): boolean {
   if (!knownRole(role)) return false;
   if (role === "SUPER_ADMIN") return true;
+  if (path === "/lms/course-options")
+    return hasCapability(role, "lms:author") || hasCapability(role, "lms:teach");
   if (/^\/employer-access-requests(?:\/[A-Za-z0-9_-]+\/resolve)?$/.test(path))
     return ["ADMIN", "DIRECTOR", "EMPLOYER"].includes(role);
   if (

@@ -15,7 +15,10 @@ export function CourseLearningSettings({
   onChange: (patch: Partial<CourseContent>) => void;
   t: Translate;
 }) {
-  const choices = useTeachingContext({ excludeCourseId: courseId });
+  const choices = useTeachingContext({
+    excludeCourseId: courseId,
+    coursesOnly: true,
+  });
   const courses = choices.context?.courses || [];
   const meta = content.metadata || {
     goalRu: "",

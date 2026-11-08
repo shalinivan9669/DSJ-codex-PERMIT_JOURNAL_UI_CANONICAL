@@ -1465,6 +1465,11 @@
     {
       "method": "GET",
       "surface": "api",
+      "path": "/lms/course-options"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
       "path": "/lms/learning-bindings"
     },
     {

@@ -19,6 +19,7 @@ const scrypt = promisify(scryptCallback);
 import { trustedClientIp } from "./proxy-policy";
 import type { User, Tenant } from "@demo/database";
 import { createMfaChallenge, mandatoryMfa } from "./mfa";
+import { isLmsContentPreparationRequest } from "./lms/content-preparation-routes";
 export async function passwordHash(password: string): Promise<string> {
   const salt = randomBytes(24).toString("hex");
   const derived = (await scrypt(password, salt, 64)) as Buffer;
@@ -152,11 +153,6 @@ export async function authenticate(
         "MFA_SETUP_REQUIRED",
         "Подключите второй фактор в настройках безопасности",
       );
-    if (req.path.startsWith("/lms/") || req.path.startsWith("/learn/")) {
-      const { assertLmsDeploymentAllowed } =
-        await import("./lms/deployment-gate");
-      await assertLmsDeploymentAllowed(tenant);
-    }
     const learnerAction =
       /^\/lms\/enrollments\/[^/]+\/(assessments|assignments)\b/.test(req.path);
     const teachingMode =
@@ -170,6 +166,17 @@ export async function authenticate(
       }));
     if (!roleRouteAllowed(user.role, req.path) && !teachingMode)
       fail(403, "ROLE_SCOPE", "Недостаточно прав для этой операции");
+    if (
+      (req.path.startsWith("/lms/") || req.path.startsWith("/learn/")) &&
+      !isLmsContentPreparationRequest(req.method, req.path, {
+        role: user.role,
+        teachingMode,
+      })
+    ) {
+      const { assertLmsDeploymentAllowed } =
+        await import("./lms/deployment-gate");
+      await assertLmsDeploymentAllowed(tenant);
+    }
     if (!["GET", "HEAD", "OPTIONS"].includes(req.method)) {
       const csrf = req.headers["x-csrf-token"];
       if (typeof csrf !== "string" || hash(csrf) !== s.csrfHash)

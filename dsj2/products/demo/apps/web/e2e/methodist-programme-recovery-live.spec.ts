@@ -19,7 +19,15 @@ const evidence = path.resolve(
     "../../../.runtime/commission-flow/evidence/methodist-programmes",
 );
 
-async function fixture(courses = 0) {
+function preparationCourse() {
+  const input = lmsCourse({ kind: "PRACTICE" });
+  input.profile.synthetic = false;
+  input.profile.status = "NEEDS_LEGAL_REVIEW";
+  input.profile.sources = [];
+  return input;
+}
+
+async function fixture(courses = 0, demoOnly = true) {
   assertTestDatabase();
   expect(["127.0.0.1", "localhost"]).toContain(
     new URL(process.env.DATABASE_URL!).hostname,
@@ -58,10 +66,17 @@ async function fixture(courses = 0) {
   };
   const seeded = [];
   for (let index = 0; index < courses; index++) {
-    const input = lmsCourse();
+    const input = demoOnly ? lmsCourse() : preparationCourse();
     input.content.titleRu = `Синтетическая программа ${String(index + 1).padStart(3, "0")}`;
     input.content.titleKz = `Синтетикалық бағдарлама ${String(index + 1).padStart(3, "0")}`;
     seeded.push(await createCourse(author, input));
+  }
+  if (!demoOnly) {
+    // Every record remains synthetic and local; exercise the non-demo gate.
+    await db.tenant.update({
+      where: { id: context.tenantId },
+      data: { demoOnly: false },
+    });
   }
   return {
     context,
@@ -138,10 +153,10 @@ test.afterAll(async () => {
   await db.$disconnect();
 });
 
-test("real METHODIST login opens an empty catalogue and can create, autosave and reopen its own programme", async ({
+test("real non-demo METHODIST login can create, autosave and reopen its own programme before learning deployment is ready", async ({
   page,
 }) => {
-  const seeded = await fixture();
+  const seeded = await fixture(0, false);
   await page.setViewportSize({ width: 390, height: 844 });
   const failures: { path: string; status: number }[] = [];
   page.on("response", (response) => {
@@ -162,6 +177,7 @@ test("real METHODIST login opens an empty catalogue and can create, autosave and
     JSON.stringify(
       {
         role: "METHODIST",
+        demoOnly: false,
         status: listResponse.status(),
         code: listBody.code || null,
         total: listBody.total,
@@ -222,6 +238,69 @@ test("real METHODIST login opens an empty catalogue and can create, autosave and
   );
   expect(returned.status()).toBe(200);
   expect((await returned.json()).course.allowedActions).toContain("edit");
+  // Fixture content only: exercise the real non-personal picker through the UI.
+  const prerequisiteInput = preparationCourse();
+  prerequisiteInput.content.titleRu =
+    "Синтетическая подготовка — предварительный курс";
+  prerequisiteInput.content.titleKz = "Синтетикалық дайындық — алдын ала курс";
+  const prerequisite = await createCourse(seeded.author, prerequisiteInput);
+  await page.getByRole("button", { name: "Условия", exact: true }).click();
+  await page.getByText("Предыдущие курсы", { exact: true }).click();
+  const optionsLoad = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === "/api/lms/course-options" &&
+      new URL(response.url()).searchParams.get("courseSearch") ===
+        "Синтетическая",
+  );
+  await page
+    .getByRole("searchbox", { name: "Поиск курса", exact: true })
+    .fill("Синтетическая");
+  const optionsResponse = await optionsLoad;
+  expect(optionsResponse.status()).toBe(200);
+  const optionsBody = await optionsResponse.json();
+  expect(
+    optionsBody.courses.map((course: { id: string }) => course.id),
+  ).toEqual([prerequisite.course.id]);
+  expect(optionsBody.users).toEqual([]);
+  expect(optionsBody.groups).toEqual([]);
+  expect(optionsBody.usersTotal).toBe(0);
+  expect(optionsBody.groupsTotal).toBe(0);
+  await page
+    .getByRole("combobox", {
+      name: "Добавить предварительный курс",
+      exact: true,
+    })
+    .selectOption(prerequisite.course.id);
+  await expect(
+    page.getByRole("group", {
+      name: prerequisiteInput.content.titleRu,
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect
+    .poll(async () => {
+      const result = await page.request.get(
+        `/api/lms/courses/${created.course.id}`,
+      );
+      const detail = await result.json();
+      return detail.versions[0].content.coursePrerequisites;
+    })
+    .toEqual([
+      {
+        courseId: prerequisite.course.id,
+        basis: "LEARNING_COMPLETION",
+        versionPolicy: "ANY",
+      },
+    ]);
+  await page.reload();
+  await page.getByRole("button", { name: "Условия", exact: true }).click();
+  await page.getByText("Предыдущие курсы", { exact: true }).click();
+  await expect(
+    page.getByRole("group", {
+      name: prerequisiteInput.content.titleRu,
+      exact: true,
+    }),
+  ).toBeVisible();
   expect(failures).toEqual([]);
   expect(
     await db.lmsTeachingBinding.count({
@@ -244,10 +323,14 @@ test("real METHODIST login opens an empty catalogue and can create, autosave and
       {
         role: "METHODIST",
         loginLanding: "/lms",
+        demoOnly: false,
         initialStatus: listResponse.status(),
         createStatus: createdResponse.status(),
         courseId: created.course.id,
         ownBindingCount: 1,
+        prerequisitePickerStatus: optionsResponse.status(),
+        prerequisiteSavedAndReopened: true,
+        pickerContainsNoUserOrGroupData: true,
         titleRu,
         titleKz,
         failures,
@@ -258,14 +341,22 @@ test("real METHODIST login opens an empty catalogue and can create, autosave and
   );
 });
 
-test("real non-demo gate names the configuration blocker and GET-only access checks never create a programme", async ({
+test("real non-demo content preparation is available while teacher calendar, notifications and materials remain gated", async ({
   page,
+  browser,
 }) => {
-  const seeded = await fixture();
-  // All data is synthetic and local. Only this flag exercises the real-data policy branch.
-  await db.tenant.update({
-    where: { id: seeded.context.tenantId },
-    data: { demoOnly: false },
+  const seeded = await fixture(1, false);
+  const own = seeded.seeded[0];
+  const teacher = await saveUser(seeded.context, {
+    email: `teacher-preparation-${randomUUID()}@example.test`,
+    password: seeded.account.password,
+    displayName: "Синтетический преподаватель проверки границы доступа",
+    role: "TEACHER",
+  });
+  await createTeachingBinding(seeded.context, {
+    userId: teacher.id,
+    courseId: own.course.id,
+    role: "TEACHER",
   });
   await page.setViewportSize({ width: 390, height: 844 });
   let writes = 0;
@@ -283,80 +374,140 @@ test("real non-demo gate names the configuration blocker and GET-only access che
   );
   await login(page, seeded.account);
   const response = await initial;
-  expect(response.status()).toBe(503);
-  expect((await response.json()).code).toBe("LMS_DEPLOYMENT_REVIEW_REQUIRED");
+  expect(response.status()).toBe(200);
+  expect(
+    (await response.json()).items.map((item: { id: string }) => item.id),
+  ).toEqual([own.course.id]);
   await expect(
-    page.getByText("Доступ к программам пока закрыт", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Обучение пока недоступно. Обратитесь к администратору.", {
+    page.getByRole("link", {
+      name: "Синтетическая программа 001",
       exact: true,
     }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Создать программу", exact: true }),
-  ).toBeDisabled();
-  await expect(page.locator(".lms-empty")).toHaveCount(0);
+  ).toBeEnabled();
   await expect(
-    page.getByRole("button", { name: "Повторить загрузку", exact: true }),
+    page.getByText("Доступ к программам пока закрыт", { exact: true }),
   ).toHaveCount(0);
+  const preparationReads: Record<string, number> = {};
+  for (const endpoint of [
+    `/api/lms/courses/${own.course.id}`,
+    "/api/lms/questions",
+    "/api/lms/regulatory",
+    "/api/lms/regulatory-sources",
+  ]) {
+    const result = await page.request.get(endpoint);
+    preparationReads[endpoint] = result.status();
+    expect(result.status(), endpoint).toBe(200);
+  }
+  const blockedReads: Record<string, number> = {};
+  for (const endpoint of [
+    "/api/lms/material-library",
+    "/api/lms/notifications",
+  ]) {
+    const result = await page.request.get(endpoint);
+    blockedReads[endpoint] = result.status();
+    expect(result.status(), endpoint).toBe(503);
+    expect((await result.json()).code).toBe("LMS_DEPLOYMENT_REVIEW_REQUIRED");
+  }
   const checking = page.waitForResponse(
     (candidate) =>
       new URL(candidate.url()).pathname === "/api/lms/courses" &&
       candidate.request().method() === "GET",
   );
-  await page
-    .getByRole("button", { name: "Проверить доступ", exact: true })
-    .click();
-  expect((await checking).status()).toBe(503);
+  await page.reload();
+  expect((await checking).status()).toBe(200);
   expect(writes).toBe(0);
   await page.screenshot({
-    path: path.join(evidence, "methodist-real-gate-390-ru.png"),
+    path: path.join(evidence, "methodist-non-demo-authoring-390-ru.png"),
     fullPage: true,
   });
   await page.getByRole("button", { name: "KZ", exact: true }).first().click();
   await expect(
-    page.getByText("Бағдарламаларға қолжетімділік әзірге жабық", {
+    page.getByRole("link", {
+      name: "Синтетикалық бағдарлама 001",
       exact: true,
     }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Бағдарлама жасау", exact: true }),
-  ).toBeDisabled();
+  ).toBeEnabled();
   await page.screenshot({
-    path: path.join(evidence, "methodist-real-gate-390-kz.png"),
+    path: path.join(evidence, "methodist-non-demo-authoring-390-kz.png"),
     fullPage: true,
   });
-  const session = await (await page.request.get("/api/auth/session")).json();
-  const directCreate = await page.request.post("/api/lms/courses", {
-    headers: {
-      origin: process.env.DEMO_ORIGIN!,
-      "x-csrf-token": session.csrfToken,
-    },
-    data: lmsCourse(),
-  });
-  expect(directCreate.status()).toBe(503);
-  expect((await directCreate.json()).code).toBe(
-    "LMS_DEPLOYMENT_REVIEW_REQUIRED",
-  );
   expect(
     (await page.request.get("/api/settings/learning-readiness")).status(),
   ).toBe(403);
   expect(
     await db.course.count({ where: { tenantId: seeded.context.tenantId } }),
-  ).toBe(0);
+  ).toBe(1);
+  const teacherContext = await browser.newContext({
+    baseURL: process.env.DEMO_ORIGIN!,
+    viewport: { width: 390, height: 844 },
+  });
+  const teacherResponses: Record<string, number> = {};
+  try {
+    const teacherPage = await teacherContext.newPage();
+    await teacherPage.routeWebSocket(/\/_next\/webpack-hmr/, (socket) =>
+      socket.close(),
+    );
+    await login(
+      teacherPage,
+      { email: teacher.email, password: seeded.account.password },
+      /\/lms\/teaching$/,
+    );
+    const course = await teacherPage.request.get(
+      `/api/lms/courses/${own.course.id}`,
+    );
+    expect(course.status()).toBe(200);
+    teacherResponses.course = course.status();
+    const calendarLoad = teacherPage.waitForResponse(
+      (candidate) => new URL(candidate.url()).pathname === "/api/lms/calendar",
+    );
+    const notificationLoad = teacherPage.waitForResponse(
+      (candidate) =>
+        new URL(candidate.url()).pathname === "/api/lms/notifications",
+    );
+    await teacherPage.goto("/lms/calendar");
+    for (const [name, result] of [
+      ["calendar", await calendarLoad],
+      ["notifications", await notificationLoad],
+    ] as const) {
+      expect(result.status(), name).toBe(503);
+      expect((await result.json()).code).toBe("LMS_DEPLOYMENT_REVIEW_REQUIRED");
+      teacherResponses[name] = result.status();
+    }
+    await expect(teacherPage.locator(".lms-calendar")).toContainText(
+      "Обучение пока недоступно. Обратитесь к администратору.",
+    );
+    await expect(
+      teacherPage.getByText("В этом периоде событий нет", { exact: true }),
+    ).toHaveCount(0);
+    await teacherPage.screenshot({
+      path: path.join(
+        evidence,
+        "teacher-non-demo-calendar-still-gated-390.png",
+      ),
+      fullPage: true,
+    });
+  } finally {
+    await teacherContext.close();
+  }
   await fs.writeFile(
-    path.join(evidence, "methodist-real-gate.json"),
+    path.join(evidence, "methodist-content-preparation-boundary.json"),
     JSON.stringify(
       {
         localSyntheticTenant: seeded.context.tenantId,
         demoOnly: false,
         loginStatus: 201,
-        listStatus: 503,
-        code: "LMS_DEPLOYMENT_REVIEW_REQUIRED",
-        accessCheckOnlyGet: writes === 0,
-        directCreateDenied: true,
-        courseCount: 0,
+        listStatus: 200,
+        preparationReads,
+        blockedReads,
+        teacherResponses,
+        refreshCreatesNoCourse: writes === 0,
+        courseCount: 1,
       },
       null,
       2,
@@ -447,8 +598,11 @@ test("director can diagnose blocked learning and copy an actionable task without
     path: path.join(evidence, "director-learning-readiness-390.png"),
   });
   expect((await page.request.get("/api/lms/courses?page=1")).status()).toBe(
-    503,
+    200,
   );
+  const calendar = await page.request.get("/api/lms/calendar");
+  expect(calendar.status()).toBe(503);
+  expect((await calendar.json()).code).toBe("LMS_DEPLOYMENT_REVIEW_REQUIRED");
   expect(
     (
       await db.tenant.findUniqueOrThrow({
@@ -465,7 +619,8 @@ test("director can diagnose blocked learning and copy an actionable task without
         copiedTaskIncludesTenantAndRecoveryInstructions: true,
         registrationNotRequested: true,
         mutations: calls.filter((call) => call.method !== "GET").length,
-        gateStill503: true,
+        contentPreparationStatus: 200,
+        calendarGateStill503: true,
       },
       null,
       2,
@@ -750,8 +905,8 @@ test("methodist search and pagination show only its own bound programmes", async
   page,
 }) => {
   test.setTimeout(180_000);
-  const seeded = await fixture(52);
-  const hidden = lmsCourse();
+  const seeded = await fixture(52, false);
+  const hidden = preparationCourse();
   hidden.content.titleRu =
     "Чужая синтетическая программа без назначения методисту";
   const inaccessible = await createCourse(seeded.context, hidden);

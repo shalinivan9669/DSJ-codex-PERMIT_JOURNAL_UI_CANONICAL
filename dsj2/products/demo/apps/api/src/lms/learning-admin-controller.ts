@@ -13,6 +13,7 @@ import { lmsContext } from "./scope";
 import { listGroups } from "./groups";
 import {
   createTeachingBinding,
+  courseOptions,
   listTeachingBindings,
   revokeTeachingBinding,
   teachingContext,
@@ -28,6 +29,7 @@ import {
 export const learningAdminRoutes = [
   ["GET", "/lms/groups"],
   ["GET", "/lms/teaching-context"],
+  ["GET", "/lms/course-options"],
   ["GET", "/lms/learning-bindings"],
   ["POST", "/lms/learning-bindings"],
   ["POST", "/lms/learning-bindings/:id/revoke"],
@@ -40,6 +42,12 @@ export const learningAdminRoutes = [
 ] as const;
 @Controller()
 export class LmsLearningAdminController {
+  @Get("lms/course-options") courseOptions(
+    @Req() r: DemoRequest,
+    @Query() q: unknown,
+  ) {
+    return courseOptions(lmsContext(r), q);
+  }
   @Get("lms/groups") groups(@Req() r: DemoRequest, @Query() q: unknown) {
     return listGroups(lmsContext(r), q);
   }

@@ -1,0 +1,16 @@
+# Optional: add after compose.yaml only when the real deployment evidence exists.
+# These are the two processes that read the LMS deployment gate.
+x-lms-evidence: &lms-evidence
+  environment:
+    DEMO_LMS_DEPLOYMENT_EVIDENCE: /run/demo/lms-deployment-evidence.json
+  volumes:
+    - type: bind
+      source: ${DEMO_LMS_EVIDENCE_FILE:?Set an absolute path to the approved LMS evidence file}
+      target: /run/demo/lms-deployment-evidence.json
+      read_only: true
+      bind:
+        create_host_path: false
+
+services:
+  api: *lms-evidence
+  integration: *lms-evidence
