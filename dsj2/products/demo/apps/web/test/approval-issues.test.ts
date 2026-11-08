@@ -167,3 +167,71 @@ test("special knowledge and proctoring requirements share one event input while 
       assert.equal(entry.issue.rowId, "person-3");
   }
 });
+
+test("commission errors combine inherited settings but preserve each explicit event repair target", () => {
+  const draft = draftSchema.parse({
+    kind: "PERSON",
+    profileVersionId: "default-profile",
+    events: [
+      { id: "inherited-a", title: "БиОТ рабочих" },
+      { id: "inherited-b", title: "БиОТ ИТР" },
+      {
+        id: "pinned-a",
+        title: "Первая комиссия",
+        profileVersionId: "other-profile",
+      },
+      {
+        id: "pinned-b",
+        title: "Вторая комиссия",
+        profileVersionId: "other-profile",
+      },
+      {
+        id: "pinned-default",
+        title: "Закреплённый состав",
+        profileVersionId: "default-profile",
+      },
+    ].map((event) => ({
+      ...event,
+      protocolTemplateId: "biot-protocol",
+      commonFields: {},
+    })),
+    items: [],
+  });
+  const issue = {
+    code: "BIOT_COMMISSION_REQUIRED",
+    path: "issuer.commission",
+    field: "commission",
+    message: "Укажите председателя и двух членов комиссии",
+  };
+  const issues = [
+    issue,
+    ...draft.events!.flatMap((event) => [
+      { ...issue, eventId: event.id },
+      { ...issue, eventId: event.id },
+    ]),
+  ];
+  const groups = approvalIssueGroups(issues, draft);
+  assert.deepEqual(
+    groups.map((group) => group.key),
+    ["center", "center:pinned-a", "center:pinned-b", "center:pinned-default"],
+  );
+  assert.deepEqual(
+    groups.map((group) => group.title),
+    [
+      "Настройки центра",
+      "Комиссия · Первая комиссия",
+      "Комиссия · Вторая комиссия",
+      "Комиссия · Закреплённый состав",
+    ],
+  );
+  assert.equal(groups[0].entries.length, 1);
+  assert.equal(groups[0].entries[0].count, 5);
+  for (const group of groups.slice(1)) {
+    assert.equal(group.entries.length, 1);
+    assert.equal(group.entries[0].count, 2);
+    const target = group.entries[0].issue;
+    assert.notEqual(typeof target, "string");
+    if (typeof target !== "string")
+      assert.equal(target.eventId, group.key.slice("center:".length));
+  }
+});

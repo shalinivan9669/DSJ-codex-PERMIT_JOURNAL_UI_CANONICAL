@@ -127,7 +127,15 @@ export function draftReadiness(
               : assignmentPath[2];
           path = `items.${row}.assignments.${column}${field ? `.${field}` : ""}`;
         } else path = path.replace(/^items\.0(?=\.|$)/, `items.${row}`);
-        contractIssues.push({ ...issue, path });
+        contractIssues.push({
+          ...issue,
+          path,
+          // The same profile may be explicitly pinned to several events. Keep
+          // the owner so repairing one commission cannot change another event.
+          ...(/^(profile|issuer)(\.|$)/.test(path)
+            ? { eventId: group.event.id }
+            : {}),
+        });
       }
     }
   }
@@ -153,6 +161,7 @@ export function draftReadiness(
       issue.code,
       issue.path,
       issue.rowId,
+      issue.eventId,
       issue.message,
     ]);
     if (seen.has(key)) continue;

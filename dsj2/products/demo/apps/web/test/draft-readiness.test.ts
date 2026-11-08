@@ -390,4 +390,43 @@ test("a separately pinned event profile is not judged using the request's commis
   input.events![0].profileVersionId = "request-profile";
   const same = draftReadiness(input, requestProfile);
   assert.ok(same.fieldHints["issuer.commission"]);
+  assert.equal(
+    same.issues.find((issue) => issue.code === "BIOT_COMMISSION_REQUIRED")
+      ?.eventId,
+    input.events![0].id,
+  );
+});
+
+test("local commission errors retain separate event targets even for the same recipient and profile", () => {
+  const input = groupedItrDraft();
+  input.profileVersionId = "request-profile";
+  const first = input.events![0];
+  first.profileVersionId = "request-profile";
+  input.events!.push({
+    ...structuredClone(first),
+    id: "second-itr-training",
+    title: "Другая комиссия ИТР",
+  });
+  input.items[1].assignments.push({
+    ...structuredClone(input.items[1].assignments[1]),
+    id: "second-itr-certificate",
+    eventId: "second-itr-training",
+  });
+  const before = structuredClone(input);
+  const issues = draftReadiness(input, {
+    ...itrProfile,
+    commission: [],
+  }).issues.filter((issue) => issue.code === "BIOT_COMMISSION_REQUIRED");
+  assert.equal(issues.length, 2);
+  assert.deepEqual(
+    new Set(issues.map((issue) => issue.eventId)),
+    new Set([first.id, "second-itr-training"]),
+  );
+  assert.ok(
+    issues.every(
+      (issue) =>
+        issue.path === "issuer.commission" && issue.rowId === input.items[1].id,
+    ),
+  );
+  assert.deepEqual(input, before);
 });

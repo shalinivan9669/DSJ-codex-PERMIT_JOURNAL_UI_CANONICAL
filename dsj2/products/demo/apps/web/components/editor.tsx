@@ -22,6 +22,8 @@ import { RequestTrainingChoices } from "./request-training-choices";
 import { TrainingBundleDialog } from "./training-bundle-dialog";
 import { TrainingOverview } from "./training-overview";
 import { RequestActivity } from "./request-activity";
+import { RequestCommission } from "./request-commission";
+import { commissionProfilePatch } from "@/lib/request-commission";
 import { ApprovalBanner } from "./approvals";
 import { BatchReadyPanel } from "./batch-ready-panel";
 import { SigningPanel } from "./signing-panel";
@@ -169,6 +171,34 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     (issue: Validation["errors"][number]) => void
   >(() => undefined);
   const consumedIssueQuery = useRef("");
+  const [commissionIssue, setCommissionIssue] = useState<{
+    eventId?: string;
+    commissionRequired?: boolean;
+  } | null>(null);
+  useEffect(() => {
+    if (!draft || draft.id !== id) return;
+    const url = new URL(window.location.href);
+    if (
+      url.searchParams.get("commission") !== "1" &&
+      url.searchParams.get("profile") !== "1"
+    )
+      return;
+    const eventId = url.searchParams.get("commissionEvent") || undefined;
+    setCommissionIssue({
+      commissionRequired: url.searchParams.get("profile") !== "1",
+      eventId: draft.events?.some((event) => event.id === eventId)
+        ? eventId
+        : undefined,
+    });
+    url.searchParams.delete("commission");
+    url.searchParams.delete("commissionEvent");
+    url.searchParams.delete("profile");
+    window.history.replaceState(
+      window.history.state,
+      "",
+      url.pathname + url.search + url.hash,
+    );
+  }, [id, draft?.id]);
   useEffect(() => {
     const focus = (event: Event) =>
       focusIssueAction.current(
@@ -1191,7 +1221,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     onError: (caught) => setError(errorText(caught)),
     replace: (url) => router.replace(url),
   });
-  async function applyOperation(patch: Partial<Draft>, removedId?: string) {
+  async function applyOperation(
+    patch: Partial<Draft> | ((saved: Draft) => Partial<Draft>),
+    removedId?: string,
+  ) {
     if (!current.current || busy) return;
     setBusy("bulk");
     setError("");
@@ -1200,7 +1233,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       const before = structuredClone(current.current);
       const next = applyBusinessRules({
         ...before,
-        ...patch,
+        ...(typeof patch === "function" ? patch(before) : patch),
         businessRuleVersion: "LIVE_V1" as const,
       });
       if (
@@ -1283,8 +1316,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         });
       }
     } catch (caught) {
-      setError(errorText(caught));
       const errors = validationErrors(caught);
+      setError(errors.length ? "" : errorText(caught));
       if (errors.length) {
         validationRequested.current = true;
         focusValidation.current = true;
@@ -1625,6 +1658,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             : JSON.stringify([
                 path,
                 mapped.message,
+                (mapped as AddressedIssue).eventId,
                 /^(events|commonFields|profile|issuer)(\.|$)/.test(path)
                   ? "shared"
                   : (mapped as AddressedIssue).rowId,
@@ -1664,9 +1698,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       return;
     }
     if (/^(profile|issuer)(\.|$)/.test(path)) {
-      document
-        .getElementById("request-readiness")
-        ?.scrollIntoView({ block: "center" });
+      setCommissionIssue({
+        eventId: (issue as AddressedIssue).eventId,
+        commissionRequired: /^(profile|issuer)\.commission(?:\.|$)/.test(path),
+      });
       return;
     }
     const sharedEventMatch = /^events\.(\d+)\./.exec(path);
@@ -1838,7 +1873,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       (candidate) =>
         candidate.id === (addressed.eventId || assignment?.eventId),
     );
-    return `${person ? `Строка ${Number(index![1]) + 1}${person.fullNameRu ? `, ${person.fullNameRu}` : ""}${event ? `, ${trainingDisplayTitle(event.title)}` : ""}: ` : ""}${issue.message}`;
+    return `${person ? `Строка ${Number(index![1]) + 1}${person.fullNameRu ? `, ${person.fullNameRu}` : ""}${event ? `, ${trainingDisplayTitle(event.title)}` : ""}: ` : event ? `${trainingDisplayTitle(event.title)}: ` : ""}${issue.message}`;
   }
   const missingNames = draft.items.filter((item) =>
     isBlankText(item.fullNameRu),
@@ -1897,7 +1932,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           ← Все заявки
         </Link>
         {draft.items.some((item) => item.recipientId) &&
-          ["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR"].includes(context.user.role) && (
+          ["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR"].includes(
+            context.user.role,
+          ) && (
             <Link className="back-link" href={`/lms/assign?requestId=${id}`}>
               Назначить обучение участникам
             </Link>
@@ -2778,17 +2815,12 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 <ul className="operator-next-fields">
                   {nextIssues.map((issue, index) => (
                     <li key={index}>
-                      {typeof issue !== "string" &&
-                      /^(profile|issuer)(\.|$)/.test(String(issue.path)) ? (
-                        <Link href="/settings">{issue.message}</Link>
-                      ) : (
-                        <button
-                          className="text-button"
-                          onClick={() => focusIssue(issue)}
-                        >
-                          {issueLabel(issue)}
-                        </button>
-                      )}
+                      <button
+                        className="text-button"
+                        onClick={() => focusIssue(issue)}
+                      >
+                        {issueLabel(issue)}
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -2812,8 +2844,13 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           {!readonly && (
             <BatchReadyPanel
               draft={draft}
+              selectionStorageKey={`demo:batch-selection:${context.tenant.id}:${context.user.id}:${id}`}
+              disabled={operationBusy}
+              dirty={dirty}
+              onBusyChange={setContextBusy}
               onSave={flush}
               onRefresh={async () => {
+                await flush(false);
                 initialize(await api<Draft>(`/print-requests/${id}`));
                 setRefreshFiles((value) => value + 1);
               }}
@@ -2854,7 +2891,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             ) : actions.showPreview ? (
               <button
                 className="primary"
-                disabled={operationBusy || !readiness.locallyComplete}
+                disabled={operationBusy}
                 onClick={() => void command("preview")}
               >
                 {busy === "preview"
@@ -2885,6 +2922,12 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               </Link>
             )}
           </div>
+          {actions.showPreview && !readiness.locallyComplete && (
+            <p className="fine-print">
+              Предпросмотр — черновой макет. Для передачи директору и оформления
+              документов нужно исправить обязательные данные.
+            </p>
+          )}
           {actions.showPrepareSigning && (
             <p className="fine-print">
               При подготовке комплект получит номера. Дальнейшие исправления
@@ -2940,9 +2983,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                                   {documentLabel}:{" "}
                                 </span>
                               )}
-                              {typeof issue === "string"
-                                ? issue
-                                : issue.message}
+                              {typeof issue !== "string" &&
+                              /^(profile|issuer)(\.|$)/.test(
+                                String(issue.path || ""),
+                              )
+                                ? issueLabel(issue)
+                                : typeof issue === "string"
+                                  ? issue
+                                  : issue.message}
                             </button>
                           </li>
                         ),
@@ -2979,7 +3027,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       )}
       {(draft.status !== "DRAFT" || !!draft.issuances?.length) && (
         <details className="panel">
-                    <summary>Подписание и выдача</summary>
+          <summary>Подписание и выдача</summary>
           <SigningPanel
             requestId={id}
             issuances={draft.issuances}
@@ -3455,6 +3503,44 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             }}
           />
         </Modal>
+      )}
+      {commissionIssue && (
+        <RequestCommission
+          draft={draft}
+          context={context}
+          eventId={commissionIssue.eventId}
+          commissionRequired={commissionIssue.commissionRequired}
+          readonly={readonly}
+          onClose={() => setCommissionIssue(null)}
+          onApply={async (profile, eventId) => {
+            if (readonly || !current.current) return;
+            const applied = await applyOperation((saved) =>
+              commissionProfilePatch(saved, profile.id, eventId),
+            );
+            if (!applied)
+              throw new Error(
+                "Не удалось применить комиссию. Проверьте сообщение в заявке и повторите действие.",
+              );
+            if (!eventId)
+              setPinnedCenter({
+                id: profile.id,
+                commonFields: profile.profile.commonFields || {},
+                profile: profile.profile,
+              });
+            setRefreshFiles((value) => value + 1);
+            setCommissionIssue(null);
+            validationRequested.current = true;
+            focusValidation.current = true;
+            try {
+              await refreshValidation(current.current.revision);
+            } catch (caught) {
+              setReviewStale(true);
+              setError(
+                `Комиссия сохранена в заявке. Повторите проверку данных. ${errorText(caught)}`,
+              );
+            }
+          }}
+        />
       )}
       {documentTargets && !readonly && (
         <TrainingBundleDialog

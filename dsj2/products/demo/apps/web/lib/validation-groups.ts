@@ -26,7 +26,14 @@ export function groupValidationIssues(errors: Issue[], items: Recipient[]) {
         (match ? items[Number(match[1])] : undefined);
     const key = person?.id || "common";
     const message = typeof issue === "string" ? issue : issue.message;
-    const identity = JSON.stringify([key, path, message]);
+    const identity = JSON.stringify([
+      key,
+      path,
+      message,
+      typeof issue === "string"
+        ? undefined
+        : (issue as Issue & { eventId?: string }).eventId,
+    ]);
     if (seen.has(identity)) continue;
     seen.add(identity);
     const document =

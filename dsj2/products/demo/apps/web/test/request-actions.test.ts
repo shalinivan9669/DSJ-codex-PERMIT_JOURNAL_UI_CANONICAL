@@ -48,6 +48,31 @@ test("saved draft entry offers checks without a no-op save, decision, preparatio
   assert.equal(actions.showDocuments, false);
 });
 
+test("superadministrators can validate, preview and save drafts under the same archive and issuance limits", () => {
+  const request = input(undefined, { role: "SUPER_ADMIN", dirty: true });
+  const actions = requestActions(request);
+  assert.equal(actions.editable, true);
+  assert.equal(actions.showValidate, true);
+  assert.equal(actions.showPreview, true);
+  assert.equal(actions.showSave, true);
+  assert.equal(
+    requestActions(input("PENDING", { role: "SUPER_ADMIN" })).showDecision,
+    true,
+  );
+  assert.equal(
+    requestActions(input("APPROVED", { role: "SUPER_ADMIN" }))
+      .showPrepareSigning,
+    true,
+  );
+  request.draft.archived = true;
+  assert.equal(requestActions(request).editable, false);
+  request.draft.archived = false;
+  request.draft.status = "FINALIZED";
+  assert.equal(requestActions(request).showValidate, false);
+  assert.equal(requestActions(request).showSave, false);
+  assert.equal(requestActions(request).showDocuments, true);
+});
+
 test("pending unchanged data needs no repeat submission; dirty data needs a new save and no stale decision", () => {
   const pending = requestActions(input("PENDING"));
   assert.equal(pending.showSave, false);

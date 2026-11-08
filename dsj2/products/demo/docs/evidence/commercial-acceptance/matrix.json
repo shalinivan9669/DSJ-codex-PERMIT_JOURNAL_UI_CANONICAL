@@ -1,4 +1,11 @@
 {
+  "commissionFlow20261108": {
+    "date": "2026-11-08",
+    "status": "LOCAL_COMMISSION_AND_TRANSFER_FLOW_VERIFIED",
+    "branch": "codex/korochki-commission-flow-20261108",
+    "evidence": "../commission-flow-20261108/acceptance.json",
+    "deployment": "NOT_PERFORMED"
+  },
   "korochkiLocalMvp20261104": {
     "date": "2026-11-04",
     "status": "LOCAL_MVP_VERIFIED",

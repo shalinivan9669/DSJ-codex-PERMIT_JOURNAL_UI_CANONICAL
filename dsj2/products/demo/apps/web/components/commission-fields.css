@@ -1,0 +1,65 @@
+.commission-fields,
+.commission-person {
+  min-width: 0;
+}
+.commission-person {
+  padding: 16px 0;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+}
+.commission-person legend {
+  padding: 0;
+  font-weight: 600;
+}
+.commission-person-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+.commission-fields > button {
+  margin-top: 16px;
+}
+.commission-person input {
+  min-width: 0;
+  width: 100%;
+  font-size: 16px;
+}
+.profile-commission {
+  scroll-margin-top: 96px;
+  margin: 28px 0;
+}
+.profile-save-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+.profile-save-actions p {
+  margin: 0;
+}
+.profile-fields {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.profile-error-links button {
+  color: inherit;
+  text-decoration: underline;
+  text-align: start;
+  background: none;
+  border: 0;
+  padding: 8px 0;
+}
+@media (max-width: 600px) {
+  .commission-person-fields {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .profile-save-actions > .primary,
+  .profile-save-actions > .button {
+    width: 100%;
+  }
+}

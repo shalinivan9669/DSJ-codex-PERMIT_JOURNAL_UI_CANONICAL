@@ -975,7 +975,11 @@ export function validateDraft(
               "Укажите вид проверки: периодическая или повторная",
               item.id,
             );
-          if (!profile || profile.commission.length < 3)
+          if (
+            !profile ||
+            profile.commission.length < 3 ||
+            profile.commission.some((member) => isBlankText(member.name))
+          )
             add(
               "BIOT_COMMISSION_REQUIRED",
               "issuer.commission",

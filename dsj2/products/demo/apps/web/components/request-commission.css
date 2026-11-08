@@ -1,0 +1,33 @@
+.request-commission > section {
+  margin-block: 24px;
+}
+.request-commission-people {
+  margin: 12px 0;
+}
+.request-commission-people > div {
+  padding-block: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.request-commission-people dt {
+  font-size: 14px;
+  color: var(--muted);
+}
+.request-commission-people dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+.request-commission-people small {
+  display: block;
+  margin-top: 4px;
+}
+.request-commission .modal-actions {
+  flex-wrap: wrap;
+}
+.request-commission .modal-actions > * {
+  white-space: normal;
+}
+@media (max-width: 600px) {
+  .request-commission .modal-actions > * {
+    width: 100%;
+  }
+}

@@ -47,7 +47,7 @@ export function requestActions({
   const editable =
     draft.status === "DRAFT" &&
     !archived &&
-    ["ADMIN", "DIRECTOR", "OPERATOR"].includes(role);
+    ["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR"].includes(role);
   const approval = draft.approval?.status;
   const alreadyPrepared = approvedScopeIssued(draft);
   const canPrintCurrentPreview =

@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-08",
+  "status": "LOCAL_COMMISSION_AND_TRANSFER_FLOW_VERIFIED",
+  "branch": "codex/korochki-commission-flow-20261108",
+  "baseBranch": "codex/korochki-mvp-deploy-20261104",
+  "baseCommit": "cd5886a3270d4325d698ed7feb00a089ec116354",
+  "scope": "Commission setup, existing request/profile recovery and selected-course approval submission",
+  "findings": [
+    "Existing requests pin an immutable issuer profile; saving settings alone cannot update them.",
+    "Issuer errors scrolled to readiness instead of opening the responsible composition.",
+    "Submission failures stayed visible after input/profile changes; the generic correlation-code error obscured the blocked action.",
+    "Selected courses were lost during settings navigation.",
+    "SUPER_ADMIN was missing from the presentation-only request action list."
+  ],
+  "implemented": [
+    "Three labeled commission slots, field error focus, explicit save and return-to-request flow.",
+    "Explicit adoption of saved profile for request or independently pinned event; no automatic reassignment.",
+    "Significant commission names required by authoritative BiOT validation.",
+    "Actionable submission feedback bound to current input/selection; technical diagnostics collapsed.",
+    "Same-request session selection preserved through settings navigation; no automatic transfer after repair.",
+    "Draft preview remains available while incomplete required data blocks transfer/issuance.",
+    "Pending/approved matching scope shown as already submitted; response loss requires state recovery.",
+    "Refresh saves local edits before replacing the draft; post-save revision mismatch prevents unseen concurrent data from being submitted."
+  ],
+  "verification": {
+    "rootUnitTests": { "status": "PASS", "passed": 318, "failed": 0, "command": "pnpm test (root stage)" },
+    "webUnitTests": { "status": "PASS", "passed": 265, "failed": 0, "command": "pnpm --filter @demo/web test" },
+    "integration": { "status": "PASS", "passed": 1, "database": "isolated disposable demo_test_commission_20261108", "file": "tests/integration/commission-profile-rebind.test.ts" },
+    "browser": {
+      "status": "PASS", "passed": 8, "failed": 0, "skipped": 0, "flaky": 0, "durationMs": 52223,
+      "file": "apps/web/e2e/commission-recovery-live.spec.ts",
+      "environment": "Current source, real isolated API/PostgreSQL, actual Python layout preflight, Chromium desktop and 390px viewport",
+      "cases": [
+        "SUPER_ADMIN corrects issuer city through settings and adopts the version",
+        "Director desktop commission repair, adoption, validation, reload",
+        "Director mobile missing-name focus, failed save input preservation, recovery",
+        "Operator adopts director-saved commission without settings access",
+        "Mobile partial batch same-page repair preserves 1 of 2 recipients and submits once",
+        "Mobile partial batch settings roundtrip preserves 1 of 2 recipients and submits once",
+        "Accepted submission plus failed refresh retains success and saves subsequent edits before reload",
+        "Lost POST response remains unresolved through selection changes and recovers existing approval without duplicate POST"
+      ]
+    },
+    "lint": "PASS: pnpm lint",
+    "typecheck": "PASS: pnpm -r typecheck and final web TypeScript check",
+    "build": "PASS: pnpm build with DEMO_STANDALONE=0 for local Windows packaging and isolated .next-commission-build output",
+    "designDetector": "PASS: zero findings on changed UI; original repair and added submission panel checked separately",
+    "visualReview": "PASS: mobile settings, composition adoption, blocked submission and recovered states inspected",
+    "gitDiffCheck": "PASS"
+  },
+  "verificationCorrections": [
+    "Initial tests without the configured Python runtime failed; corrected environment passed all root tests.",
+    "Inherited DEMO_STANDALONE=0 contaminated a deployment configuration test; unset for the unit suite, final suite passed.",
+    "An interrupted browser run encountered development hot reload; final settled source run passed without retries.",
+    "A test initially inspected checkboxes inside a collapsed details element after navigation; the test now opens it explicitly."
+  ],
+  "intentionallyUnchanged": ["Authentication and tenant policy", "Database schema and migrations", "Numbering and immutable issued artifacts", "Signing requirements", "Production runtime/deployment configuration", "Frozen legacy modules"],
+  "notPerformed": ["Production deployment or cloud data changes", "Full legacy integration/render suites", "Physical iPhone/Safari testing or physical printing"],
+  "screenshotsStorage": "Local ignored evidence files; screenshots contain only synthetic test data",
+  "screenshots": ["commission-settings-390.png", "commission-apply-dialog-390.png", "commission-transfer-same-page-blocked-390.png", "commission-transfer-settings-return-submitted-390.png"]
+}

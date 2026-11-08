@@ -76,8 +76,14 @@ export function approvalIssueGroups(
       row?.fullNameRu ||
       row?.fullNameKz ||
       `Получатель ${(draft?.items.indexOf(row!) ?? -1) + 1}`;
-    const key = /^(profile|issuer)/.test(path)
-      ? "center"
+    const centerIssue = /^(profile|issuer)(\.|$)/.test(path);
+    // An explicit pin has its own repair action even when it currently points
+    // at the request's version. Inherited events are repaired together.
+    const eventProfile = centerIssue && event?.profileVersionId ? event : null;
+    const key = centerIssue
+      ? eventProfile
+        ? `center:${eventProfile.id}`
+        : "center"
       : sharedCourse
         ? `course:${event!.id}`
         : inheritedEmployer
@@ -85,20 +91,21 @@ export function approvalIssueGroups(
           : row
             ? `person:${row.id}`
             : "request";
-    const title =
-      key === "center"
-        ? "Настройки центра"
-        : sharedCourse
-          ? trainingDisplayTitle(course)
-          : inheritedEmployer
-            ? "Компания / работодатель"
-            : row
-              ? personTitle
-              : "Общие данные заявки";
+    const title = centerIssue
+      ? eventProfile
+        ? `Комиссия · ${trainingDisplayTitle(eventProfile.title || "Обучение")}`
+        : "Настройки центра"
+      : sharedCourse
+        ? trainingDisplayTitle(course)
+        : inheritedEmployer
+          ? "Компания / работодатель"
+          : row
+            ? personTitle
+            : "Общие данные заявки";
     // Outcomes/professions are one fact per person/course, never merged across people.
     const identity = JSON.stringify([
       key,
-      key === "center" || key.startsWith("company:")
+      centerIssue || key.startsWith("company:")
         ? ""
         : assignment?.eventId ||
           (assignment ? trainingDirection(assignment.templateId) : ""),

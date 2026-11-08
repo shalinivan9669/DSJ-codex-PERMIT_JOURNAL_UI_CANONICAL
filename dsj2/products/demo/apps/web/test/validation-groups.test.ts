@@ -3,6 +3,20 @@ import { test } from "node:test";
 import { groupValidationIssues } from "../lib/validation-groups";
 import { newRecipient } from "../lib/types";
 
+test("commission errors from independently pinned events retain both repair targets", () => {
+  const first = {
+    path: "issuer.commission",
+    message: "Заполните комиссию",
+    eventId: "first",
+  };
+  const second = { ...first, eventId: "second" };
+  const groups = groupValidationIssues([first, first, second], []);
+  assert.deepEqual(
+    groups[0].issues.map(({ issue }) => issue),
+    [first, second],
+  );
+});
+
 test("review separates common issues and distinct people, retaining document context and field paths", () => {
   const people = [newRecipient(), newRecipient()];
   people[0].fullNameRu = "Первый";

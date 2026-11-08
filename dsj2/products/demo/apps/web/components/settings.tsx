@@ -1,10 +1,19 @@
 "use client";
-import { useCabinetText, useCabinetLanguage, useCabinetError } from "./cabinet-language";
-import { useEffect, useState, type FormEvent } from "react";
+import {
+  useCabinetText,
+  useCabinetLanguage,
+  useCabinetError,
+} from "./cabinet-language";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Icon, Modal, Notice } from "@demo/ui";
 import { api, json } from "@/lib/api";
-import { canManageUsers, canManageSystem, profileSchema, roleLabel } from "@demo/contracts";
+import {
+  canManageUsers,
+  canManageSystem,
+  profileSchema,
+  roleLabel,
+} from "@demo/contracts";
 import {
   userRoleForEditor,
   userRoleOptions,
@@ -18,6 +27,13 @@ import { AuditLog } from "./audit-log";
 import { OwnPasswordForm } from "./own-password-form";
 import { RegistrationPolicy } from "./registration-policy";
 import { TemplateManager } from "./template-manager";
+import { CommissionFields } from "./commission-fields";
+import {
+  commissionMissingNames,
+  prepareCommissionForSave,
+  requestReturnPath,
+} from "@/lib/commission";
+import { validationErrors } from "@/lib/validation-errors";
 import "./center-onboarding.css";
 import {
   templateLabels,
@@ -53,7 +69,11 @@ export function Settings({
         ["account", tr("Мой пароль")],
       ]
     : managesUsers
-      ? [["users", tr("Пользователи")], ["templates", tr("Формы")], ["account", tr("Мой пароль")]]
+      ? [
+          ["users", tr("Пользователи")],
+          ["templates", tr("Формы")],
+          ["account", tr("Мой пароль")],
+        ]
       : [["account", tr("Мой пароль")]];
   const tab = searchParams.get("tab");
   const activeTab = tabs.some(([id]) => id === tab) ? tab : tabs[0]![0];
@@ -67,7 +87,13 @@ export function Settings({
       <div className="page-heading">
         <div>
           <h1>{tr("Настройки")}</h1>
-          <p>{managesSystem ? tr("Реквизиты эмитента, формы документов и доступ к центру.") : managesUsers ? tr("Пользователи, формы документов и доступ к обучению.") : tr("Безопасность вашей учётной записи.")}</p>
+          <p>
+            {managesSystem
+              ? tr("Реквизиты эмитента, формы документов и доступ к центру.")
+              : managesUsers
+                ? tr("Пользователи, формы документов и доступ к обучению.")
+                : tr("Безопасность вашей учётной записи.")}
+          </p>
         </div>
       </div>
       <div className="settings-layout">
@@ -86,6 +112,8 @@ export function Settings({
           {activeTab === "profile" && managesSystem ? (
             <ProfileForm
               profile={context.profile}
+              focusCommission={searchParams.get("focus") === "commission"}
+              returnTo={requestReturnPath(searchParams.get("returnTo"))}
               onSaved={(profile) =>
                 onContextChange({
                   ...context,
@@ -99,7 +127,13 @@ export function Settings({
           ) : activeTab === "numbering" && managesSystem ? (
             <Numbering />
           ) : activeTab === "users" && managesUsers ? (
-            <><Users currentUserId={context.user.id} actorRole={context.user.role} /><RegistrationPolicy t={t} /></>
+            <>
+              <Users
+                currentUserId={context.user.id}
+                actorRole={context.user.role}
+              />
+              <RegistrationPolicy t={t} />
+            </>
           ) : activeTab === "signatories" && managesSystem ? (
             <SignatorySettings />
           ) : activeTab === "audit" && managesSystem ? (
@@ -108,11 +142,18 @@ export function Settings({
             <>
               <h2>{tr("Полная копия данных центра")}</h2>
               <p>
-                {tr("Архив содержит данные заказчиков и получателей, историю, связанные записи и доступные файлы центра. Сохраните его в защищённом месте с доступом только уполномоченных сотрудников.")}</p>
+                {tr(
+                  "Архив содержит данные заказчиков и получателей, историю, связанные записи и доступные файлы центра. Сохраните его в защищённом месте с доступом только уполномоченных сотрудников.",
+                )}
+              </p>
               <p className="fine-print">
-                {tr("Это выгрузка данных для сохранения и переноса. Проверка восстановления выполняется отдельно.")}</p>
+                {tr(
+                  "Это выгрузка данных для сохранения и переноса. Проверка восстановления выполняется отдельно.",
+                )}
+              </p>
               <a className="button primary" href="/api/tenant-export" download>
-                {tr("Скачать полную копию центра (ZIP)")}</a>
+                {tr("Скачать полную копию центра (ZIP)")}
+              </a>
             </>
           ) : (
             <OwnPasswordForm />
@@ -125,11 +166,16 @@ export function Settings({
 export function ProfileForm({
   profile,
   onSaved,
+  focusCommission = false,
+  returnTo,
 }: {
   profile: Profile | null;
   onSaved: (profile: Profile) => void;
+  focusCommission?: boolean;
+  returnTo?: string;
 }) {
   const tr = useCabinetText();
+  const formRef = useRef<HTMLFormElement>(null);
   const [value, setValue] = useState<Profile>(
     profile || {
       nameRu: "",
@@ -149,22 +195,107 @@ export function ProfileForm({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useCabinetError();
   const [saved, setSaved] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
+  const [issues, setIssues] = useState<{ path: string; message: string }[]>([]);
+  const safeReturnTo = requestReturnPath(returnTo);
+  function focusField(path: string) {
+    requestAnimationFrame(() => {
+      const commission = /^commission\.(\d+)\.(name|position)/.exec(path);
+      const targetId = commission
+        ? `profile-commission-${commission[2]}-${commission[1]}`
+        : /^(name|ownName|legalForm)/.test(path)
+          ? "profile-names"
+          : path.startsWith("people")
+            ? "profile-other-people"
+            : path.startsWith("commonFields")
+              ? "profile-schedule"
+              : `profile-${path}`;
+      const target = document.getElementById(targetId) || formRef.current;
+      if (!target) return;
+      if (target instanceof HTMLDetailsElement) target.open = true;
+      let ancestor = target.parentElement;
+      while (ancestor) {
+        if (ancestor instanceof HTMLDetailsElement) ancestor.open = true;
+        ancestor = ancestor.parentElement;
+      }
+      const input = target.matches("input, textarea, select, button")
+        ? target
+        : target.querySelector<HTMLElement>("input, textarea, select, button");
+      target.scrollIntoView({ block: "center" });
+      input?.focus({ preventScroll: true });
+    });
+  }
+  useEffect(() => {
+    if (focusCommission) focusField("commission.0.name");
+  }, [focusCommission]);
+  useEffect(() => {
+    if (!dirty && !busy) return;
+    const beforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", beforeUnload);
+    return () => window.removeEventListener("beforeunload", beforeUnload);
+  }, [dirty, busy]);
   function change(patch: Partial<Profile>) {
     setSaved(false);
-    setValue({ ...value, ...patch });
+    setDirty(true);
+    setIssues((current) =>
+      current.filter((issue) => !(issue.path.split(".")[0] in patch)),
+    );
+    setValue((current) => ({ ...current, ...patch }));
   }
   async function submit(event: FormEvent) {
     event.preventDefault();
-    setBusy(true);
+    if (busy) return;
     setError("");
+    setSaved(false);
+    setShowErrors(true);
+    const { id: _id, version: _version, ...fields } = value;
+    const commission = prepareCommissionForSave(fields.commission);
+    const missing = commissionMissingNames(commission, focusCommission ? 3 : 0);
+    const parsed = profileSchema.safeParse({
+      ...fields,
+      commission,
+      people: fields.people?.filter(
+        (person) => person.name.trim() || person.position.trim(),
+      ),
+    });
+    const nextIssues = missing.map((index) => ({
+      path: `commission.${index}.name`,
+      message: `${index === 0 ? tr("Председатель комиссии") : `${tr("Член комиссии")} ${index}`} — ${tr("укажите ФИО")}`,
+    }));
+    if (!parsed.success) {
+      for (const issue of parsed.error.issues) {
+        const path = issue.path.join(".");
+        if (nextIssues.some((entry) => entry.path === path)) continue;
+        nextIssues.push({
+          path,
+          message: /[А-Яа-яЁё]/.test(issue.message)
+            ? tr(issue.message)
+            : tr("Проверьте значение в выделенном поле."),
+        });
+      }
+    }
+    if (focusCommission && !fields.approved)
+      nextIssues.push({
+        path: "approved",
+        message: tr("Подтвердите, что реквизиты и состав комиссии проверены."),
+      });
+    if (nextIssues.length || !parsed.success) {
+      setIssues(nextIssues);
+      focusField(nextIssues[0]?.path || "commission.0.name");
+      return;
+    }
+    setIssues([]);
+    setBusy(true);
     try {
-      const { id: _id, version: _version, ...fields } = value;
-      const payload = profileSchema.parse(fields);
       const result = await api<Profile & { profile?: Profile }>(
         "/settings/profile",
         {
           method: "POST",
-          body: json(payload),
+          body: json(parsed.data),
         },
       );
       const savedProfile = result.profile
@@ -173,238 +304,277 @@ export function ProfileForm({
       setValue(savedProfile);
       onSaved(savedProfile);
       setSaved(true);
+      setDirty(false);
+      setShowErrors(false);
     } catch (caught) {
       setError(caught);
+      const serverIssues = validationErrors(caught).flatMap((issue) =>
+        typeof issue === "string"
+          ? []
+          : [
+              {
+                path: Array.isArray(issue.path)
+                  ? issue.path.join(".")
+                  : issue.path || "",
+                message: issue.message,
+              },
+            ],
+      );
+      setIssues(serverIssues);
+      if (serverIssues.length) focusField(serverIssues[0].path);
     } finally {
       setBusy(false);
     }
   }
   return (
-    <form onSubmit={submit}>
+    <form ref={formRef} onSubmit={submit} noValidate>
       <div className="section-heading">
         <h2>{tr("Реквизиты учебного центра")}</h2>
         {value.version && (
-          <span className="status">{tr("Версия")}{" "}{value.version}</span>
+          <span className="status">
+            {tr("Версия")} {value.version}
+          </span>
         )}
       </div>
       <p className="muted">
-        {tr("В документы попадают реквизиты вашей организации.")}</p>
+        {tr("В документы попадают реквизиты вашей организации.")}
+      </p>
       {error && <Notice>{error}</Notice>}
-      {saved && (
-        <Notice kind="success">
-          {tr("Создана новая версия реквизитов. Ранее оформленные документы сохраняют свою версию.")}</Notice>
+      {!!issues.length && (
+        <Notice>
+          <strong>{tr("Исправьте поля перед сохранением")}</strong>
+          <ul className="profile-error-links">
+            {issues.map((issue, index) => (
+              <li key={`${issue.path}-${index}`}>
+                <button type="button" onClick={() => focusField(issue.path)}>
+                  {tr(issue.message)}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </Notice>
       )}
-      <OrganizationNameFields
-        value={value}
-        onChange={(names) => change(names)}
-        legacyLabels={[
-          tr("Юридическое название · RU"),
-          tr("Юридическое название · KZ"),
-        ]}
-      />
-      <div className="form-grid">
-        {[
-          ["bin", tr("БИН учебного центра")],
-          ["headName", tr("ФИО руководителя учебного центра")],
-
-          ["cityRu", tr("Город · RU")],
-          ["cityKz", tr("Город · KZ")],
-
-          ["addressRu", tr("Адрес · RU")],
-          ["addressKz", tr("Адрес · KZ")],
-        ].map(([key, label]) => (
-          <label key={key}>
-            {label}
-            <input
-              required={key === "nameRu"}
-              value={String(value[key as keyof Profile] || "")}
-              onChange={(event) => change({ [key]: event.target.value })}
-            />
-          </label>
-        ))}
-      </div>
-      <label>
-        {tr("Название комиссии / версии профиля")}<input
-          value={value.commissionTitle || ""}
-          onChange={(event) => change({ commissionTitle: event.target.value })}
-          placeholder={tr("Например: комиссия ПБ, состав от 24.09.2026")}
-        />
-      </label>
-      <label>
-        {tr("Основание утверждения / полномочий")}<textarea
-          aria-label={tr("Основание утверждения / полномочий")}
-          value={value.approvalBasis}
-          onChange={(event) => change({ approvalBasis: event.target.value })}
-        />
-      </label>
-      <div className="section-heading">
-        <h3>{tr("Комиссия")}</h3>
-        <button
-          type="button"
-          disabled={value.commission.length >= 12}
-          onClick={() =>
-            change({
-              commission: [...value.commission, { name: "", position: "" }],
-            })
-          }
-        >
-          <Icon name="plus" />
-          {value.commission.length
-            ? tr("Добавить члена комиссии")
-            : tr("Добавить председателя")}
-        </button>
-      </div>
-
-      {value.commission.length === 0 && (
-        <p className="muted">
-          {tr("Состав комиссии не указан. Внесите фактические утверждённые данные.")}</p>
-      )}
-      {value.commission.map((person, index) => (
-        <div key={index}>
-          <p className="center-person-role">
-            {index === 0 ? tr("Председатель комиссии") : `${tr("Член комиссии ")}${index}`}
-          </p>
-          <div className="commission-row">
-            <label>
-              {tr("ФИО")}<input
-                required
-                value={person.name}
-                onChange={(event) =>
-                  change({
-                    commission: value.commission.map((row, i) =>
-                      i === index ? { ...row, name: event.target.value } : row,
-                    ),
-                  })
-                }
-              />
-            </label>
-            <label>
-              {tr("Роль в комиссии / должность")}<input
-                value={person.position}
-                onChange={(event) =>
-                  change({
-                    commission: value.commission.map((row, i) =>
-                      i === index
-                        ? { ...row, position: event.target.value }
-                        : row,
-                    ),
-                  })
-                }
-              />
-            </label>
-            <button
-              type="button"
-              aria-label={`${tr("Удалить члена комиссии ")}${index + 1}`}
-              onClick={() =>
-                change({
-                  commission:
-                    index === 0 && value.commission.length > 1
-                      ? [
-                          { name: "", position: "" },
-                          ...value.commission.slice(1),
-                        ]
-                      : value.commission.filter((_, i) => i !== index),
-                })
-              }
-            >
-              {tr("Удалить")}</button>
-          </div>
+      <fieldset className="profile-fields" disabled={busy}>
+        <div id="profile-names">
+          <OrganizationNameFields
+            value={value}
+            autoFocus={!focusCommission}
+            showRequiredErrors={showErrors}
+            onChange={(names) => change(names)}
+            legacyLabels={[
+              tr("Юридическое название · RU"),
+              tr("Юридическое название · KZ"),
+            ]}
+          />
         </div>
-      ))}
-      <details className="center-extra-people">
-        <summary>{tr("Другие преподаватели и подписанты")}</summary>
-        <p className="fine-print">
-          {tr("Список имён для работы центра. Состав комиссии выше определяет подписи в текущих формах. Эти записи не предоставляют доступ к приложению.")}</p>
-        {(value.people || []).map((person, index) => (
-          <div className="form-grid" key={index}>
-            <label>
-              {tr("ФИО сотрудника")}<input
-                required
-                maxLength={255}
-                value={person.name}
-                onChange={(event) =>
-                  change({
-                    people: value.people!.map((row, i) =>
-                      i === index ? { ...row, name: event.target.value } : row,
-                    ),
-                  })
-                }
+        <div className="form-grid">
+          {[
+            ["bin", tr("БИН учебного центра")],
+            ["headName", tr("ФИО руководителя учебного центра")],
+
+            ["cityRu", tr("Город · RU")],
+            ["cityKz", tr("Город · KZ")],
+
+            ["addressRu", tr("Адрес · RU")],
+            ["addressKz", tr("Адрес · KZ")],
+          ].map(([key, label]) => (
+            <label key={key}>
+              {label}
+              <input
+                id={`profile-${key}`}
+                aria-invalid={issues.some((issue) => issue.path === key)}
+                required={key === "nameRu"}
+                value={String(value[key as keyof Profile] || "")}
+                onChange={(event) => change({ [key]: event.target.value })}
               />
             </label>
-            <label>
-              {tr("Роль")}<select
-                value={person.role}
-                onChange={(event) =>
+          ))}
+        </div>
+        <label>
+          {tr("Название комиссии / версии профиля")}
+          <input
+            id="profile-commissionTitle"
+            maxLength={255}
+            value={value.commissionTitle || ""}
+            onChange={(event) =>
+              change({ commissionTitle: event.target.value })
+            }
+            placeholder={tr("Например: комиссия ПБ, состав от 24.09.2026")}
+          />
+        </label>
+        <label>
+          {tr("Основание утверждения / полномочий")}
+          <textarea
+            id="profile-approvalBasis"
+            aria-label={tr("Основание утверждения / полномочий")}
+            value={value.approvalBasis}
+            onChange={(event) => change({ approvalBasis: event.target.value })}
+          />
+        </label>
+        <section
+          className="profile-commission"
+          id="profile-commission"
+          aria-labelledby="profile-commission-title"
+        >
+          <div className="section-heading">
+            <h3 id="profile-commission-title">
+              {tr("Комиссия для протоколов")}
+            </h3>
+          </div>
+          <CommissionFields
+            value={value.commission}
+            onChange={(commission) => change({ commission })}
+            idPrefix="profile-commission"
+            showErrors={showErrors}
+            requiredCount={focusCommission ? 3 : 0}
+            disabled={busy}
+          />
+        </section>
+        <details className="center-extra-people" id="profile-other-people">
+          <summary>{tr("Другие преподаватели и подписанты")}</summary>
+          <p className="fine-print">
+            {tr(
+              "Список имён для работы центра. Состав комиссии выше определяет подписи в текущих формах. Эти записи не предоставляют доступ к приложению.",
+            )}
+          </p>
+          {(value.people || []).map((person, index) => (
+            <div className="form-grid" key={index}>
+              <label>
+                {tr("ФИО сотрудника")}
+                <input
+                  required
+                  maxLength={255}
+                  value={person.name}
+                  onChange={(event) =>
+                    change({
+                      people: value.people!.map((row, i) =>
+                        i === index
+                          ? { ...row, name: event.target.value }
+                          : row,
+                      ),
+                    })
+                  }
+                />
+              </label>
+              <label>
+                {tr("Роль")}
+                <select
+                  value={person.role}
+                  onChange={(event) =>
+                    change({
+                      people: value.people!.map((row, i) =>
+                        i === index
+                          ? {
+                              ...row,
+                              role: event.target.value as "TEACHER" | "SIGNER",
+                            }
+                          : row,
+                      ),
+                    })
+                  }
+                >
+                  <option value="TEACHER">{tr("Преподаватель")}</option>
+                  <option value="SIGNER">{tr("Подписант")}</option>
+                </select>
+              </label>
+              <label>
+                {tr("Должность сотрудника")}
+                <input
+                  maxLength={255}
+                  value={person.position}
+                  onChange={(event) =>
+                    change({
+                      people: value.people!.map((row, i) =>
+                        i === index
+                          ? { ...row, position: event.target.value }
+                          : row,
+                      ),
+                    })
+                  }
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() =>
                   change({
-                    people: value.people!.map((row, i) =>
-                      i === index
-                        ? {
-                            ...row,
-                            role: event.target.value as "TEACHER" | "SIGNER",
-                          }
-                        : row,
-                    ),
+                    people: value.people!.filter((_, i) => i !== index),
                   })
                 }
               >
-                <option value="TEACHER">{tr("Преподаватель")}</option>
-                <option value="SIGNER">{tr("Подписант")}</option>
-              </select>
-            </label>
-            <label>
-              {tr("Должность сотрудника")}<input
-                maxLength={255}
-                value={person.position}
-                onChange={(event) =>
-                  change({
-                    people: value.people!.map((row, i) =>
-                      i === index
-                        ? { ...row, position: event.target.value }
-                        : row,
-                    ),
-                  })
-                }
-              />
-            </label>
-            <button
-              type="button"
-              onClick={() =>
-                change({ people: value.people!.filter((_, i) => i !== index) })
-              }
-            >
-              {tr("Убрать сотрудника")}{" "}{index + 1}
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          disabled={(value.people?.length || 0) >= 24}
-          onClick={() =>
-            change({
-              people: [
-                ...(value.people || []),
-                { name: "", position: "", role: "TEACHER" },
-              ],
-            })
-          }
-        >
-          {tr("Добавить преподавателя или подписанта")}</button>
-      </details>
-      <CenterTrainingSchedule
-        commonFields={value.commonFields}
-        disabled={busy}
-        onChange={(commonFields) => change({ commonFields })}
-      />
-      <label className="checkbox approval">
-        <input
-          type="checkbox"
-          checked={value.approved}
-          onChange={(event) => change({ approved: event.target.checked })}
-        />
-        {tr("Реквизиты и состав комиссии проверены уполномоченным сотрудником центра")}</label>
-      <button className="primary" disabled={busy}>
-        {busy ? tr("Сохраняем…") : tr("Сохранить новую версию")}
-      </button>
+                {tr("Убрать сотрудника")} {index + 1}
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            disabled={(value.people?.length || 0) >= 24}
+            onClick={() =>
+              change({
+                people: [
+                  ...(value.people || []),
+                  { name: "", position: "", role: "TEACHER" },
+                ],
+              })
+            }
+          >
+            {tr("Добавить преподавателя или подписанта")}
+          </button>
+        </details>
+        <div id="profile-schedule">
+          <CenterTrainingSchedule
+            commonFields={value.commonFields}
+            disabled={busy}
+            onChange={(commonFields) => change({ commonFields })}
+          />
+        </div>
+        <label className="checkbox approval">
+          <input
+            id="profile-approved"
+            type="checkbox"
+            aria-invalid={issues.some((issue) => issue.path === "approved")}
+            checked={value.approved}
+            onChange={(event) => change({ approved: event.target.checked })}
+          />
+          {tr(
+            "Реквизиты и состав комиссии проверены уполномоченным сотрудником центра",
+          )}
+        </label>
+      </fieldset>
+      {saved && (
+        <Notice kind="success">
+          {safeReturnTo
+            ? tr(
+                focusCommission
+                  ? "Комиссия сохранена. Вернитесь в заявку и примените сохранённый состав."
+                  : "Реквизиты сохранены. Вернитесь в заявку и примените сохранённую версию.",
+              )
+            : tr(
+                "Реквизиты сохранены. Для открытой заявки выберите новую версию комиссии; ранее оформленные документы не изменятся.",
+              )}
+        </Notice>
+      )}
+      <div className="profile-save-actions">
+        {saved && safeReturnTo ? (
+          <a className="button primary" href={safeReturnTo}>
+            {tr("Вернуться к заявке")}
+          </a>
+        ) : (
+          <button className="primary" disabled={busy}>
+            {busy
+              ? tr("Сохраняем…")
+              : focusCommission
+                ? tr("Сохранить комиссию")
+                : tr("Сохранить реквизиты")}
+          </button>
+        )}
+        <p className="fine-print" role="status">
+          {dirty
+            ? tr("Есть несохранённые изменения.")
+            : !saved
+              ? tr("Изменения сохраняются кнопкой внизу формы.")
+              : ""}
+        </p>
+      </div>
     </form>
   );
 }
