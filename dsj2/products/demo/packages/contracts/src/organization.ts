@@ -16,6 +16,16 @@ export const ORGANIZATION_FORMS = [
 ] as const;
 export const organizationFormSchema = z.enum(["TOO", "IP", "AO", "NONE"]);
 export type OrganizationForm = z.infer<typeof organizationFormSchema>;
+/** Optional editor hint. The full workplace language fields remain printable authority. */
+export const workplaceNamingSchema = z
+  .object({
+    version: z.literal(1),
+    legalForm: organizationFormSchema,
+    ownNameRu: z.string().max(500),
+    ownNameKz: z.string().max(500),
+  })
+  .strict();
+export type WorkplaceNaming = z.infer<typeof workplaceNamingSchema>;
 export type OrganizationNames = {
   legalForm?: OrganizationForm | null;
   ownNameRu?: string | null;

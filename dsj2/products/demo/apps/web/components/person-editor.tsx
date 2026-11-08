@@ -27,6 +27,7 @@ import { RecipientDetails } from "./recipient-details";
 import { TrainingPeriodFields } from "./training-period-fields";
 import { RecipientRecord } from "./recipient-record";
 import { TextQualityHint } from "./text-quality-hint";
+import { useCabinetText } from "./cabinet-language";
 import "./person-editor.css";
 
 const directions = [
@@ -90,6 +91,7 @@ function PersonFlow({
   person,
   ...props
 }: PersonEditorProps & { person: Recipient }) {
+  const tr = useCabinetText();
   const {
     draft,
     context,
@@ -126,9 +128,6 @@ function PersonFlow({
           (template.templateId || template.id) === assignment.templateId &&
           template.photo,
       ),
-  );
-  const needsEmployer = person.assignments.some((assignment) =>
-    assignment.templateId.startsWith("biot-"),
   );
   const needsEmployerDetails = resolved.assignments.some(
     (assignment) =>
@@ -367,6 +366,42 @@ function PersonFlow({
               </dd>
             </div>
           </dl>
+          {(person.assignments.length > 0 ||
+            resolved.workplaceRu ||
+            resolved.workplaceKz) && (
+            <div className="person-summary-employer">
+              <strong>{tr("Работодатель для документов")}</strong>
+              <p>
+                {resolved.workplaceRu ||
+                  resolved.workplaceKz ||
+                  tr("Не указан")}
+              </p>
+              {resolved.workplaceKz &&
+                resolved.workplaceKz !== resolved.workplaceRu && (
+                  <p>{resolved.workplaceKz}</p>
+                )}
+              {!readonly && (
+                <button
+                  type="button"
+                  className="text-button"
+                  onClick={() => {
+                    editPoint("courses");
+                    requestAnimationFrame(() =>
+                      requestAnimationFrame(() => {
+                        const target = root.current?.querySelector<HTMLElement>(
+                          `[data-field-path="${prefix}workplaceRu"]`,
+                        );
+                        target?.scrollIntoView({ block: "center" });
+                        target?.focus({ preventScroll: true });
+                      }),
+                    );
+                  }}
+                >
+                  {tr("Изменить работодателя")}
+                </button>
+              )}
+            </div>
+          )}
           {formList()}
           {person.photoAssetId && (
             <img
@@ -754,86 +789,87 @@ function PersonFlow({
                   {feedback("photoAssetId")}
                 </div>
               )}
-              {(needsEmployer || person.workplaceRu || person.workplaceKz) && (
+              {(person.assignments.length > 0 ||
+                person.employerId ||
+                person.workplaceRu ||
+                person.workplaceKz) && (
                 <section
                   className="person-employer-fields"
                   aria-label="Работодатель для документов"
                 >
-                  <h3>Работодатель для документов БиОТ</h3>
-                  <div className="form-grid">
-                    <label>
-                      Место работы
-                      <input
-                        aria-label="Место работы"
-                        {...field("workplaceRu")}
-                        disabled={disabled || readonly}
-                        value={person.workplaceRu || person.workplaceKz}
-                        onChange={(event) =>
-                          change({ workplaceRu: event.target.value })
-                        }
-                      />
-                      {feedback("workplaceRu")}
-                    </label>
-                    {needsEmployerDetails &&
-                      (
-                        [
-                          ["employerBin", "БИН работодателя"],
-                          [
-                            "employerAddressRu",
-                            "Юридический адрес работодателя",
-                          ],
-                        ] as const
-                      ).map(([key, label]) => (
-                        <label key={key}>
-                          {label}
-                          <input
-                            aria-label={label}
-                            {...field(key)}
-                            disabled={disabled || readonly}
-                            value={person[key] || ""}
-                            onChange={(event) =>
-                              change({ [key]: event.target.value })
-                            }
-                          />
-                          {feedback(key)}
-                        </label>
-                      ))}
-                  </div>
-                  <details>
-                    <summary>Дополнительные сведения работодателя</summary>
+                  <RecipientRecord
+                    inlineEmployer
+                    recipient={person}
+                    disabled={disabled || readonly}
+                    onChange={onChangeRecipient}
+                    rowIndex={rowIndex}
+                    fieldErrors={fieldErrors}
+                    fieldHints={props.fieldHints}
+                  >
                     <div className="form-grid">
-                      {(
-                        [
-                          ["workplaceKz", "Место работы · KZ"],
-                          ["employerAddressKz", "Адрес работодателя · KZ"],
-                          ["departmentRu", "Подразделение · RU"],
-                          ["departmentKz", "Подразделение · KZ"],
-                        ] as const
-                      ).map(([key, label]) => (
-                        <label key={key}>
-                          {label}
-                          <input
-                            aria-label={label}
-                            {...field(key)}
-                            disabled={disabled || readonly}
-                            value={person[key] || ""}
-                            onChange={(event) =>
-                              change({ [key]: event.target.value })
-                            }
-                          />
-                          {feedback(key)}
-                        </label>
-                      ))}
+                      {needsEmployerDetails &&
+                        (
+                          [
+                            ["employerBin", "БИН работодателя"],
+                            [
+                              "employerAddressRu",
+                              "Юридический адрес работодателя",
+                            ],
+                          ] as const
+                        ).map(([key, label]) => (
+                          <label key={key}>
+                            {tr(label)}
+                            <input
+                              aria-label={tr(label)}
+                              {...field(key)}
+                              disabled={disabled || readonly}
+                              value={person[key] || ""}
+                              onChange={(event) =>
+                                change({ [key]: event.target.value })
+                              }
+                            />
+                            {feedback(key)}
+                          </label>
+                        ))}
                     </div>
-                    <RecipientRecord
-                      recipient={person}
-                      disabled={disabled || readonly}
-                      onChange={onChangeRecipient}
-                      rowIndex={rowIndex}
-                      fieldErrors={fieldErrors}
-                      fieldHints={props.fieldHints}
-                    />
-                  </details>
+                    <details>
+                      <summary>
+                        {tr("Дополнительные сведения работодателя")}
+                      </summary>
+                      <div className="form-grid">
+                        {(
+                          [
+                            ...(!needsEmployerDetails
+                              ? ([
+                                  ["employerBin", "БИН / ИИН работодателя"],
+                                  [
+                                    "employerAddressRu",
+                                    "Адрес работодателя · RU",
+                                  ],
+                                ] as const)
+                              : []),
+                            ["employerAddressKz", "Адрес работодателя · KZ"],
+                            ["departmentRu", "Подразделение · RU"],
+                            ["departmentKz", "Подразделение · KZ"],
+                          ] as const
+                        ).map(([key, label]) => (
+                          <label key={key}>
+                            {tr(label)}
+                            <input
+                              aria-label={tr(label)}
+                              {...field(key)}
+                              disabled={disabled || readonly}
+                              value={person[key] || ""}
+                              onChange={(event) =>
+                                change({ [key]: event.target.value })
+                              }
+                            />
+                            {feedback(key)}
+                          </label>
+                        ))}
+                      </div>
+                    </details>
+                  </RecipientRecord>
                 </section>
               )}
             </>

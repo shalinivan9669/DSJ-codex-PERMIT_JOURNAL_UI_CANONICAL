@@ -53,7 +53,7 @@ test("V01 one person obtains actual files for one mandatory training kit without
       .getByLabel("Дата протокола", { exact: true })
       .fill("2026-09-23");
     await page
-      .getByLabel("Место работы", { exact: true })
+      .getByLabel("Название работодателя · RU", { exact: true })
       .fill("Тестовое предприятие");
     await course
       .getByRole("button", { name: "Параметры", exact: true })

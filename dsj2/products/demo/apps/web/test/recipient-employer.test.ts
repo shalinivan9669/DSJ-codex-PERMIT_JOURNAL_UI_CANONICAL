@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   applyRecipientOrganization,
+  detachRecipientEmployer,
+  editRecipientOrganization,
   patchRecipientEmployer,
   recipientOrganizationDraft,
 } from "../lib/recipient-employer";
@@ -110,4 +112,90 @@ test("conflicting legal forms cannot silently rewrite employer names", () => {
     }),
   );
   assert.equal(recipient.workplaceRu, "");
+});
+
+test("explicit bilingual form survives a draft round trip without inferring forms from literal text", () => {
+  const person = {
+    ...newRecipient(),
+    employerId: "known",
+    employerBin: "123",
+    workplaceEn: "existing English",
+  };
+  const next = applyRecipientOrganization(person, {
+    legalForm: "IP",
+    ownNameRu: "«Север»",
+    ownNameKz: "«Солтүстік»",
+    nameRu: "",
+    nameKz: "",
+  });
+  const restored = recipientOrganizationDraft(JSON.parse(JSON.stringify(next)));
+  assert.equal(restored.legalForm, "IP");
+  assert.equal(restored.ownNameRu, "«Север»");
+  assert.equal(restored.ownNameKz, "«Солтүстік»");
+  assert.equal(next.employerId, "known");
+  assert.equal(next.employerBin, "123");
+  assert.equal(next.workplaceEn, person.workplaceEn);
+  assert.doesNotThrow(() => applyRecipientOrganization(next, restored));
+});
+
+test("stale formatting hints cannot overwrite independent manual RU or KZ edits", () => {
+  const next = applyRecipientOrganization(newRecipient(), {
+    legalForm: "TOO",
+    ownNameRu: "Север",
+    ownNameKz: "Солтүстік",
+    nameRu: "",
+    nameKz: "",
+  });
+  for (const patch of [
+    { workplaceRu: "Своя строка" },
+    { workplaceKz: "Өз атауы" },
+  ]) {
+    const edited = { ...next, ...patch };
+    const display = recipientOrganizationDraft(edited);
+    assert.equal(display.legalForm, null);
+    assert.equal(display.nameRu, edited.workplaceRu);
+    assert.equal(display.nameKz, edited.workplaceKz);
+  }
+});
+
+test("a blank inline name retains an explicit form choice without creating an organization", () => {
+  const empty = editRecipientOrganization(newRecipient(), {
+    legalForm: "IP",
+    ownNameRu: "",
+    ownNameKz: "",
+    nameRu: "",
+    nameKz: "",
+  });
+  assert.equal(empty.employerId, undefined);
+  assert.equal(recipientOrganizationDraft(empty).legalForm, "IP");
+  assert.equal(empty.workplaceRu, "");
+  assert.equal(empty.workplaceKz, "");
+});
+
+test("unlinking the directory preserves document names, formatting choice and local requisites", () => {
+  const linked = applyRecipientOrganization(
+    {
+      ...newRecipient(),
+      employerId: "old",
+      employerBin: "123",
+      employerAddressRu: "Адрес",
+      departmentRu: "Цех",
+    },
+    {
+      legalForm: "IP",
+      ownNameRu: "Север",
+      ownNameKz: "",
+      nameRu: "",
+      nameKz: "",
+    },
+  );
+  const unlinked = detachRecipientEmployer(linked);
+  assert.equal(unlinked.employerId, undefined);
+  assert.equal(unlinked.workplaceRu, linked.workplaceRu);
+  assert.equal(unlinked.workplaceKz, linked.workplaceKz);
+  assert.deepEqual(unlinked.workplaceNaming, linked.workplaceNaming);
+  assert.equal(unlinked.employerBin, "123");
+  assert.equal(unlinked.employerAddressRu, "Адрес");
+  assert.equal(unlinked.departmentRu, "Цех");
+  assert.equal(linked.employerId, "old");
 });

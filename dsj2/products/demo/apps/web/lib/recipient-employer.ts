@@ -1,4 +1,8 @@
-import { customerSchema, type OrganizationNames } from "@demo/contracts";
+import {
+  customerSchema,
+  formatOrganizationNames,
+  type OrganizationNames,
+} from "@demo/contracts";
 import type { Customer, Recipient } from "./types";
 
 /** Both languages describe one effective employer; a local exception never borrows the other employer's name. */
@@ -78,6 +82,7 @@ export function patchRecipientEmployer(
     employerBin: employer.bin,
     employerAddressRu: employer.addressRu,
     employerAddressKz: employer.addressKz,
+    workplaceNaming: organizationNamingHint(employer),
   };
 }
 
@@ -139,6 +144,27 @@ export function supplementRecipientEmployer(
 export function recipientOrganizationDraft(
   recipient: Recipient,
 ): OrganizationNames {
+  const hint = recipient.workplaceNaming;
+  if (hint?.version === 1) {
+    const names = formatOrganizationNames(
+      hint.legalForm,
+      hint.ownNameRu,
+      hint.ownNameKz,
+    );
+    if (
+      !names.issue &&
+      names.nameRu === recipient.workplaceRu &&
+      names.nameKz === recipient.workplaceKz
+    ) {
+      return {
+        legalForm: hint.legalForm,
+        ownNameRu: hint.ownNameRu,
+        ownNameKz: hint.ownNameKz,
+        nameRu: recipient.workplaceRu,
+        nameKz: recipient.workplaceKz,
+      };
+    }
+  }
   const hasName = !!(recipient.workplaceRu || recipient.workplaceKz);
   return {
     legalForm: hasName ? null : "NONE",
@@ -155,5 +181,40 @@ export function applyRecipientOrganization(
   value: OrganizationNames,
 ): Recipient {
   const names = customerSchema.parse(value);
-  return { ...recipient, workplaceRu: names.nameRu, workplaceKz: names.nameKz };
+  return editRecipientOrganization(recipient, names);
+}
+
+/** Formatting state is a hint only; literal document names always remain authoritative. */
+function organizationNamingHint(
+  value: OrganizationNames,
+): Recipient["workplaceNaming"] {
+  if (!value.legalForm) return undefined;
+  const ownNameRu = value.ownNameRu || "";
+  const ownNameKz = value.ownNameKz || "";
+  const names = formatOrganizationNames(value.legalForm, ownNameRu, ownNameKz);
+  if (
+    names.issue ||
+    names.nameRu !== value.nameRu ||
+    names.nameKz !== value.nameKz
+  )
+    return undefined;
+  return { version: 1, legalForm: value.legalForm, ownNameRu, ownNameKz };
+}
+
+/** Allow an unfinished inline draft; creating a directory record still validates customerSchema. */
+export function editRecipientOrganization(
+  recipient: Recipient,
+  value: OrganizationNames,
+): Recipient {
+  return {
+    ...recipient,
+    workplaceRu: value.nameRu,
+    workplaceKz: value.nameKz,
+    workplaceNaming: organizationNamingHint(value),
+  };
+}
+
+export function detachRecipientEmployer(recipient: Recipient): Recipient {
+  const { employerId: _employerId, ...rest } = recipient;
+  return rest;
 }

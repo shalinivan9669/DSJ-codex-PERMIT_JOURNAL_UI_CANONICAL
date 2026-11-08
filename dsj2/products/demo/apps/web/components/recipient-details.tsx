@@ -176,7 +176,6 @@ export function RecipientDetails({
     let focusFrame = 0;
     function revealField(path: string) {
       if (!path?.startsWith(`items.${rowIndex}.`)) return;
-      consumedFocusPath.current = `${recipient.id}:${path}`;
       const assignmentPath = path
         .slice(`items.${rowIndex}.`.length)
         .match(/^assignments\.(\d+)(?:\.(.+))?$/);
@@ -221,6 +220,10 @@ export function RecipientDetails({
             ancestor = ancestor.parentElement;
           }
           input?.focus();
+          // A refresh may cancel the scheduled frames. Consume only actual focus,
+          // so the next effect can still reveal an issue after its tab mounts.
+          if (input && document.activeElement === input)
+            consumedFocusPath.current = `${recipient.id}:${path}`;
           input?.scrollIntoView({ block: "center" });
         });
       });

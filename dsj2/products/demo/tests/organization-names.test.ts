@@ -4,6 +4,7 @@ import {
   customerSchema,
   formatOrganizationNames,
   itemSchema,
+  draftSchema,
   organizationOwnName,
 } from "../packages/contracts/src";
 
@@ -129,4 +130,68 @@ test("name contract rejects unknown forms, unnamed organizations and overflow af
     assert.equal(customerSchema.safeParse(input).success, false);
   assert.equal(formatOrganizationNames("TOO", "").nameRu, "");
   assert.equal(formatOrganizationNames("TOO", "").nameKz, "");
+});
+
+test("optional workplace naming survives draft JSON without changing full names or legacy rows", () => {
+  const legacy = itemSchema.parse({
+    id: "legacy",
+    workplaceRu: "ИП/ЖК как импортировано",
+    workplaceKz: "  Бастапқы жол  ",
+  });
+  const hint = {
+    version: 1,
+    legalForm: "IP",
+    ownNameRu: "Северный сервис",
+    ownNameKz: "Солтүстік қызмет",
+  };
+  const item = itemSchema.parse({
+    id: "person",
+    workplaceRu: "ИП Северный сервис",
+    workplaceKz: "Солтүстік қызмет ЖК",
+    workplaceEn: "Independent workplace wording",
+    employerId: "same-employer",
+    employerBin: "000000000099",
+    workplaceNaming: hint,
+  });
+  const draft = draftSchema.parse({ kind: "PERSON", items: [legacy, item] });
+  assert.deepEqual(draftSchema.parse(JSON.parse(JSON.stringify(draft))), draft);
+  assert.equal("workplaceNaming" in draft.items[0], false);
+  assert.deepEqual(draft.items[0], legacy);
+  assert.deepEqual(draft.items[1].workplaceNaming, hint);
+  const manual = itemSchema.parse({
+    ...item,
+    workplaceRu: "Ручная строка",
+    workplaceKz: "",
+  });
+  assert.equal(manual.workplaceRu, "Ручная строка");
+  assert.equal(manual.workplaceKz, "");
+  assert.equal(manual.workplaceEn, item.workplaceEn);
+  assert.equal(manual.employerId, item.employerId);
+  assert.equal(manual.employerBin, item.employerBin);
+  assert.deepEqual(
+    manual.workplaceNaming,
+    hint,
+    "stale editor metadata never rewrites authoritative manual names",
+  );
+});
+
+test("workplace naming is a bounded explicit hint, not an inferred legal identity", () => {
+  const valid = { version: 1, legalForm: "TOO", ownNameRu: "", ownNameKz: "" };
+  assert.equal(
+    itemSchema.safeParse({ id: "draft", workplaceNaming: valid }).success,
+    true,
+  );
+  for (const workplaceNaming of [
+    { ...valid, version: 2 },
+    { ...valid, legalForm: "LLC" },
+    { ...valid, legalForm: null },
+    { ...valid, ownNameRu: "x".repeat(501) },
+    { ...valid, ownNameKz: "x".repeat(501) },
+    { ...valid, userId: "not-a-workplace-field" },
+    { legalForm: "TOO", ownNameRu: "", ownNameKz: "" },
+  ])
+    assert.equal(
+      itemSchema.safeParse({ id: "draft", workplaceNaming }).success,
+      false,
+    );
 });

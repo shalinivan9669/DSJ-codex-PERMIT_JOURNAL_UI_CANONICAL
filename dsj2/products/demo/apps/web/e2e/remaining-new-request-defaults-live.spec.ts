@@ -90,7 +90,7 @@ test("ordinary new request keeps positive BIOT PTM PB defaults and saved BIOT 10
     });
     await expect(employer).toBeVisible();
     await employer
-      .getByLabel("Место работы", { exact: true })
+      .getByLabel("Название работодателя · RU", { exact: true })
       .fill("СИНТЕТИЧЕСКОЕ предприятие локальной проверки");
     await page.getByRole("button", { name: "Готово", exact: true }).click();
     await expect

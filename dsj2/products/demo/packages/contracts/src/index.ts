@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { BIOT_CATEGORIES, biotCategoryIds, biotValidUntil } from "./biot";
 import { dateOriginsSchema, trainingDateRuleSchema } from "./date-calculation";
-import { customerSchema, organizationFormSchema } from "./organization";
+import {
+  customerSchema,
+  organizationFormSchema,
+  workplaceNamingSchema,
+} from "./organization";
 import { documentPlan } from "./resolution";
 import { validateBusinessRules } from "./business-rules";
 import { isBlankText } from "./blank-text";
@@ -359,6 +363,7 @@ export const itemSchema = z
     workplaceRu: text,
     workplaceKz: text,
     workplaceEn: optionalText,
+    workplaceNaming: workplaceNamingSchema.optional(),
     departmentRu: optionalText,
     departmentKz: optionalText,
     departmentEn: optionalText,

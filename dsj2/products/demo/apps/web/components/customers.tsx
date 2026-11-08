@@ -1,10 +1,12 @@
 "use client";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { customerSchema } from "@demo/contracts";
 import { Icon, Modal, Notice } from "@demo/ui";
-import { api, json } from "@/lib/api";
+import { ApiError, api, json } from "@/lib/api";
 import type { AppContext, Customer, Page } from "@/lib/types";
 import { OrganizationNameFields } from "./organization-name-fields";
 import { useCabinetLanguage, useCabinetError } from "./cabinet-language";
+import { initialCustomerDraft } from "@/lib/customer-draft";
 const emptyCustomer = {
   nameRu: "",
   nameKz: "",
@@ -40,7 +42,10 @@ export function Customers({ context }: { context: AppContext }) {
           }
         })
         .catch((caught) => {
-          if (active) { setError(caught); setRows({ items: [], total: 0 }); }
+          if (active) {
+            setError(caught);
+            setRows({ items: [], total: 0 });
+          }
         })
         .finally(() => {
           if (active) setLoading(false);
@@ -100,7 +105,11 @@ export function Customers({ context }: { context: AppContext }) {
             </button>
           )}
           <span className="count muted" role="status">
-            {loading ? t("Загружаем заказчиков…", "Тапсырыс берушілер жүктелуде…") : error ? t("Список не загружен", "Тізім жүктелмеді") : `${t("Всего", "Барлығы")}: ${rows.total}`}
+            {loading
+              ? t("Загружаем заказчиков…", "Тапсырыс берушілер жүктелуде…")
+              : error
+                ? t("Список не загружен", "Тізім жүктелмеді")
+                : `${t("Всего", "Барлығы")}: ${rows.total}`}
           </span>
         </div>
         <div className="table-scroll" aria-busy={loading}>
@@ -123,7 +132,11 @@ export function Customers({ context }: { context: AppContext }) {
                   </td>
                   <td>{customer.nameKz || "—"}</td>
                   <td>{customer.bin || "—"}</td>
-                  <td>{customer.archived ? t("В архиве", "Мұрағатта") : t("Активен", "Белсенді")}</td>
+                  <td>
+                    {customer.archived
+                      ? t("В архиве", "Мұрағатта")
+                      : t("Активен", "Белсенді")}
+                  </td>
                   <td>
                     {context.user.role !== "VIEWER" && (
                       <button onClick={() => setEdit(customer)}>
@@ -139,11 +152,21 @@ export function Customers({ context }: { context: AppContext }) {
         {!rows.items.length && !loading && !error && (
           <div className="empty-state">
             <Icon name="company" size={36} />
-            <h2>{search ? t("Заказчики не найдены", "Тапсырыс берушілер табылмады") : t("Заказчиков ещё нет", "Тапсырыс берушілер әлі жоқ")}</h2>
+            <h2>
+              {search
+                ? t("Заказчики не найдены", "Тапсырыс берушілер табылмады")
+                : t("Заказчиков ещё нет", "Тапсырыс берушілер әлі жоқ")}
+            </h2>
             <p>
               {search
-                ? t("Попробуйте другое название или БИН либо сбросьте поиск.", "Басқа атауды немесе БСН енгізіңіз не іздеуді тазалаңыз.")
-                : t("Добавьте реквизиты организации один раз и выбирайте её в заявках.", "Ұйым деректемелерін бір рет қосып, өтінімдерде таңдаңыз.")}
+                ? t(
+                    "Попробуйте другое название или БИН либо сбросьте поиск.",
+                    "Басқа атауды немесе БСН енгізіңіз не іздеуді тазалаңыз.",
+                  )
+                : t(
+                    "Добавьте реквизиты организации один раз и выбирайте её в заявках.",
+                    "Ұйым деректемелерін бір рет қосып, өтінімдерде таңдаңыз.",
+                  )}
             </p>
             {search ? (
               <button
@@ -170,7 +193,8 @@ export function Customers({ context }: { context: AppContext }) {
         )}
         <div className="pagination">
           <span>
-            {t("Страница", "Бет")} {page} / {Math.max(1, Math.ceil(rows.total / 20))}
+            {t("Страница", "Бет")} {page} /{" "}
+            {Math.max(1, Math.ceil(rows.total / 20))}
           </span>
           <div>
             <button
@@ -211,116 +235,202 @@ export function CustomerDialog({
   onSaved: (customer: Customer) => void;
 }) {
   const t = useCabinetLanguage();
-  const [value, setValue] = useState(() => ({
-    ...emptyCustomer,
-    ...customer,
-    legalForm: customer.id
-      ? (customer.legalForm ?? null)
-      : (customer.legalForm ?? "NONE"),
-    ownNameRu: customer.id
-      ? (customer.ownNameRu ?? null)
-      : (customer.ownNameRu ?? ""),
-    ownNameKz: customer.id
-      ? (customer.ownNameKz ?? null)
-      : (customer.ownNameKz ?? ""),
-  }));
+  const [value, setValue] = useState(() => initialCustomerDraft(customer));
   const [busy, setBusy] = useState(false);
+  const saving = useRef(false);
+  const creationAttempt = useRef<{ key: string; body: string } | null>(null);
+  const [uncertain, setUncertain] = useState(false);
+  const [attempted, setAttempted] = useState(false);
   const [error, setError] = useCabinetError();
-  async function save(event: FormEvent) {
+  async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setBusy(true);
+    if (saving.current) return;
     setError("");
+    setAttempted(true);
+    const {
+      nameRu,
+      nameKz,
+      legalForm,
+      ownNameRu,
+      ownNameKz,
+      bin,
+      addressRu,
+      addressKz,
+      city,
+      archived,
+    } = value;
+    const parsed = customerSchema.safeParse({
+      nameRu,
+      nameKz,
+      legalForm,
+      ownNameRu,
+      ownNameKz,
+      bin,
+      addressRu,
+      addressKz,
+      city,
+      archived,
+    });
+    if (!parsed.success) {
+      const issue = parsed.error.issues[0];
+      setError(
+        issue?.message ||
+          t("Проверьте название компании.", "Компания атауын тексеріңіз."),
+      );
+      const path = issue?.path[0];
+      if (typeof path === "string") {
+        const input = event.currentTarget.querySelector<HTMLInputElement>(
+          `[data-field-path="${path}"]`,
+        );
+        const details = input?.closest("details");
+        if (details) details.open = true;
+        input?.focus();
+      }
+      return;
+    }
+    saving.current = true;
+    setBusy(true);
+    if (!customer.id)
+      creationAttempt.current ||= {
+        key: crypto.randomUUID(),
+        body: json(parsed.data),
+      };
+    let result: Customer;
     try {
-      const {
-        nameRu,
-        nameKz,
-        legalForm,
-        ownNameRu,
-        ownNameKz,
-        bin,
-        addressRu,
-        addressKz,
-        city,
-        archived,
-      } = value;
-      const result = await api<Customer>(
+      result = await api<Customer>(
         customer.id ? `/customers/${customer.id}` : "/customers",
         {
           method: customer.id ? "PATCH" : "POST",
-          body: json({
-            nameRu,
-            nameKz,
-            legalForm,
-            ownNameRu,
-            ownNameKz,
-            bin,
-            addressRu,
-            addressKz,
-            city,
-            archived,
-          }),
+          ...(!customer.id && creationAttempt.current
+            ? {
+                headers: { "Idempotency-Key": creationAttempt.current.key },
+                body: creationAttempt.current.body,
+              }
+            : { body: json(parsed.data) }),
         },
       );
-      onSaved(result);
+      if (!customer.id && !result?.id)
+        throw new ApiError(
+          0,
+          t(
+            "Не удалось получить подтверждение создания организации. Проверьте сохранение.",
+            "Ұйымның құрылғаны туралы растау алынбады. Сақталуын тексеріңіз.",
+          ),
+        );
     } catch (caught) {
+      if (!customer.id) {
+        const unknown =
+          caught instanceof ApiError &&
+          (caught.status === 0 || caught.status >= 500);
+        setUncertain(unknown);
+        if (!unknown) creationAttempt.current = null;
+      }
       setError(caught);
+      return;
     } finally {
+      saving.current = false;
       setBusy(false);
     }
+    creationAttempt.current = null;
+    setUncertain(false);
+    onSaved(result);
   }
   return (
     <Modal
-      title={customer.id ? t("Реквизиты организации", "Ұйым деректемелері") : t("Новая организация", "Жаңа ұйым")}
-      onClose={() => { if (!busy) onClose(); }}
+      title={
+        customer.id
+          ? t("Реквизиты организации", "Ұйым деректемелері")
+          : t("Новая организация", "Жаңа ұйым")
+      }
+      onClose={() => {
+        if (!busy && !uncertain) onClose();
+      }}
     >
       <form onSubmit={save}>
         {error && <Notice>{error}</Notice>}
-        <OrganizationNameFields
-          value={value}
-          onChange={(names) => setValue({ ...value, ...names })}
-        />
-        <details className="customer-extra-fields">
-          <summary>{t("Дополнительные реквизиты", "Қосымша деректемелер")}</summary>
-          <p className="fine-print">
-            {t("БИН и адрес можно добавить сейчас или позже.", "БСН мен мекенжайды қазір немесе кейін қосуға болады.")}
-          </p>
-          <div className="form-grid">
-            {[
-              ["bin", t("БИН", "БСН")],
-              ["addressRu", t("Адрес на русском", "Орыс тіліндегі мекенжай")],
-              ["addressKz", t("Адрес на казахском", "Қазақ тіліндегі мекенжай")],
-              ["city", t("Город (подтверждённый)", "Қала (расталған)")],
-            ].map(([key, label]) => (
-              <label key={key}>
-                {label}
-                <input
-                  value={String(value[key as keyof typeof value] || "")}
-                  onChange={(event) =>
-                    setValue({ ...value, [key]: event.target.value })
-                  }
-                />
-              </label>
-            ))}
-          </div>
-        </details>
-        {customer.id && (
-          <label className="checkbox">
-            <input
-              type="checkbox"
-              checked={value.archived}
-              onChange={(event) =>
-                setValue({ ...value, archived: event.target.checked })
-              }
-            />
-            {t("Перенести в архив", "Мұрағатқа көшіру")}
-          </label>
+        {uncertain && (
+          <Notice kind="info">
+            {t(
+              "Ответ сервера не получен. Нажмите «Проверить сохранение»: повтор проверит ту же организацию без создания дубля. До проверки поля и закрытие окна заблокированы.",
+              "Сервер жауабы алынбады. «Сақталуын тексеру» түймесін басыңыз: қайталау сол ұйымды көшірмесін жасамай тексереді. Тексеруге дейін өрістер мен терезені жабу бұғатталған.",
+            )}
+          </Notice>
         )}
+        <fieldset
+          disabled={busy || uncertain}
+          className="stack"
+          style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}
+        >
+          <legend className="sr-only">
+            {t("Реквизиты организации", "Ұйым деректемелері")}
+          </legend>
+          <OrganizationNameFields
+            value={value}
+            onChange={(names) => setValue({ ...value, ...names })}
+            disabled={busy || uncertain}
+            showRequiredErrors={attempted}
+            fieldPaths={
+              value.legalForm
+                ? ["ownNameRu", "ownNameKz"]
+                : ["nameRu", "nameKz"]
+            }
+          />
+          <details className="customer-extra-fields">
+            <summary>
+              {t("Дополнительные реквизиты", "Қосымша деректемелер")}
+            </summary>
+            <p className="fine-print">
+              {t(
+                "БИН и адрес можно добавить сейчас или позже.",
+                "БСН мен мекенжайды қазір немесе кейін қосуға болады.",
+              )}
+            </p>
+            <div className="form-grid">
+              {[
+                ["bin", t("БИН", "БСН")],
+                ["addressRu", t("Адрес на русском", "Орыс тіліндегі мекенжай")],
+                [
+                  "addressKz",
+                  t("Адрес на казахском", "Қазақ тіліндегі мекенжай"),
+                ],
+                ["city", t("Город (подтверждённый)", "Қала (расталған)")],
+              ].map(([key, label]) => (
+                <label key={key}>
+                  {label}
+                  <input
+                    data-field-path={key}
+                    value={String(value[key as keyof typeof value] || "")}
+                    onChange={(event) =>
+                      setValue({ ...value, [key]: event.target.value })
+                    }
+                  />
+                </label>
+              ))}
+            </div>
+          </details>
+          {customer.id && (
+            <label className="checkbox">
+              <input
+                type="checkbox"
+                checked={value.archived}
+                onChange={(event) =>
+                  setValue({ ...value, archived: event.target.checked })
+                }
+              />
+              {t("Перенести в архив", "Мұрағатқа көшіру")}
+            </label>
+          )}
+        </fieldset>
         <div className="modal-actions">
-          <button type="button" disabled={busy} onClick={onClose}>
+          <button type="button" disabled={busy || uncertain} onClick={onClose}>
             {t("Отмена", "Бас тарту")}
           </button>
           <button className="primary" disabled={busy}>
-            {busy ? t("Сохраняем…", "Сақталуда…") : t("Сохранить", "Сақтау")}
+            {busy
+              ? t("Сохраняем…", "Сақталуда…")
+              : uncertain
+                ? t("Проверить сохранение", "Сақталуын тексеру")
+                : t("Сохранить", "Сақтау")}
           </button>
         </div>
       </form>

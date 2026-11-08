@@ -68,6 +68,16 @@
 .person-employer-fields {
   margin-top: 20px;
 }
+.person-employer-fields,
+.person-summary-employer {
+  overflow-wrap: anywhere;
+}
+.person-summary-employer {
+  margin-block: 20px;
+}
+.person-summary-employer p {
+  margin-block: 8px;
+}
 .person-course-card {
   padding: 20px;
   border: 1px solid var(--line);

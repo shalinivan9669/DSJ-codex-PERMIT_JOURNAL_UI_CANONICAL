@@ -1,0 +1,102 @@
+{
+  "date": "2026-11-08",
+  "status": "LOCAL_EMPLOYER_PERSON_FLOW_VERIFIED",
+  "branch": "codex/korochki-commission-flow-20261108",
+  "previousCommit": "c697e83",
+  "scope": "Bilingual employer entry in personal requests in autonomous DEMO",
+  "implemented": [
+    "One visible employer block exposes legal form and RU/KZ names immediately, with formatted full names for documents.",
+    "Explicit IP/TOO/AO/NONE selection persists through request autosave, reload, recipient JSON and optional directory creation.",
+    "Optional versioned naming metadata is accepted only as a UI hint; existing full workplace names remain the authority and legacy names are never inferred or rewritten.",
+    "Directory selection, request-local name edits, and detaching the link have separate behavior; both local names and requisites are preserved on detach.",
+    "Failed lookup offers retry; delayed lookup cannot overwrite typed names, an explicit empty draft, or a newly selected form.",
+    "Creating a directory record is prefilled; an unknown POST outcome replays the same body and idempotency key with fields locked until confirmed.",
+    "The summary shows both employer names and a direct edit action; validation navigation waits until the target receives focus.",
+    "RU/KZ employer labels and feedback are localized and verified at 390px."
+  ],
+  "verification": {
+    "unit": {
+      "rootPassed": 327,
+      "webPassed": 295,
+      "failed": 0,
+      "skipped": 0
+    },
+    "browser": {
+      "uniqueScenariosPassed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "files": [
+        "apps/web/e2e/employer-person-live.spec.ts",
+        "apps/web/e2e/operator-person-flow.spec.ts",
+        "apps/web/e2e/shared-employer-feedback.spec.ts"
+      ],
+      "environment": "Local isolated PostgreSQL/API, synthetic tenants, Chromium desktop and 390px, RU/KZ",
+      "mainRunMs": 103804.945,
+      "companyRunMs": 19333.558,
+      "evidence": ".runtime/commission-flow/evidence/employer-verified-final/results.json",
+      "companyEvidence": ".runtime/commission-flow/evidence/employer-verified-final/company-results.json",
+      "harness": "Development hot-reload sockets blocked so source recompilation cannot reset a browser scenario. Assertions retained; final clean run has no retries or failures."
+    },
+    "integration": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "file": "tests/integration/employer-name-metadata.test.ts",
+      "runnerMs": 2178.97,
+      "scope": "Real request autosave/reload and Recipient JSON roundtrip; literal names remain authoritative with stale metadata"
+    },
+    "documentEvidence": {
+      "rendererVersion": "demo-ooxml-13/libreoffice-26.2.6.3",
+      "protocolVariants": [
+        "biot-protocol",
+        "biot-itr-protocol"
+      ],
+      "protocolSpecimens": "Two real DOCX/PDF pairs; each PDF one page; paired employer names verified in header and roster",
+      "protocolManifest": ".runtime/commission-flow/employer-form-render/EMPLOYER_RENDER_CHECKS.json",
+      "uiToIssuance": "Real worker-generated BiOT card and protocol from UI-entered bilingual IP employer, frozen snapshot and PDF hashes unchanged after later directory edit",
+      "issuanceManifest": ".runtime/commission-flow/evidence/employer-verified-final/bilingual-pdf-manifest.json",
+      "pagesReviewed": 3
+    },
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "uiDetectorFindings": 0,
+    "visualReview": "Final RU/KZ mobile fields, linked desktop form, one-page real protocol and both real card pages inspected; paired employer names correct, no clipping or overlap.",
+    "buildEnvironment": "Local Windows production compilation, separate .next-employer-final-build directory, DEMO_STANDALONE=0; deployment configuration unchanged."
+  },
+  "measuredRecovery": {
+    "lostAcceptedDirectoryCreate": {
+      "identicalAttempts": 2,
+      "directoryRecords": 1
+    },
+    "delayedLookupPreservesLocalInput": true,
+    "delayedLookupPreservesSelectedFormAndEmptyDraft": true,
+    "preparedDirectoryEmployer": {
+      "clicks": 2,
+      "retypedNamesOrRequisites": 0
+    },
+    "prefilledDirectoryCreate": {
+      "retypedNames": 0
+    },
+    "summaryEdit": {
+      "clicks": 1,
+      "focusedField": "workplaceRu"
+    }
+  },
+  "preserved": [
+    "Tenant/auth checks",
+    "Original document files and numbering",
+    "Existing frozen issuances",
+    "Database schema and applied migrations",
+    "Legacy literal employer names"
+  ],
+  "limits": {
+    "productionDeployment": "NOT_PERFORMED",
+    "productionDataChanged": false,
+    "physicalIphoneSafari": "NOT_TESTED",
+    "physicalPrinting": "NOT_PERFORMED",
+    "fullHistoricalIntegrationAndRenderSuites": "NOT_RUN"
+  },
+  "runtime": "Owned API 4168, web 3168 and disposable PostgreSQL 55468 stopped; listeners verified absent; fixture data and logs retained."
+}

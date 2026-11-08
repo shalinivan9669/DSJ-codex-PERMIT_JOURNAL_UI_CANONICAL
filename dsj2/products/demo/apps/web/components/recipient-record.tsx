@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { Notice } from "@demo/ui";
 import { customerSchema, type OrganizationNames } from "@demo/contracts";
@@ -7,12 +7,16 @@ import { api, errorText, json } from "@/lib/api";
 import type { Recipient, Customer } from "@/lib/types";
 import {
   applyRecipientOrganization,
+  detachRecipientEmployer,
+  editRecipientOrganization,
   patchRecipientEmployer,
   recipientOrganizationDraft,
+  supplementRecipientEmployer,
 } from "@/lib/recipient-employer";
 import { RecordPicker } from "./record-picker";
 import { CustomerDialog } from "./customers";
 import { OrganizationNameFields } from "./organization-name-fields";
+import { useCabinetLanguage, useCabinetText } from "./cabinet-language";
 type History = {
   employment: {
     id: string;
@@ -30,6 +34,8 @@ export function RecipientRecord({
   rowIndex,
   fieldErrors = {},
   fieldHints = {},
+  inlineEmployer = false,
+  children,
 }: {
   recipient: Recipient;
   disabled: boolean;
@@ -37,9 +43,30 @@ export function RecipientRecord({
   rowIndex?: number;
   fieldErrors?: Record<string, string>;
   fieldHints?: Record<string, string>;
+  inlineEmployer?: boolean;
+  children?: ReactNode;
 }) {
+  const t = useCabinetLanguage();
+  const tr = useCabinetText();
+  const latest = useRef(recipient);
+  latest.current = recipient;
+  const editable = useRef(!disabled);
+  editable.current = !disabled;
+  const employerEditGeneration = useRef(0);
+  const changed = useRef(onChange);
+  changed.current = onChange;
+  const [inlineNames, setInlineNames] = useState(() =>
+    recipientOrganizationDraft(recipient),
+  );
+  const lastInlineNames = useRef([
+    recipient.workplaceRu,
+    recipient.workplaceKz,
+  ]);
   const [history, setHistory] = useState<History | null>(null);
   const [employer, setEmployer] = useState<Customer | null>(null);
+  const [employerError, setEmployerError] = useState("");
+  const [employerLoading, setEmployerLoading] = useState(false);
+  const [employerReload, setEmployerReload] = useState(0);
   const [employerNames, setEmployerNames] = useState<Record<string, string>>(
     {},
   );
@@ -52,6 +79,20 @@ export function RecipientRecord({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   useEffect(() => {
+    if (
+      lastInlineNames.current[0] !== recipient.workplaceRu ||
+      lastInlineNames.current[1] !== recipient.workplaceKz
+    ) {
+      setInlineNames(recipientOrganizationDraft(recipient));
+      lastInlineNames.current = [recipient.workplaceRu, recipient.workplaceKz];
+    }
+  }, [
+    recipient.id,
+    recipient.workplaceRu,
+    recipient.workplaceKz,
+    recipient.workplaceNaming,
+  ]);
+  useEffect(() => {
     setSuccess("");
     setError("");
     setNameDraft(null);
@@ -59,8 +100,11 @@ export function RecipientRecord({
   }, [recipient.id, recipient.employerId]);
   useEffect(() => {
     let active = true;
+    const editGeneration = employerEditGeneration.current;
     setHistory(null);
     setEmployer(null);
+    setEmployerError("");
+    setEmployerLoading(!!recipient.employerId);
     setConfirmed(false);
     if (recipient.recipientId)
       void api<History>(`/recipients/${recipient.recipientId}`)
@@ -73,15 +117,45 @@ export function RecipientRecord({
     if (recipient.employerId)
       void api<Customer>(`/customers/${recipient.employerId}`)
         .then((r) => {
-          if (active) setEmployer(r);
+          if (active) {
+            setEmployer(r);
+            const current = latest.current;
+            if (
+              inlineEmployer &&
+              editable.current &&
+              employerEditGeneration.current === editGeneration &&
+              current.employerId === r.id &&
+              !current.workplaceRu.trim() &&
+              !current.workplaceKz.trim()
+            ) {
+              const supplemented = supplementRecipientEmployer(current, r);
+              if (supplemented !== current) {
+                const names = recipientOrganizationDraft(
+                  patchRecipientEmployer(current, r),
+                );
+                const next = editRecipientOrganization(supplemented, names);
+                setInlineNames(names);
+                lastInlineNames.current = [next.workplaceRu, next.workplaceKz];
+                changed.current(next);
+              }
+            }
+          }
         })
         .catch((c) => {
-          if (active) setError(errorText(c));
+          if (active) setEmployerError(errorText(c));
+        })
+        .finally(() => {
+          if (active) setEmployerLoading(false);
         });
     return () => {
       active = false;
     };
-  }, [recipient.id, recipient.recipientId, recipient.employerId]);
+  }, [
+    recipient.id,
+    recipient.recipientId,
+    recipient.employerId,
+    employerReload,
+  ]);
   useEffect(() => {
     let active = true;
     setEmployerNames({});
@@ -138,7 +212,10 @@ export function RecipientRecord({
     setCreateEmployer(false);
     setNameDraft(null);
     setConfirmed(false);
-    onChange(patchRecipientEmployer(recipient, value));
+    const next = patchRecipientEmployer(latest.current, value);
+    setInlineNames(recipientOrganizationDraft(next));
+    lastInlineNames.current = [next.workplaceRu, next.workplaceKz];
+    onChange(next);
   }
   return (
     <>
@@ -148,9 +225,24 @@ export function RecipientRecord({
       >
         <div className="section-heading">
           <div>
-            <h4>Организация / работодатель</h4>
-            <p>{recipient.workplaceRu || employer?.nameRu || "Не указан"}</p>
-            {recipient.workplaceKz && <small>{recipient.workplaceKz}</small>}
+            {inlineEmployer ? (
+              <h3>
+                {t(
+                  "Работодатель для документов",
+                  "Құжаттарға арналған жұмыс беруші",
+                )}
+              </h3>
+            ) : (
+              <>
+                <h4>Организация / работодатель</h4>
+                <p>
+                  {recipient.workplaceRu || employer?.nameRu || "Не указан"}
+                </p>
+                {recipient.workplaceKz && (
+                  <small>{recipient.workplaceKz}</small>
+                )}
+              </>
+            )}
           </div>
         </div>
         <div className="toolbar-actions">
@@ -159,30 +251,155 @@ export function RecipientRecord({
             disabled={disabled}
             onClick={() => setPicker(true)}
           >
-            Выбрать работодателя
+            {tr("Выбрать работодателя")}
           </button>
           <button
             type="button"
             disabled={disabled}
             onClick={() => setCreateEmployer(true)}
           >
-            Добавить организацию работодателя
+            {inlineEmployer
+              ? t(
+                  recipient.employerId
+                    ? "Создать другую организацию"
+                    : "Сохранить работодателя в справочник",
+                  recipient.employerId
+                    ? "Басқа ұйым құру"
+                    : "Жұмыс берушіні анықтамалыққа сақтау",
+                )
+              : "Добавить организацию работодателя"}
           </button>
-          <button
-            type="button"
-            className="text-button"
-            disabled={disabled}
-            onClick={() => {
-              setNameDraft(recipientOrganizationDraft(recipient));
-              setNameError("");
-            }}
-          >
-            Ввести название для документов
-          </button>
+          {!inlineEmployer && (
+            <button
+              type="button"
+              className="text-button"
+              disabled={disabled}
+              onClick={() => {
+                setNameDraft(recipientOrganizationDraft(recipient));
+                setNameError("");
+              }}
+            >
+              Ввести название для документов
+            </button>
+          )}
         </div>
+        {inlineEmployer && (
+          <>
+            {employerError && (
+              <Notice>
+                {t(
+                  "Не удалось загрузить карточку работодателя. Введённые названия остаются на экране.",
+                  "Жұмыс берушінің карточкасын жүктеу мүмкін болмады. Енгізілген атаулар экранда қалады.",
+                )}
+                <div className="toolbar-actions">
+                  <button
+                    type="button"
+                    disabled={employerLoading}
+                    onClick={() => setEmployerReload((value) => value + 1)}
+                  >
+                    {tr("Повторить загрузку")}
+                  </button>
+                </div>
+              </Notice>
+            )}
+            <p className="fine-print">
+              {t(
+                "Выберите из справочника или введите название здесь. Оно сразу попадёт в документы этой заявки.",
+                "Анықтамалықтан таңдаңыз немесе атауды осында енгізіңіз. Ол осы өтінімнің құжаттарына бірден түседі.",
+              )}
+            </p>
+            {recipient.employerId && (
+              <p className="fine-print">
+                {t("Связь со справочником", "Анықтамалықпен байланыс")}:{" "}
+                {employer?.nameRu ||
+                  (employerError
+                    ? t("Карточка недоступна", "Карточка қолжетімсіз")
+                    : t("Загружаем работодателя…", "Жұмыс беруші жүктелуде…"))}
+                .{" "}
+                {t(
+                  "Изменение названий ниже действует только в этой заявке.",
+                  "Төмендегі атауларды өзгерту тек осы өтінімге қолданылады.",
+                )}{" "}
+                <button
+                  type="button"
+                  className="text-button"
+                  disabled={disabled}
+                  onClick={() =>
+                    onChange(detachRecipientEmployer(latest.current))
+                  }
+                >
+                  {t(
+                    "Убрать связь со справочником",
+                    "Анықтамалықпен байланысты алып тастау",
+                  )}
+                </button>
+              </p>
+            )}
+            <OrganizationNameFields
+              value={inlineNames}
+              onChange={(value) => {
+                employerEditGeneration.current += 1;
+                setInlineNames(value);
+                const next = editRecipientOrganization(latest.current, value);
+                lastInlineNames.current = [next.workplaceRu, next.workplaceKz];
+                onChange(next);
+                setConfirmed(false);
+              }}
+              autoFocus={false}
+              disabled={disabled}
+              alwaysShowKz
+              compactHints
+              hideEmptyPreview
+              labels={{
+                legalForm: t("Форма работодателя", "Жұмыс берушінің нысаны"),
+                ownNameRu: t(
+                  "Название работодателя · RU",
+                  "Жұмыс берушінің атауы · RU",
+                ),
+                ownNameKz: t(
+                  "Название работодателя · KZ",
+                  "Жұмыс берушінің атауы · KZ",
+                ),
+              }}
+              legacyLabels={[
+                "Название работодателя · RU",
+                "Название работодателя · KZ",
+              ]}
+              fieldPaths={
+                rowIndex === undefined
+                  ? undefined
+                  : [
+                      `items.${rowIndex}.workplaceRu`,
+                      `items.${rowIndex}.workplaceKz`,
+                    ]
+              }
+              fieldErrors={
+                rowIndex === undefined
+                  ? undefined
+                  : [
+                      fieldErrors[`items.${rowIndex}.workplaceRu`],
+                      fieldErrors[`items.${rowIndex}.workplaceKz`],
+                    ]
+              }
+              fieldHints={
+                rowIndex === undefined
+                  ? undefined
+                  : [
+                      fieldHints[`items.${rowIndex}.workplaceRu`],
+                      fieldHints[`items.${rowIndex}.workplaceKz`],
+                    ]
+              }
+            />
+            {children}
+          </>
+        )}
         {nameDraft && (
           <div className="recipient-employer-name-editor">
-            <OrganizationNameFields value={nameDraft} onChange={setNameDraft} />
+            <OrganizationNameFields
+              value={nameDraft}
+              onChange={setNameDraft}
+              disabled={disabled}
+            />
             {nameError && <Notice>{nameError}</Notice>}
             {recipient.employerId && (
               <p className="fine-print">
@@ -219,8 +436,9 @@ export function RecipientRecord({
         )}
       </section>
       <details className="outcome-entry">
-        <summary>Постоянная запись, работодатель и история</summary>
+        <summary>{tr("Постоянная запись, работодатель и история")}</summary>
         {error && <Notice>{error}</Notice>}
+        {!inlineEmployer && employerError && <Notice>{employerError}</Notice>}
         {success && <Notice kind="success">{success}</Notice>}
         <p>
           {recipient.recipientId
@@ -337,7 +555,16 @@ export function RecipientRecord({
       )}
       {createEmployer && (
         <CustomerDialog
-          customer={{}}
+          customer={
+            inlineEmployer
+              ? {
+                  ...recipientOrganizationDraft(recipient),
+                  bin: recipient.employerBin || "",
+                  addressRu: recipient.employerAddressRu || "",
+                  addressKz: recipient.employerAddressKz || "",
+                }
+              : {}
+          }
           onClose={() => setCreateEmployer(false)}
           onSaved={chooseEmployer}
         />

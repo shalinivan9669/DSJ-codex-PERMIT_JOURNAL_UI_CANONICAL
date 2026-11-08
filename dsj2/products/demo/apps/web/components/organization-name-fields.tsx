@@ -18,16 +18,26 @@ export function OrganizationNameFields({
   compactHints = false,
   hideEmptyPreview = false,
   requestEntry = false,
+  alwaysShowKz = false,
+  fieldPaths,
+  fieldErrors,
+  fieldHints,
+  disabled = false,
 }: {
   value: OrganizationNames;
   onChange: (value: OrganizationNames) => void;
   legacyLabels?: readonly [string, string];
-  labels?: { legalForm?: string; ownNameRu?: string };
+  labels?: { legalForm?: string; ownNameRu?: string; ownNameKz?: string };
   autoFocus?: boolean;
   showRequiredErrors?: boolean;
   compactHints?: boolean;
   hideEmptyPreview?: boolean;
   requestEntry?: boolean;
+  alwaysShowKz?: boolean;
+  fieldPaths?: readonly [string, string];
+  fieldErrors?: readonly [string | undefined, string | undefined];
+  fieldHints?: readonly [string | undefined, string | undefined];
+  disabled?: boolean;
 }) {
   const tr = useCabinetText();
   const id = useId();
@@ -41,10 +51,21 @@ export function OrganizationNameFields({
     : null;
   const nameError =
     names?.issue ||
+    fieldErrors?.[0] ||
     (showRequiredErrors &&
     !(value.legalForm ? value.ownNameRu : value.nameRu)?.trim()
       ? tr("Введите название компании.")
       : "");
+  const ruFeedback = nameError || fieldHints?.[0];
+  const kzFeedback = fieldErrors?.[1] || fieldHints?.[1];
+  const kzDescription =
+    [
+      names?.issue && `${id}-error`,
+      kzFeedback && `${id}-kz-feedback`,
+      alwaysShowKz && value.legalForm && `${id}-kz-hint`,
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined;
   function update(ownNameRu: string, ownNameKz: string) {
     if (!value.legalForm) return;
     const computed = formatOrganizationNames(
@@ -65,6 +86,7 @@ export function OrganizationNameFields({
       <label>
         {labels?.legalForm || tr("Форма организации")}
         <select
+          disabled={disabled}
           value={value.legalForm || ""}
           aria-describedby={requestEntry ? undefined : `${id}-hint`}
           onChange={(event) => {
@@ -85,7 +107,7 @@ export function OrganizationNameFields({
               value.ownNameKz ?? value.nameKz,
             );
             const ownNameKz =
-              computed.ownNameKz === computed.ownNameRu
+              !alwaysShowKz && computed.ownNameKz === computed.ownNameRu
                 ? ""
                 : computed.ownNameKz;
             setDifferentKz(!!ownNameKz);
@@ -115,7 +137,9 @@ export function OrganizationNameFields({
             ? value.legalForm === "NONE"
               ? tr("Название сохранится как введено.")
               : tr("Введите название без ТОО, ИП, АО. Кавычки сохраняются.")
-            : tr("Название вводится один раз. Меняется только обозначение формы: ТОО / ЖШС, ИП / ЖК, АО / АҚ.")}
+            : tr(
+                "Название вводится один раз. Меняется только обозначение формы: ТОО / ЖШС, ИП / ЖК, АО / АҚ.",
+              )}
         </p>
       )}
       {value.legalForm ? (
@@ -123,13 +147,15 @@ export function OrganizationNameFields({
           <label>
             {labels?.ownNameRu || tr("Собственное наименование")}
             <input
+              disabled={disabled}
+              data-field-path={fieldPaths?.[0]}
               aria-label={labels?.ownNameRu || tr("Собственное наименование")}
               autoFocus={autoFocus}
               required
               maxLength={500}
               value={value.ownNameRu || ""}
               aria-invalid={!!nameError}
-              aria-describedby={nameError ? `${id}-error` : undefined}
+              aria-describedby={ruFeedback ? `${id}-error` : undefined}
               onChange={(event) =>
                 update(event.target.value, value.ownNameKz || "")
               }
@@ -137,68 +163,114 @@ export function OrganizationNameFields({
             {!compactHints && (
               <small>
                 {value.legalForm === "NONE"
-                  ? tr("Название сохраняется как введено. Обозначение формы не добавляется.")
-                  : tr("Без ТОО, ИП, АО. Кавычки сохраняются так, как вы их ввели.")}
+                  ? tr(
+                      "Название сохраняется как введено. Обозначение формы не добавляется.",
+                    )
+                  : tr(
+                      "Без ТОО, ИП, АО. Кавычки сохраняются так, как вы их ввели.",
+                    )}
               </small>
             )}
           </label>
-          {!requestEntry && (
-            <details
-              open={differentKz || undefined}
-              className="organization-extra-name"
-            >
-              <summary>{tr("Другое наименование на казахском")}</summary>
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={differentKz}
-                  onChange={(event) => {
-                    setDifferentKz(event.target.checked);
-                    if (!event.target.checked)
-                      update(value.ownNameRu || "", "");
-                  }}
-                />
-                {tr("Собственное наименование на казахском отличается")}</label>
-              {differentKz && (
-                <label>
-                  {tr("Собственное наименование · KZ")}<input
-                    required
-                    maxLength={500}
-                    value={value.ownNameKz || ""}
-                    aria-invalid={!!names?.issue}
-                    aria-describedby={names?.issue ? `${id}-error` : undefined}
-                    onChange={(event) =>
-                      update(value.ownNameRu || "", event.target.value)
-                    }
+          {alwaysShowKz ? (
+            <label>
+              {labels?.ownNameKz || tr("Собственное наименование · KZ")}
+              <input
+                disabled={disabled}
+                data-field-path={fieldPaths?.[1]}
+                aria-label={
+                  labels?.ownNameKz || tr("Собственное наименование · KZ")
+                }
+                maxLength={500}
+                value={value.ownNameKz || ""}
+                placeholder={value.ownNameRu || ""}
+                aria-invalid={!!names?.issue || !!fieldErrors?.[1]}
+                aria-describedby={kzDescription}
+                onChange={(event) =>
+                  update(value.ownNameRu || "", event.target.value)
+                }
+              />
+              <small id={`${id}-kz-hint`}>
+                {tr("Пусто — используем название RU.")}
+              </small>
+            </label>
+          ) : (
+            !requestEntry && (
+              <details
+                open={differentKz || undefined}
+                className="organization-extra-name"
+              >
+                <summary>{tr("Другое наименование на казахском")}</summary>
+                <label className="checkbox-label">
+                  <input
+                    disabled={disabled}
+                    type="checkbox"
+                    checked={differentKz}
+                    onChange={(event) => {
+                      setDifferentKz(event.target.checked);
+                      if (!event.target.checked)
+                        update(value.ownNameRu || "", "");
+                    }}
                   />
+                  {tr("Собственное наименование на казахском отличается")}
                 </label>
-              )}
-            </details>
+                {differentKz && (
+                  <label>
+                    {labels?.ownNameKz || tr("Собственное наименование · KZ")}
+                    <input
+                      disabled={disabled}
+                      data-field-path={fieldPaths?.[1]}
+                      required
+                      maxLength={500}
+                      value={value.ownNameKz || ""}
+                      aria-invalid={!!names?.issue || !!fieldErrors?.[1]}
+                      aria-describedby={kzDescription}
+                      onChange={(event) =>
+                        update(value.ownNameRu || "", event.target.value)
+                      }
+                    />
+                  </label>
+                )}
+              </details>
+            )
           )}
           {nameError && (
             <p className="field-error" id={`${id}-error`} role="alert">
               {tr(nameError)}
             </p>
           )}
+          {!nameError && fieldHints?.[0] && (
+            <p className="fine-print" id={`${id}-error`}>
+              {tr(fieldHints[0])}
+            </p>
+          )}
           {names?.normalized && !names.issue && (
             <p className="fine-print">
-              {tr("Отдельное обозначение выбранной формы распознано. В полном названии оно будет только один раз.")}</p>
+              {tr(
+                "Отдельное обозначение выбранной формы распознано. В полном названии оно будет только один раз.",
+              )}
+            </p>
           )}
         </>
       ) : (
         <>
           <p className="fine-print">
-            {tr("Старые или импортированные названия сохраняются без изменений. Чтобы разделить форму и имя, явно выберите форму и проверьте предпросмотр.")}</p>
+            {tr(
+              "Старые или импортированные названия сохраняются без изменений. Чтобы разделить форму и имя, явно выберите форму и проверьте предпросмотр.",
+            )}
+          </p>
           <div className="form-grid">
             <label>
               {tr(legacyLabels[0])}
               <input
+                disabled={disabled}
+                data-field-path={fieldPaths?.[0]}
                 autoFocus={autoFocus}
                 required
                 maxLength={500}
                 value={value.nameRu}
                 aria-invalid={!!nameError}
-                aria-describedby={nameError ? `${id}-error` : undefined}
+                aria-describedby={ruFeedback ? `${id}-error` : undefined}
                 onChange={(event) =>
                   onChange({ ...value, nameRu: event.target.value })
                 }
@@ -208,12 +280,19 @@ export function OrganizationNameFields({
                   {tr(nameError)}
                 </span>
               )}
+              {!nameError && fieldHints?.[0] && (
+                <small id={`${id}-error`}>{tr(fieldHints[0])}</small>
+              )}
             </label>
             <label>
               {tr(legacyLabels[1])}
               <input
+                disabled={disabled}
+                data-field-path={fieldPaths?.[1]}
                 maxLength={500}
                 value={value.nameKz}
+                aria-invalid={!!fieldErrors?.[1]}
+                aria-describedby={kzDescription}
                 onChange={(event) =>
                   onChange({ ...value, nameKz: event.target.value })
                 }
@@ -221,6 +300,15 @@ export function OrganizationNameFields({
             </label>
           </div>
         </>
+      )}
+      {kzFeedback && (
+        <p
+          id={`${id}-kz-feedback`}
+          className={fieldErrors?.[1] ? "field-error" : "fine-print"}
+          role={fieldErrors?.[1] ? "alert" : undefined}
+        >
+          {tr(kzFeedback)}
+        </p>
       )}
       {(!hideEmptyPreview ||
         names?.nameRu ||

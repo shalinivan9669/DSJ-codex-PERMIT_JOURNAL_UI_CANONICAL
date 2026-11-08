@@ -8,6 +8,10 @@ import {
 import { newAssignment, newRecipient, type Draft } from "../lib/types";
 import { pdfObjects, pdfStream } from "../../../tests/fixtures/pdf";
 
+test.beforeEach(async ({ page }) => {
+  await page.routeWebSocket(/\/_next\/webpack-hmr/, (socket) => socket.close());
+});
+
 async function workspace(
   page: Page,
   options: {
@@ -731,7 +735,9 @@ test("PERSON course and employer names remain stable while validation descriptio
   const hours = person
     .getByRole("region", { name: "Параметры ПС", exact: true })
     .getByLabel("Часы программы", { exact: true });
-  const employer = person.getByLabel("Место работы", { exact: true });
+  const employer = person.getByLabel("Название работодателя · RU", {
+    exact: true,
+  });
   for (const [control, message] of [
     [hours, /положительное число часов/],
     [employer, /наименование предприятия/],
