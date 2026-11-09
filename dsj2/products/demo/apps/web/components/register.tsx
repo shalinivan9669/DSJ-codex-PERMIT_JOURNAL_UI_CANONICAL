@@ -71,7 +71,7 @@ export function Register({
       <div className="page-heading">
         <div>
           <span className="brand">
-            <Icon name="print" /> КОРОЧКИ
+            <Icon name="print" /> Safirebrief
           </span>
           <h1>{t("Зарегистрировать учебный центр", "Оқу орталығын тіркеу")}</h1>
 

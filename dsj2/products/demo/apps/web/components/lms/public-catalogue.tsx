@@ -195,7 +195,7 @@ export function PublicCatalogue({ context }: { context?: AppContext | null }) {
   return (
     <div className="lms-workspace" lang={language === "kz" ? "kk" : "ru"}>
       <div className="lms-toolbar">
-        <strong>{data?.centerName || "DEMO"}</strong>
+        <strong>{data?.centerName || "Safirebrief"}</strong>
         <LanguageSwitch language={language} onChange={setLanguage} />
         {context && (
           <Link

@@ -35,7 +35,7 @@ export async function loginIsolated(page: Page) {
     exact: true,
   });
   const loginHeading = page.getByRole("heading", {
-    name: /^Войти в (?:DEMO|КОРОЧКИ)$/,
+    name: /^Войти в (?:DEMO|Safirebrief)$/,
     exact: true,
   });
   await expect(requestsHeading.or(loginHeading)).toBeVisible();

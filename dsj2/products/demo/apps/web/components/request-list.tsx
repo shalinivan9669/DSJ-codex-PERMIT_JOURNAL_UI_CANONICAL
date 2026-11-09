@@ -146,7 +146,7 @@ export function RequestList({
           ...(filter ? { status: filter } : {}),
           format: "XLSX",
         },
-        "КОРОЧКИ-реестр.xlsx",
+        "Safirebrief-реестр.xlsx",
       );
     } catch (caught) {
       setExportError(errorText(caught));

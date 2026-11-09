@@ -139,7 +139,7 @@ export function LearnerIdentity({
         style={{ width: "min(100%, 540px)", textAlign: "left" }}
       >
         <div className="lms-toolbar">
-          <strong className="brand">DEMO</strong>
+          <strong className="brand">Safirebrief</strong>
           <LanguageSwitch language={language} onChange={setLanguage} />
         </div>
         <h1>

@@ -87,7 +87,7 @@ export function PrintSetDownloads({
         await downloadArtifact(
           result.artifact.id,
           result.artifact.fileName ||
-            `DEMO-комплект.${plan.format.toLowerCase()}`,
+            `Safirebrief-комплект.${plan.format.toLowerCase()}`,
         );
     } catch (caught) {
       setError(errorText(caught));

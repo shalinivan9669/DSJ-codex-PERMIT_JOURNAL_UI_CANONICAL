@@ -1,5 +1,21 @@
 {
   "version": "2026-09-22.2",
+  "safirebriefBrand20261109": {
+    "status": "LOCAL_VERIFICATION_PASS_DEPLOYMENT_PENDING",
+    "scope": "User-visible product name Safirebrief: shared shell/login/register, learner invitations/catalogue, page titles, export names, XLSX/PDF metadata and new TOTP issuer label",
+    "preserved": "Existing origins, accounts, authentication secrets/AAD, productId and environment names; historical artifacts and non-issued-document watermarks",
+    "verification": {
+      "unit": "PASS 663",
+      "importTemplate": "PASS 8 existing Python tests",
+      "printPack": "PASS 5 existing Python tests",
+      "mfa": "PASS existing lms-mfa integration 1/1",
+      "lint": "PASS",
+      "typecheck": "PASS",
+      "build": "PASS autonomous workspace build, Windows DEMO_STANDALONE=0",
+      "live": "Post-push exact commit statuses, live title/header and import-template checks recorded in .runtime/safirebrief-brand"
+    },
+    "limits": "No new behavior tests for a text-only rename; full historical render/integration suites not repeated"
+  },
   "syntheticLearning20261109": {
     "status": "LIVE_SYNTHETIC_FLOW_PASS_LOCAL_REVIEW_FIXES_VERIFIED",
     "scope": "Separate demoOnly test center on the existing site; ordinary role APIs and browser learning/review; no real-data deployment override",

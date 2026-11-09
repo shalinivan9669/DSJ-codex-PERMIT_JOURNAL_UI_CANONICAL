@@ -3,7 +3,7 @@ import "./globals.css";
 import "./feedback-workflow.css";
 import "./first-live-iteration.css";
 export const metadata: Metadata = {
-  title: "КОРОЧКИ — заявки и документы",
+  title: "Safirebrief — заявки и документы",
   description:
     "Рабочее пространство учебного центра: заявки, получатели и печатные документы.",
 };

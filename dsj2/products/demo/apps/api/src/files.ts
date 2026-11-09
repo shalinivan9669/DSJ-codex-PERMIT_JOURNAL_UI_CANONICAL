@@ -1088,8 +1088,8 @@ export async function buildSavedRegistryDelivery(
         ? safeFilePart(profile.name) +
           (complete ? " — комплект.zip" : " — НЕПОЛНЫЙ.zip")
         : complete
-          ? "DEMO-complete.zip"
-          : "DEMO-PARTIAL.zip",
+          ? "Safirebrief-complete.zip"
+          : "Safirebrief-PARTIAL.zip",
     };
   }
   const { records, rows } = await exportData();
@@ -1139,7 +1139,7 @@ export async function buildSavedRegistryDelivery(
         ? "text/tab-separated-values; charset=utf-8"
         : MIME.XLSX,
     fileName:
-      (profile ? safeFilePart(profile.name) : "DEMO-registry") +
+      (profile ? safeFilePart(profile.name) : "Safirebrief-registry") +
       (query.format === "TSV" ? ".tsv" : ".xlsx"),
   };
 }

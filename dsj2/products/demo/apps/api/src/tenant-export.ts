@@ -207,7 +207,7 @@ export async function exportTenant(c: Context) {
   return {
     buffer: result.buffer,
     mimeType: "application/zip",
-    fileName: `OT-CENTER-data-${exportId}.zip`,
+      fileName: `Safirebrief-data-${exportId}.zip`,
     sha256: createHash("sha256").update(result.buffer).digest("hex"),
   };
 }

@@ -164,7 +164,7 @@ async function main() {
     { format: "ZIP", allowPartial: true },
     request.id,
   );
-  assert.equal(repaired.fileName, "DEMO-PARTIAL.zip");
+  assert.equal(repaired.fileName, "Safirebrief-PARTIAL.zip");
   const result = {
     mutation:
       "test-only reconstruction of prior guard and row-count naming decisions",

@@ -29,7 +29,7 @@ type BiotPreset = {
   hint: string;
 };
 const generalHint =
-  "Общие профессиональные компетенции. Сертификат оформляется в ЕЦС; DEMO не выдаёт и не заменяет сертификат ЕЦС.";
+  "Общие профессиональные компетенции. Сертификат оформляется в ЕЦС; Safirebrief не выдаёт и не заменяет сертификат ЕЦС.";
 export const BIOT_CATEGORIES: Record<BiotCategory, BiotPreset> = {
   WORKER: {
     label: "Рабочий",

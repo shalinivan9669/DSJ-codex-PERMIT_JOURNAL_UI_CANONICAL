@@ -212,7 +212,7 @@ export function Workspace() {
         <Link
           href={workspaceStartPath(context.user.role)}
           className="brand-link"
-          aria-label="КОРОЧКИ"
+          aria-label="Safirebrief"
         >
           <Brand />
         </Link>
@@ -304,8 +304,8 @@ export function Workspace() {
       <footer className="site-footer">
         <span>
           {section === "lms" || context.user.role === "LEARNER" || teachingRole
-            ? tr("КОРОЧКИ · Обучение и документы", "КОРОЧКИ · Оқыту және құжаттар")
-            : tr("КОРОЧКИ · Подготовка и печать документов", "КОРОЧКИ · Құжаттарды дайындау және басып шығару")}
+            ? tr("Safirebrief · Обучение и документы", "Safirebrief · Оқыту және құжаттар")
+            : tr("Safirebrief · Подготовка и печать документов", "Safirebrief · Құжаттарды дайындау және басып шығару")}
         </span>
         <span>
           {tr("Часовой пояс центра", "Орталықтың уақыт белдеуі")}:{" "}
@@ -321,7 +321,7 @@ function Brand() {
       <span className="brand-mark">
         <Icon name="print" size={24} />
       </span>
-      <span>КОРОЧКИ</span>
+      <span>Safirebrief</span>
     </span>
   );
 }
@@ -384,7 +384,7 @@ function Login({ onLogin }: { onLogin: () => Promise<void> }) {
       </section>
       <section className="login-form">
         <form onSubmit={submit}>
-          <h2>{t("Войти в КОРОЧКИ", "КОРОЧКИ жүйесіне кіру")}</h2>
+          <h2>{t("Войти в Safirebrief", "Safirebrief жүйесіне кіру")}</h2>
           <LanguageSwitch language={language} onChange={setLanguage} />
 
           {!!error && <Notice>{lmsError(error, t)}</Notice>}

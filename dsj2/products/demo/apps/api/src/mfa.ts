@@ -93,9 +93,9 @@ export function decryptMfaSeed(encoded: string, userId: string) {
     );
   }
 }
-function totp(seed: string, label = "DEMO") {
+function totp(seed: string, label = "Safirebrief") {
   return new TOTP({
-    issuer: "DEMO",
+    issuer: "Safirebrief",
     label,
     algorithm: "SHA1",
     digits: 6,

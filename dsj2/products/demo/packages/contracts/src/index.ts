@@ -896,7 +896,7 @@ export function validateDraft(
           add(
             "BIOT_ECS_REQUIRED",
             `${path}.biotCategory`,
-            "Для этой категории требуется оригинал сертификата из ЕЦС. DEMO не присваивает номер ЕЦС и не заменяет выдачу в ЕЦС.",
+            "Для этой категории требуется оригинал сертификата из ЕЦС. Safirebrief не присваивает номер ЕЦС и не заменяет выдачу в ЕЦС.",
             item.id,
           );
         const numericHours = (value: string | undefined) =>
