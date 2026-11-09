@@ -1,7 +1,7 @@
 {
   "version": "2026-09-22.2",
   "userArchiveForms20261109": {
-    "status": "LOCAL_ACCEPTANCE_PASS_DEPLOYMENT_PENDING",
+    "status": "DEPLOYED_AND_TENANT_ADOPTION_PASS",
     "archiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
     "sourceFiles": 93,
     "officeLockFiles": 10,
@@ -27,14 +27,46 @@
       "build": "PASS Windows DEMO_STANDALONE=0",
       "upgradeIntegration": "PASS 1; 28 real HTTP DOCX/PDF samples; approval selection and immutable history verified"
     },
-    "pending": [
-      "Commit/push, deployment and tenant adoption"
-    ],
+    "pending": [],
+    "deployment": {
+      "status": "PASS",
+      "codeCommit": "7945add",
+      "vercel": {
+        "status": "READY",
+        "deploymentId": "3576MdHWqcwS9p3nLGQyfHV3FGDk"
+      },
+      "railway": {
+        "status": "ACTIVE",
+        "deploymentId": "c6a6c2aa-7f2d-4701-8bef-eaf9ecb292cb"
+      },
+      "renderer": "demo-ooxml-15/libreoffice-26.2.6.3",
+      "realCenter": {
+        "completed": true,
+        "registered": 14,
+        "approved": 14,
+        "sampleDocx": 14,
+        "samplePdf": 14,
+        "historyPreserved": true,
+        "logout": true,
+        "evidence": ".runtime/government-forms-20261109/live-switch-real-2026-11-09T15-57-17-847Z.json"
+      },
+      "syntheticCenter": {
+        "completed": true,
+        "registered": 14,
+        "approved": 14,
+        "sampleDocx": 14,
+        "samplePdf": 14,
+        "historyPreserved": true,
+        "logout": true,
+        "evidence": ".runtime/government-forms-20261109/live-switch-synthetic-2026-11-09T15-54-23-774Z.json"
+      },
+      "boundary": "Deployment, exact template adoption and HTTP samples verified; physical printing, independent legal approval and physical Safari not claimed"
+    },
     "rawEvidence": ".runtime/government-forms-20261109",
     "professionGradeRule": "User confirmed 2026-11-09: one shared result in all three protocol grade columns"
   },
   "safirebriefBrand20261109": {
-    "status": "LOCAL_VERIFICATION_PASS_DEPLOYMENT_PENDING",
+    "status": "DEPLOYED_VISIBLE_BRAND_VERIFIED_PASS",
     "scope": "User-visible product name Safirebrief: shared shell/login/register, learner invitations/catalogue, page titles, export names, XLSX/PDF metadata and new TOTP issuer label",
     "preserved": "Existing origins, accounts, authentication secrets/AAD, productId and environment names; historical artifacts and non-issued-document watermarks",
     "verification": {
@@ -45,7 +77,7 @@
       "lint": "PASS",
       "typecheck": "PASS",
       "build": "PASS autonomous workspace build, Windows DEMO_STANDALONE=0",
-      "live": "Post-push exact commit statuses, live title/header and import-template checks recorded in .runtime/safirebrief-brand"
+      "live": "PASS: current commit 7945add deployed on Vercel READY and Railway ACTIVE; live /login Safirebrief title confirmed. Earlier title/header and import-template checks remain recorded in .runtime/safirebrief-brand"
     },
     "limits": "No new behavior tests for a text-only rename; full historical render/integration suites not repeated"
   },
@@ -69,7 +101,7 @@
       "lint": "PASS",
       "typecheck": "PASS",
       "build": "PASS autonomous workspace build, Windows DEMO_STANDALONE=0",
-      "fixDeployment": "Pending publication; cloud verification is recorded separately after deployment"
+      "fixDeployment": "PASS: fixes included in deployed commit 7945add, Vercel READY and Railway ACTIVE; deployment confirmation does not claim a repeated learner-to-teacher E2E"
     },
     "localEvidence": ".runtime/lms-test-center (sanitized reports and screenshots; access file is private and ignored)",
     "limits": "Real-data learning awaits the KZ server. Official signatures, document issuance, physical Safari and full historical render/integration suites were not exercised. No new explanatory UI text."
@@ -7691,9 +7723,66 @@
     }
   },
   "recentTestDataCleanup20261109": {
-    "status": "NOT_STARTED",
+    "status": "PRODUCTION_CLEANUP_AND_REQUISITES_VERIFIED_PASS",
     "scope": "Confirmed recent test business records only; no backup per user; preserve staff logins, courses, learning materials, templates, configuration and older data",
-    "profile": "User supplied RCОiPK requisites; not yet applied",
-    "productionMutations": false
+    "productionMutations": true,
+    "noBackupCreated": true,
+    "cleanup": {
+      "requests": 3,
+      "customerOrganizations": 1,
+      "photoAssets": 4,
+      "businessAndDependentRows": 290,
+      "totalDeletedRowsIncludingPhotos": 294,
+      "filesRemoved": 68,
+      "filePhaseDatabaseMutations": 0,
+      "retainedGlobalFingerprintTables": 113,
+      "retainedGlobalFingerprintsVerifiedTransactionally": true,
+      "preserved": [
+        "All retained authentication and staff rows",
+        "Courses and learning materials",
+        "Entire synthetic center",
+        "Number sequences",
+        "Templates, configuration and unrelated historical data"
+      ],
+      "databaseReceipt": {
+        "path": "C:/Users/Marketing/Downloads/selected-cleanup-commit-2026-11-09T16-21-59-201Z.json",
+        "sha256": "462cbeb2071cfa884a46a6adb8da75b2e8d5e4adf0fce4d755ead4813451c501"
+      },
+      "fileReceipt": {
+        "path": "C:/Users/Marketing/Downloads/selected-cleanup-files-2026-11-09T16-22-47-847Z.json",
+        "sha256": "f47d3d89fc8d9eaec596c13eddcb2e5b3244a2732a8f020330a4dc04ac1cbcb4"
+      }
+    },
+    "profile": {
+      "completed": true,
+      "previousVersion": 7,
+      "version": 8,
+      "requestedFieldsVerified": 19,
+      "previousProfilePreserved": true,
+      "staffAndCommissionPreserved": true,
+      "templatesAndNumberingPreserved": true,
+      "sidebarNameSynchronized": true,
+      "logout": true,
+      "evidence": ".runtime/recent-business-cleanup/requisites-result-2026-11-09T16-23-27-139Z.json"
+    },
+    "finalReadOnlyVerification": {
+      "completed": true,
+      "businessWrites": 0,
+      "realReady": true,
+      "syntheticReady": true,
+      "allRequests": 0,
+      "historyRequests": 0,
+      "archiveRequests": 0,
+      "retainedCustomers": 1,
+      "templates": 36,
+      "approvedArchiveTemplates": 14,
+      "historicalTemplates": 22,
+      "exactArchiveVersionsVerified": true,
+      "syntheticCourses": 2,
+      "bothSessionsLoggedOut": true,
+      "preservationProof": "Full retained-state proof comes from the transactional DB receipt; HTTP verification checks current availability and counts",
+      "evidence": ".runtime/recent-business-cleanup/verify-live-2026-11-09T16-23-38-238Z.json"
+    },
+    "boundary": "Only confirmed test records and user-supplied requisites changed; no physical-print, independent legal-approval or physical Safari claim"
   }
 }
