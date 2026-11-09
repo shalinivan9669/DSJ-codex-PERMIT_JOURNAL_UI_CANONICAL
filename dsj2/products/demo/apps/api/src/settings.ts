@@ -118,6 +118,10 @@ export async function saveProfile(c: Context, input: unknown) {
         createdBy: c.userId,
       },
     });
+    await tx.tenant.update({
+      where: { id: c.tenantId },
+      data: { name: profile.nameRu },
+    });
     await audit(tx, c, "PROFILE_VERSION_CREATED", record.id, {
       version: record.version,
     });

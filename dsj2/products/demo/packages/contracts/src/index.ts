@@ -558,6 +558,21 @@ export const previewSchema = z
   );
 export * from "./batch-scope";
 export * from "./organization";
+
+function validProfileIban(value: string) {
+  if (!value) return true;
+  if (!/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(value)) return false;
+  let remainder = 0;
+  for (const character of value.slice(4) + value.slice(0, 4)) {
+    const digits = /[A-Z]/.test(character)
+      ? String(character.charCodeAt(0) - 55)
+      : character;
+    for (const digit of digits)
+      remainder = (remainder * 10 + Number(digit)) % 97;
+  }
+  return remainder === 1;
+}
+
 export const profileSchema = z
   .object({
     commonFields: commonFieldsSchema.optional(),
@@ -594,6 +609,46 @@ export const profileSchema = z
     headName: optionalText,
     headNameEn: optionalText,
     bin: z.string().max(50).optional(),
+    bankName: z
+      .string()
+      .trim()
+      .max(255, "Название банка — до 255 символов")
+      .refine(
+        (value) =>
+          [...value].every((character) => {
+            const code = character.charCodeAt(0);
+            return code >= 32 && (code < 127 || code > 159);
+          }),
+        "Укажите банк одной строкой",
+      )
+      .optional(),
+    iban: z
+      .string()
+      .max(64, "Проверьте ИИК")
+      .transform((value) => value.replace(/\s+/g, "").toUpperCase())
+      .refine(validProfileIban, "Проверьте ИИК")
+      .optional(),
+    bik: z
+      .string()
+      .trim()
+      .toUpperCase()
+      .max(11, "Проверьте БИК")
+      .refine(
+        (value) =>
+          !value || /^[A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?$/.test(value),
+        "Проверьте БИК",
+      )
+      .optional(),
+    postalCode: z
+      .string()
+      .trim()
+      .toUpperCase()
+      .max(20, "Проверьте почтовый индекс")
+      .refine(
+        (value) => !value || /^[A-Z0-9][A-Z0-9 -]*$/.test(value),
+        "Проверьте почтовый индекс",
+      )
+      .optional(),
     commission: z
       .array(
         z

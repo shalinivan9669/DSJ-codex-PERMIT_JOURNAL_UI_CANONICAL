@@ -112,6 +112,7 @@ export function Settings({
                 onContextChange({
                   ...context,
                   profile,
+                  tenant: { ...context.tenant, name: profile.nameRu },
                   profileVersionId: profile.id || context.profileVersionId,
                 })
               }
@@ -194,6 +195,10 @@ export function ProfileForm({
       cityKz: "",
       addressRu: "",
       addressKz: "",
+      postalCode: "",
+      bankName: "",
+      iban: "",
+      bik: "",
       commission: [],
       approvalBasis: "",
       approved: false,
@@ -381,6 +386,7 @@ export function ProfileForm({
 
             ["addressRu", tr("Адрес · RU")],
             ["addressKz", tr("Адрес · KZ")],
+            ["postalCode", tr("Почтовый индекс")],
           ].map(([key, label]) => (
             <label key={key}>
               {label}
@@ -388,6 +394,29 @@ export function ProfileForm({
                 id={`profile-${key}`}
                 aria-invalid={issues.some((issue) => issue.path === key)}
                 required={key === "nameRu"}
+                maxLength={key === "postalCode" ? 20 : undefined}
+                autoComplete={key === "postalCode" ? "postal-code" : undefined}
+                value={String(value[key as keyof Profile] || "")}
+                onChange={(event) => change({ [key]: event.target.value })}
+              />
+            </label>
+          ))}
+        </div>
+        <div className="form-grid">
+          {[
+            ["bankName", tr("Банк")],
+            ["iban", tr("ИИК")],
+            ["bik", tr("БИК")],
+          ].map(([key, label]) => (
+            <label key={key}>
+              {label}
+              <input
+                id={`profile-${key}`}
+                type="text"
+                maxLength={key === "bankName" ? 255 : key === "iban" ? 64 : 11}
+                autoCapitalize={key === "bankName" ? undefined : "characters"}
+                spellCheck={key === "bankName" ? undefined : false}
+                aria-invalid={issues.some((issue) => issue.path === key)}
                 value={String(value[key as keyof Profile] || "")}
                 onChange={(event) => change({ [key]: event.target.value })}
               />
