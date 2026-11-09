@@ -111,3 +111,20 @@ assets/templates/lms-credential.v1.docx
 assets/templates/lms-credential.v2.docx
 assets/templates/lms-protocol.v1.docx
 assets/templates/lms-protocol.v2.docx
+
+# Archive release replaces these bundled neutral versions. Historical tenant
+# snapshots retain their immutable templateStorageKey/checksum in private storage.
+assets/templates/biot-worker-card.v21.docx
+assets/templates/biot-protocol.v15.docx
+assets/templates/ptm-card.v18.docx
+assets/templates/ptm-protocol.v13.docx
+assets/templates/pb-card.v18.docx
+assets/templates/pb-protocol.v13.docx
+assets/templates/ps-card.v19.docx
+assets/templates/ps-protocol.v13.docx
+assets/templates/biot-itr-protocol.v6.docx
+assets/templates/biot-protocol.group-v6.docx
+assets/templates/ptm-protocol.group-v5.docx
+assets/templates/pb-protocol.group-v5.docx
+assets/templates/ps-protocol.group-v5.docx
+assets/templates/biot-itr-protocol.group-v6.docx
