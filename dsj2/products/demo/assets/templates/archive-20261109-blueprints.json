@@ -1,0 +1,1485 @@
+[
+  {
+    "id": "biot-worker-card",
+    "source": "Б и ОТ/1 Б и ОТ - шаблон.docx",
+    "sourceSha256": "c4f4692682ce6de006129bc16baafb041f9543daf6e2692bda0b4df1c4c633e8",
+    "mergeFields": {
+      "Номер_удостоверения": "NUMBER",
+      "Берілді_ТАƏ": "FULL_NAME_KZ",
+      "Выдано_ФИО": "FULL_NAME_RU",
+      "Должность": "POSITION_RU",
+      "Лауазымы": "POSITION_KZ",
+      "Жұмыс__орны_": "WORKPLACE_KZ",
+      "Место_работы__": "WORKPLACE_RU",
+      "В_том_что_он": "SUBJECT_BOTH",
+      "ГОД": "PROTOCOL_YEAR",
+      "День_месяц": "PROTOCOL_DAY_MONTH",
+      "Протокол_": "PROTOCOL_NUMBER"
+    },
+    "paragraphSlots": [
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[5]/w:r[4]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[7]",
+        "value": "комиссии {{CHAIR_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[5]/w:r[4]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
+        "value": "Член комиссии {{MEMBER_1_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[21]/w:r[4]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[7]",
+        "value": "комиссии {{CHAIR_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[21]/w:r[4]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
+        "value": "Член комиссии {{MEMBER_1_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[3]/w:tr/w:tc/w:p",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[5]/w:r[4]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[1]",
+        "value": "{{EXAM_STATEMENT_KZ}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[5]/w:r[4]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[2]",
+        "value": "{{EXAM_STATEMENT_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[21]/w:r[4]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[1]",
+        "value": "{{EXAM_STATEMENT_KZ}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[21]/w:r[4]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[2]",
+        "value": "{{EXAM_STATEMENT_RU}}"
+      }
+    ],
+    "textSlots": [
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[4]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[5]/w:t",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[6]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[7]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[8]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[9]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[10]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[11]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[12]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[13]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[14]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[15]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[16]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[17]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[18]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[19]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[4]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[5]/w:t",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[6]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[7]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[8]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[9]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[10]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[11]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[12]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[13]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[14]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[15]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[16]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[17]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[18]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[19]/w:t",
+        "value": ""
+      }
+    ],
+    "media": [],
+    "fieldLayoutPolicy": "SOURCE_RUN_STYLES_WITH_BOUNDED_ADAPTIVE_FIT"
+  },
+  {
+    "id": "biot-protocol",
+    "source": "Б и ОТ/Б и ОТ - протокол.docx",
+    "sourceSha256": "519e651bf954c191a769970f02a2a57f1dbf9caee7bac235247c7d9dc8d2c81c",
+    "mergeFields": {
+      "Жұмыс__орны_": "WORKPLACE_KZ",
+      "Протокол_": "PROTOCOL_NUMBER",
+      "ФИО": "FULL_NAME_BOTH",
+      "ФИО_1": "FULL_NAME_BOTH",
+      "Место_работы__": "WORKPLACE_RU",
+      "Наименование_организации_1": "WORKPLACE_BOTH",
+      "Должность": "POSITION_RU",
+      "Лауазымы": "POSITION_KZ",
+      "Должность_1": "POSITION_BOTH",
+      "Номер_удостоверения": "CREDENTIAL_NUMBER",
+      "Примечание_1": "BIOT_NOTES"
+    },
+    "paragraphSlots": [
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[12]",
+        "value": "{{CHAIR}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[14]",
+        "value": "{{MEMBER_1}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[15]",
+        "value": "{{MEMBERS_FROM_SECOND}}"
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[2]/w:p[1]",
+        "value": "{{ADDRESS_KZ}}"
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[2]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[3]/w:p[1]",
+        "value": "{{ADDRESS_RU}}"
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[3]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[2]/w:p[1]",
+        "value": ""
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[2]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[3]/w:p[1]",
+        "value": ""
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[3]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[8]",
+        "value": "{{PROTOCOL_DATE}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[16]",
+        "value": "{{APPROVAL_BASIS}} — {{REASON_KZ}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[18]",
+        "value": "{{APPROVAL_BASIS}} — {{REASON_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[1]",
+        "value": "{{WORKPLACE_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[3]/w:tc[1]/w:p",
+        "value": "{{ONE}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[3]/w:tc[2]/w:p",
+        "value": "{{FULL_NAME_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[3]/w:tc[3]/w:p",
+        "value": "{{WORKPLACE_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[3]/w:tc[4]/w:p[1]",
+        "value": "{{POSITION_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[3]/w:tc[4]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[3]/w:tc[5]/w:p",
+        "value": "{{RESULT_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[3]/w:tc[6]/w:p",
+        "value": "{{BIOT_NOTES}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[1]/w:tc/w:p",
+        "value": "{{CHAIR_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[3]/w:tc/w:p",
+        "value": "{{MEMBER_1_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[5]/w:tc/w:p",
+        "value": "{{MEMBER_2_NAME}}"
+      }
+    ],
+    "textSlots": [],
+    "media": [
+      {
+        "part": "word/media/image1.png",
+        "kind": "LOGO"
+      }
+    ],
+    "roster": {
+      "tableIndex": 0,
+      "headerRows": 2,
+      "rowValues": [
+        "{{ROW_NUMBER}}",
+        "{{FULL_NAME_BOTH}}",
+        "{{WORKPLACE_BOTH}}",
+        "{{POSITION_BOTH}}",
+        "{{RESULT_BOTH}}",
+        "{{BIOT_NOTES}}"
+      ]
+    }
+  },
+  {
+    "id": "ps-card",
+    "source": "Профессии/1 Профессии - шаблон.docx",
+    "sourceSha256": "8b0bfae6341b39cb6f6422d4a5a2297dba5e4aefb046d3f86a661496034ea793",
+    "mergeFields": {
+      "Номер_удостоверения": "NUMBER",
+      "Выдано_ФИО": "FULL_NAME_BOTH",
+      "Біліктілік_берілгендігі_туралы": "POSITION_KZ",
+      "в_том_что_ему_присвоена_квалификация_": "POSITION_RU",
+      "Протокол_": "PROTOCOL_NUMBER",
+      "День_месяц": "PROTOCOL_DAY_MONTH",
+      "ГОД": "PROTOCOL_YEAR",
+      "Номер_серии": "SERIES",
+      "Баға": "RESULT_KZ",
+      "Оценка": "RESULT_RU",
+      "M_1__пп": "PS_GENERAL_NUMBER",
+      "M_2__пп": "PS_SPECIAL_NUMBER",
+      "M_1_Пәндер_атауы_": "PS_GENERAL_SUBJECT_KZ",
+      "M_1_Наименование_дисциплины": "PS_GENERAL_SUBJECT_RU",
+      "M_2_Пәндер_атауы_": "PS_SPECIAL_SUBJECT_KZ",
+      "M_2_Наименование_дисциплины": "PS_SPECIAL_SUBJECT_RU"
+    },
+    "paragraphSlots": [
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[4]/w:tr/w:tc/w:p",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[19]/w:r[3]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[17]",
+        "value": "Хаттама"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[5]/w:tr/w:tc/w:p",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[65]/w:r[3]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[17]",
+        "value": "Хаттама"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[6]/w:tr/w:tc/w:p",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[6]",
+        "value": "{{QUALIFICATION_STATUS_KZ}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[7]",
+        "value": "{{QUALIFICATION_STATUS_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[2]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[4]",
+        "value": "Пәндер бойынша білімді тексеру нәтижелері"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[2]/w:pict/v:shape/v:textbox/w:txbxContent/w:p[5]",
+        "value": "Результаты проверки знаний по дисциплинам"
+      }
+    ],
+    "textSlots": [],
+    "media": [],
+    "photoShapes": [
+      {
+        "part": "word/document.xml",
+        "shapeId": "_x0000_s2095"
+      }
+    ],
+    "fieldLayoutPolicy": "SOURCE_RUN_STYLES_WITH_BOUNDED_ADAPTIVE_FIT"
+  },
+  {
+    "id": "ps-protocol",
+    "source": "Профессии/Профессии - протокол.docx",
+    "sourceSha256": "445893091680eccf855db5575e54fd8de44ddc07cf27b9978a2c38e2c4321d25",
+    "mergeFields": {
+      "Протокол_": "PROTOCOL_NUMBER",
+      "День_месяц": "PROTOCOL_DAY_MONTH",
+      "ГОД": "PROTOCOL_YEAR",
+      "Номер_удостоверения": "CREDENTIAL_NUMBER",
+      "Номер_Уд_1": "CREDENTIAL_NUMBER",
+      "Выдано_ФИО": "FULL_NAME_RU",
+      "ФИО_1": "FULL_NAME_RU",
+      "в_том_что_ему_присвоена_квалификация_": "POSITION_RU",
+      "Образование_РУС_1": "POSITION_RU",
+      "Біліктілік_берілгендігі_туралы": "POSITION_KZ",
+      "Біліктілігі_берілді_дәреже_для_протоко": "POSITION_KZ",
+      "ДОЛЖНОСТЬ_РУС_1": "POSITION_KZ"
+    },
+    "paragraphSlots": [
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[6]",
+        "value": "{{CHAIR}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[8]",
+        "value": "{{MEMBER_1}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[9]",
+        "value": "{{MEMBERS_FROM_SECOND}}"
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[2]/w:p[1]",
+        "value": "{{ADDRESS_KZ}}"
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[2]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[3]/w:p[1]",
+        "value": "{{ADDRESS_RU}}"
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[3]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[2]/w:p[1]",
+        "value": ""
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[2]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[3]/w:p[1]",
+        "value": ""
+      },
+      {
+        "part": "word/header1.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[3]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[10]",
+        "value": "{{PS_DECISION_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[1]/w:p",
+        "value": "{{ONE}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[2]/w:p",
+        "value": "{{FULL_NAME_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[3]/w:p",
+        "value": "{{RESULT_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[4]/w:p",
+        "value": "{{RESULT_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[5]/w:p",
+        "value": "{{RESULT_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[6]/w:p",
+        "value": "{{POSITION_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[7]/w:p",
+        "value": "{{CREDENTIAL_NUMBER}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[1]/w:tc[4]/w:p[2]",
+        "value": "{{CHAIR_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[3]/w:tc[4]/w:p",
+        "value": "{{MEMBER_1_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[5]/w:tc[4]/w:p",
+        "value": "{{MEMBER_2_NAME}}"
+      }
+    ],
+    "textSlots": [],
+    "media": [
+      {
+        "part": "word/media/image1.png",
+        "kind": "LOGO"
+      }
+    ],
+    "roster": {
+      "tableIndex": 0,
+      "headerRows": 1,
+      "rowValues": [
+        "{{ROW_NUMBER}}",
+        "{{FULL_NAME_RU}}",
+        "{{RESULT_RU}}",
+        "{{RESULT_RU}}",
+        "{{RESULT_RU}}",
+        "{{PS_AWARDED_QUALIFICATION_RU}}",
+        "{{CREDENTIAL_NUMBER}}"
+      ]
+    },
+    "appendSources": [
+      {
+        "id": "ps-protocol",
+        "source": "Профессии/Профессии - протокол каз.docx",
+        "sourceSha256": "0f4e3d2db6598f5d62fb60688547fad90cbd323bfb4f6887f45eaede0696db42",
+        "mergeFields": {
+          "Протокол_": "PROTOCOL_NUMBER",
+          "День_месяц": "PROTOCOL_DAY_MONTH",
+          "ГОД": "PROTOCOL_YEAR",
+          "Номер_удостоверения": "CREDENTIAL_NUMBER",
+          "Номер_Уд_1": "CREDENTIAL_NUMBER",
+          "Выдано_ФИО": "FULL_NAME_KZ",
+          "ФИО_1": "FULL_NAME_KZ",
+          "в_том_что_ему_присвоена_квалификация_": "POSITION_RU",
+          "Образование_РУС_1": "POSITION_RU",
+          "Біліктілік_берілгендігі_туралы": "POSITION_KZ",
+          "Біліктілігі_берілді_дәреже_для_протоко": "POSITION_KZ",
+          "ДОЛЖНОСТЬ_РУС_1": "POSITION_KZ"
+        },
+        "paragraphSlots": [
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:p[7]",
+            "value": "{{CHAIR}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:p[9]",
+            "value": "{{MEMBER_1}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:p[10]",
+            "value": "{{MEMBERS_FROM_SECOND}}"
+          },
+          {
+            "part": "word/header1.xml",
+            "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[2]/w:p[1]",
+            "value": "{{ADDRESS_KZ}}"
+          },
+          {
+            "part": "word/header1.xml",
+            "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[2]/w:p[2]",
+            "value": ""
+          },
+          {
+            "part": "word/header1.xml",
+            "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[3]/w:p[1]",
+            "value": "{{ADDRESS_RU}}"
+          },
+          {
+            "part": "word/header1.xml",
+            "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[3]/w:p[2]",
+            "value": ""
+          },
+          {
+            "part": "word/header1.xml",
+            "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[2]/w:p[1]",
+            "value": ""
+          },
+          {
+            "part": "word/header1.xml",
+            "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[2]/w:p[2]",
+            "value": ""
+          },
+          {
+            "part": "word/header1.xml",
+            "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[3]/w:p[1]",
+            "value": ""
+          },
+          {
+            "part": "word/header1.xml",
+            "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[3]/w:p[2]",
+            "value": ""
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:p[11]",
+            "value": "{{PS_DECISION_KZ}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[1]/w:p",
+            "value": "{{ONE}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[2]/w:p",
+            "value": "{{FULL_NAME_KZ}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[3]/w:p",
+            "value": "{{RESULT_KZ}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[4]/w:p",
+            "value": "{{RESULT_KZ}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[5]/w:p",
+            "value": "{{RESULT_KZ}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[6]/w:p",
+            "value": "{{POSITION_KZ}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:tbl[1]/w:tr[2]/w:tc[7]/w:p",
+            "value": "{{CREDENTIAL_NUMBER}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:tbl[2]/w:tr[1]/w:tc[4]/w:p[2]",
+            "value": "{{CHAIR_NAME}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:tbl[2]/w:tr[3]/w:tc[4]/w:p",
+            "value": "{{MEMBER_1_NAME}}"
+          },
+          {
+            "part": "word/document.xml",
+            "xpath": "/w:document/w:body/w:tbl[2]/w:tr[5]/w:tc[4]/w:p[2]",
+            "value": "{{MEMBER_2_NAME}}"
+          }
+        ],
+        "textSlots": [],
+        "media": [
+          {
+            "part": "word/media/image1.png",
+            "kind": "LOGO"
+          }
+        ],
+        "roster": {
+          "tableIndex": 0,
+          "headerRows": 1,
+          "rowValues": [
+            "{{ROW_NUMBER}}",
+            "{{FULL_NAME_KZ}}",
+            "{{RESULT_KZ}}",
+            "{{RESULT_KZ}}",
+            "{{RESULT_KZ}}",
+            "{{PS_AWARDED_QUALIFICATION_KZ}}",
+            "{{CREDENTIAL_NUMBER}}"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "pb-card",
+    "source": "ПБ 2022-2023/1 ПБ - шаблон SOl.docx",
+    "sourceSha256": "f20d6c1ed485960f0a72aa017f5941d1900ba8e6c3d1607c326fc6c26bcaade8",
+    "mergeFields": {
+      "Номер_удостоверения": "NUMBER",
+      "ФИО": "FULL_NAME_RU",
+      "Жұмыс_орны_лауазымы": "WORKPLACE_BOTH",
+      "должность": "POSITION_BOTH",
+      "Год": "DOCUMENT_YEAR",
+      "День": "DOCUMENT_DAY",
+      "Месяц": "DOCUMENT_MONTH",
+      "Прослушала_курс": "SUBJECT_BOTH",
+      "Протокол_": "PROTOCOL_NUMBER",
+      "Действительно_Год": "VALID_YEAR"
+    },
+    "paragraphSlots": [
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[19]",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[19]",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[3]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[5]",
+        "value": "Действительно до {{VALID_YEAR}} ж (г.) «{{VALID_DAY}}» {{VALID_MONTH}} дейiн жарамды"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[3]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[9]",
+        "value": "{{CHAIR_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[3]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[5]",
+        "value": "Действительно до {{VALID_YEAR}} ж (г.) «{{VALID_DAY}}» {{VALID_MONTH}} дейiн жарамды"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[3]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[9]",
+        "value": "{{CHAIR_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[14]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[14]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[14]/w:r[2]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[14]/w:r[2]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[1]/w:tc/w:p",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[3]/w:tr/w:tc/w:p",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[60]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[60]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[60]/w:r[2]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[60]/w:r[2]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[4]/w:tr/w:tc/w:p",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[73]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[73]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[73]/w:r[2]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[73]/w:r[2]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
+        "value": "{{ISSUER_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[3]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[3]",
+        "value": "  {{PROTOCOL_YEAR}}    ж(г.) «  {{PROTOCOL_DAY}}    »   {{PROTOCOL_MONTH}}                                              "
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[3]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[3]",
+        "value": "  {{PROTOCOL_YEAR}}    ж(г.) «  {{PROTOCOL_DAY}}    »   {{PROTOCOL_MONTH}}                                              "
+      }
+    ],
+    "media": [
+      {
+        "part": "word/media/image1.jpeg",
+        "kind": "PHOTO"
+      }
+    ],
+    "textSlots": [
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[3]/w:t",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[4]/w:t",
+        "value": ""
+      }
+    ],
+    "fieldLayoutPolicy": "SOURCE_RUN_STYLES_WITH_BOUNDED_ADAPTIVE_FIT"
+  },
+  {
+    "id": "pb-protocol",
+    "source": "ПБ 2022-2023/ПБ - Протокол.docx",
+    "sourceSha256": "f6fa0a899212d49b0443574d9a2e26fa641f9c348dd3f5a9ce56f290e11b2a4f",
+    "mergeFields": {
+      "Протокол_": "PROTOCOL_NUMBER",
+      "Жұмыс_орны_лауазымы": "WORKPLACE_BOTH",
+      "ФИО": "FULL_NAME_BOTH",
+      "ФИО_РУС_1": "FULL_NAME_BOTH",
+      "должность": "POSITION_BOTH",
+      "ДОЛЖНОСТЬ_РУС_1": "POSITION_BOTH",
+      "Образование_РУС_1": "EDUCATION"
+    },
+    "paragraphSlots": [
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[9]",
+        "value": "{{PROTOCOL_DATE}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[14]",
+        "value": "{{CHAIR_POSITION}} {{ISSUER_BOTH}} — {{CHAIR_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[16]",
+        "value": "{{MEMBER_1_POSITION}} {{ISSUER_BOTH}} — {{MEMBER_1_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[17]",
+        "value": "{{MEMBERS_FROM_SECOND}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[19]",
+        "value": "- Қазақстан Республикасының заңдарында және нормативтік құқықтық актілерінде белгіленген өнеркәсіптік қауіпсіздік талаптарының көлемінде {{HOURS}} сағаттық бағдарлама бойынша оқу бағдарламаларына сәйкес білімге тексеру жүргізді"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[21]",
+        "value": "Провела проверку знаний в соответствии с учебными программами по {{HOURS}}-часовой программе в объеме требований промышленной безопасности, установленных законами и нормативными правовыми актами Республики Казахстан"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[1]/w:tc[4]/w:p[2]",
+        "value": "{{CHAIR_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[3]/w:tc[4]/w:p[2]",
+        "value": "{{MEMBER_1_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[5]/w:tc[4]/w:p",
+        "value": "{{MEMBER_2_NAME}}"
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[2]/w:p[1]",
+        "value": "{{ADDRESS_KZ}}"
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[2]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[3]/w:p[1]",
+        "value": "{{ADDRESS_RU}}"
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[3]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[2]/w:p[1]",
+        "value": ""
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[2]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[3]/w:p[1]",
+        "value": ""
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[3]/w:p[2]",
+        "value": ""
+      }
+    ],
+    "media": [
+      {
+        "part": "word/media/image1.png",
+        "kind": "BLANK"
+      },
+      {
+        "part": "word/media/image2.png",
+        "kind": "LOGO"
+      }
+    ],
+    "roster": {
+      "tableIndex": 0,
+      "headerRows": 1,
+      "rowValues": [
+        "{{ROW_NUMBER}}",
+        "{{FULL_NAME_BOTH}}",
+        "{{POSITION_BOTH}}",
+        "{{EDUCATION}}",
+        "{{RESULT_BOTH}}"
+      ]
+    }
+  },
+  {
+    "id": "ptm-card",
+    "source": "ПТМ/1 ПТМ — шаблон Sol.docx",
+    "sourceSha256": "83e3f05d94d64da7eecf6590050f239866cf139933fe1d415245a90d8a1109cf",
+    "mergeFields": {
+      "Номер_удостоверения": "NUMBER",
+      "ФИО": "FULL_NAME_RU",
+      "Должность": "POSITION_RU",
+      "Лауазымы": "POSITION_KZ",
+      "Жұмыс_орны": "WORKPLACE_KZ",
+      "Место_работы": "WORKPLACE_RU",
+      "Емтихан_тапсырды": "SUBJECT_KZ",
+      "В_том_что": "SUBJECT_RU",
+      "Год": "PROTOCOL_YEAR",
+      "Месяц": "PROTOCOL_DAY_MONTH",
+      "Протокол_": "PROTOCOL_NUMBER",
+      "Действительно_Год": "VALID_YEAR",
+      "Действительно_Мес": "VALID_DAY_MONTH"
+    },
+    "paragraphSlots": [
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[2]",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[2]",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[8]",
+        "value": "Негіздеме: {{PROTOCOL_YEAR}} ж. {{PROTOCOL_DAY_MONTH}} № {{PROTOCOL_NUMBER}} хаттама"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
+        "value": "Основание: Протокол № {{PROTOCOL_NUMBER}} от {{PROTOCOL_DATE}} г."
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[12]",
+        "value": "{{VALID_YEAR}} ж. {{VALID_DAY_MONTH}} дейін жарамды"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[14]",
+        "value": "Действительно до {{VALID_DATE}} г."
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[16]",
+        "value": "Оқу орталығының басшысы___________________{{HEAD_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[8]",
+        "value": "Негіздеме: {{PROTOCOL_YEAR}} ж. {{PROTOCOL_DAY_MONTH}} № {{PROTOCOL_NUMBER}} хаттама"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
+        "value": "Основание: Протокол № {{PROTOCOL_NUMBER}} от {{PROTOCOL_DATE}} г."
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[12]",
+        "value": "{{VALID_YEAR}} ж. {{VALID_DAY_MONTH}} дейін жарамды"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[14]",
+        "value": "Действительно до {{VALID_DATE}} г."
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[16]",
+        "value": "Оқу орталығының басшысы___________________{{HEAD_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[4]",
+        "value": "{{EXAM_STATEMENT_KZ}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[6]",
+        "value": "{{EXAM_STATEMENT_RU}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[4]",
+        "value": "{{EXAM_STATEMENT_KZ}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[2]/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[6]",
+        "value": "{{EXAM_STATEMENT_RU}}"
+      }
+    ],
+    "media": [
+      {
+        "part": "word/media/image1.png",
+        "kind": "PHOTO"
+      }
+    ],
+    "textSlots": [
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[2]/w:t",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[3]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[4]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[5]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[6]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[7]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[8]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[9]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[10]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[11]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[12]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[13]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[14]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[15]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[16]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[17]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[18]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[19]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[20]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[21]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[22]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[23]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[24]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[25]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[26]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[27]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[28]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[29]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[30]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[31]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[32]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[33]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[34]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[35]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[36]/w:t",
+        "value": ""
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[37]/w:t",
+        "value": ""
+      }
+    ],
+    "fieldLayoutPolicy": "SOURCE_RUN_STYLES_WITH_BOUNDED_ADAPTIVE_FIT"
+  },
+  {
+    "id": "ptm-protocol",
+    "source": "ПТМ/ПТМ - протокол.docx",
+    "sourceSha256": "7cf2e53bf2bdd23ad55325e1205ca6cab52017236f02b5f14de149c4292b3edb",
+    "mergeFields": {
+      "Протокол_": "PROTOCOL_NUMBER",
+      "ФИО": "FULL_NAME_BOTH",
+      "ФИО_1": "FULL_NAME_BOTH",
+      "Должность": "POSITION_RU",
+      "Лауазымы": "POSITION_KZ",
+      "Должность_РУС_1": "POSITION_RU",
+      "Место_работы": "WORKPLACE_BOTH",
+      "Организация_РУС_1": "WORKPLACE_BOTH",
+      "Номер_Уд_1": "NUMBER"
+    },
+    "paragraphSlots": [
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[8]",
+        "value": "{{ISSUER_BOTH}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[11]",
+        "value": "{{APPROVAL_BASIS}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[12]",
+        "value": "«Өрт-техникалық минимум көлемінде өрт қауіпсіздігі бойынша білімді тексеру мәселелері бойынша Біліктілік комиссиясын құру туралы»"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[13]",
+        "value": "Біліктілік комиссиясы мынадай құрамда:"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[16]",
+        "value": "{{CHAIR_POSITION}} {{ISSUER_BOTH}} — {{CHAIR_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[18]",
+        "value": "{{MEMBER_1_POSITION}} {{ISSUER_BOTH}} — {{MEMBER_1_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[19]",
+        "value": "{{MEMBERS_FROM_SECOND}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[20]",
+        "value": "{{PROTOCOL_DATE}} приняла экзамен по пожарной безопасности в объеме пожарно-технического минимума и установила следующие результаты/ {{PROTOCOL_DATE}} өрт қауіпсіздігі көлемінде өрт-техникалық минимум  білімін  тексеруді өткізді және келесі нәтижені орнатты:"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[1]/w:tc[4]/w:p[2]",
+        "value": "{{CHAIR_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[3]/w:tc[4]/w:p[2]",
+        "value": "{{MEMBER_1_NAME}}"
+      },
+      {
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[5]/w:tc[4]/w:p",
+        "value": "{{MEMBER_2_NAME}}"
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[2]/w:p[1]",
+        "value": "{{ADDRESS_KZ}}"
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[2]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[3]/w:p[1]",
+        "value": "{{ADDRESS_RU}}"
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[1]/w:tc[3]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[2]/w:p[1]",
+        "value": ""
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[2]/w:p[2]",
+        "value": ""
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[3]/w:p[1]",
+        "value": ""
+      },
+      {
+        "part": "word/header2.xml",
+        "xpath": "/w:hdr/w:tbl/w:tr[2]/w:tc[3]/w:p[2]",
+        "value": ""
+      }
+    ],
+    "media": [
+      {
+        "part": "word/media/image1.png",
+        "kind": "BLANK"
+      },
+      {
+        "part": "word/media/image2.png",
+        "kind": "LOGO"
+      }
+    ],
+    "roster": {
+      "tableIndex": 0,
+      "headerRows": 1,
+      "rowValues": [
+        "{{ROW_NUMBER}}",
+        "{{FULL_NAME_BOTH}}",
+        "{{POSITION_BOTH}}",
+        "{{WORKPLACE_BOTH}}",
+        "{{REASON_BOTH}}",
+        "{{RESULT_BOTH}}",
+        ""
+      ]
+    }
+  }
+]

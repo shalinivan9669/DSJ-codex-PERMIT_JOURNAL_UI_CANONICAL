@@ -58,9 +58,13 @@ class RenderTests(unittest.TestCase):
         for template in MANIFEST['templates']:
             with self.subTest(template=template['id']):
                 snap=fixture(template['id'])
+                snap['items'][0]['assignment']['outcome']={'status':'PASSED'}
+                if template['id']=='ps-protocol':snap['items'][0]['credentialNumber']='СВ-ОБРАЗЕЦ-001'
                 if template['photo']:
-                    portrait=Image.new('RGB',(480,640),(70,115,150));portrait.save(STORE/'test-photo.png')
-                    snap['items'][0]['photoAssetId']='synthetic-photo';snap['photos']['synthetic-photo']='test-photo.png'
+                    portrait=Image.new('RGB',(480,640),(70,115,150));photo=io.BytesIO();portrait.save(photo,'PNG')
+                    key=hashlib.sha256(photo.getvalue()).hexdigest()+'-00000000-0000-4000-8000-000000000001.png'
+                    (STORE/key).write_bytes(photo.getvalue())
+                    snap['items'][0]['photoAssetId']='synthetic-photo';snap['photos']['synthetic-photo']=key
                 out=OUT/(template['id']+'.docx');render_docx(snap,out)
                 with ZipFile(out) as z:
                     # Raw Word merge instructions remain part of the original
@@ -128,7 +132,19 @@ class RenderTests(unittest.TestCase):
     def test_07_clean_templates_keep_exact_geometry(self):
         for template in MANIFEST['templates']:
             with ZipFile(ROOT/'assets/templates'/template['file']) as z:
-                if 'demo/original-form.json' in z.namelist():
+                if 'demo/archive-form.json' in z.namelist():
+                    metadata=json.loads(z.read('demo/archive-form.json'))
+                    self.assertEqual(metadata['policy'],'USER_ARCHIVE_20261109_V1')
+                    self.assertEqual(metadata['templateId'],template['id'])
+                    self.assertEqual(metadata['sourceSha256'],template['sourceSha256'])
+                    self.assertEqual(set(metadata['fields']),set(template['fields']))
+                    self.assertTrue(all(slot['part'] in z.namelist() for slot in metadata.get('dynamicMedia',[])))
+                    for part in z.namelist():
+                        if not part.startswith('word/media/'):continue
+                        with Image.open(io.BytesIO(z.read(part))) as image:
+                            if image.mode=='RGBA':self.assertEqual(image.getchannel('A').getextrema(),(0,0))
+                            else:self.assertEqual(image.convert('RGB').getextrema(),((255,255),)*3)
+                elif 'demo/original-form.json' in z.namelist():
                     metadata=json.loads(z.read('demo/original-form.json'))
                     self.assertEqual({n for n in z.namelist() if n.startswith('word/media/')},
                                      {slot['part'] for slot in metadata['dynamicMedia']})
@@ -209,14 +225,17 @@ class RenderTests(unittest.TestCase):
         from print_contracts import W,text
         for tid in ['biot-protocol','ptm-protocol','pb-protocol','ps-protocol','ps-witness','biot-worker-card']:
             snap=fixture(tid);item=snap['items'][0];item['credentialNumber']='КР-98765';item['assignment']['education']='ТЕСТ: высшее'
+            item['assignment']['outcome']={'status':'PASSED'}
             output=OUT/(tid+'-mapping-regression.docx');render_docx(snap,output)
             with ZipFile(output) as archive:tree=E.fromstring(archive.read('word/document.xml'))
             if tid in ['biot-protocol','ptm-protocol']:
-                policy=next(template for template in MANIFEST['templates'] if template['id']==tid).get('restoration',{}).get('layoutPolicy')
+                active=next(template for template in MANIFEST['templates'] if template['id']==tid)
+                policy=active.get('restoration',{}).get('layoutPolicy')
                 # Both versioned source-form policies retain the separate
                 # Russian and Kazakh approval-basis slots of the same form.
                 source_form_policy = policy in ['LEGACY_REFERENCE_90D5', 'NEUTRAL_FORMS_V1']
-                self.assertEqual(text(tree).count(snap['issuer']['approvalBasis']), 2 if source_form_policy else 1)
+                basis_count=(2 if tid=='biot-protocol' else 1) if active.get('renderPolicy')=='USER_ARCHIVE_20261109_V1' else (2 if source_form_policy else 1)
+                self.assertEqual(text(tree).count(snap['issuer']['approvalBasis']),basis_count)
                 table=next(tree.iter(W+'tbl'));cells=table.findall(W+'tr')[2 if tid=='biot-protocol' else 1].findall(W+'tc');self.assertEqual(text(cells[-1]).strip(),'')
             if tid=='ps-protocol':
                 table=next(tree.iter(W+'tbl'));cell=table.findall(W+'tr')[1].findall(W+'tc')[-1];self.assertEqual(text(cell),'КР-98765')

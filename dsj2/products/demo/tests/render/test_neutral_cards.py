@@ -1,7 +1,6 @@
 """Filled card values, identical copies, photos and release overflow guard."""
 from copy import deepcopy
 import os
-import json
 from pathlib import Path
 import sys
 import tempfile
@@ -16,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/render'))
 from legacy_reference import reference_sources, render_reference_files, freeze_reference_dates
 from neutral_cards import repair_card_files, NS, W
-from test_render import fixture
+from neutral_fixture import fixture, MANIFEST
 
 
 class NeutralCardTests(unittest.TestCase):
@@ -93,8 +92,7 @@ class NeutralCardTests(unittest.TestCase):
 
     def test_neutral_batch_keeps_each_recipient_photo_relationship(self):
         from neutral_forms import render_neutral_document
-        manifest = json.loads((ROOT / 'assets/templates/manifest.json').read_text(encoding='utf8'))
-        template = next(x for x in manifest['templates'] if x['id'] == 'pb-card')
+        template = next(x for x in MANIFEST['templates'] if x['id'] == 'pb-card')
         snapshot = fixture('pb-card')
         snapshot.update(demoMode=False, englishAppendix=False)
         second = deepcopy(snapshot['items'][0])

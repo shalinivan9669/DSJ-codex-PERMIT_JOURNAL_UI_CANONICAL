@@ -7,7 +7,7 @@ from zipfile import ZipFile
 
 from lxml import etree as E
 
-from test_render import fixture
+from neutral_fixture import fixture
 from renderer import render_docx
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'

@@ -9,8 +9,7 @@ from lxml import etree as E
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/render'))
 from neutral_forms import render_neutral_one, render_neutral_group
-from test_render import fixture, MANIFEST
-from test_group_protocol import group_fixture
+from neutral_fixture import fixture, group_fixture, MANIFEST
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 

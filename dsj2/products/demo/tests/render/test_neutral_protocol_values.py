@@ -10,8 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/render'))
 from group_protocol import roster_table, W
 from neutral_forms import render_neutral_group, render_neutral_one
-from test_group_protocol import group_fixture
-from test_render import fixture, MANIFEST
+from neutral_fixture import fixture, group_fixture, MANIFEST
 
 FORMS = ['biot-protocol', 'biot-itr-protocol', 'ptm-protocol', 'pb-protocol']
 

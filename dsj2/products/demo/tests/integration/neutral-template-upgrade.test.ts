@@ -7,7 +7,11 @@ import { assertTestDatabase } from "./test-database";
 import { bootstrap } from "../../apps/api/src/main";
 import { db, hash, json, type Context } from "../../apps/api/src/core";
 import { passwordHash } from "../../apps/api/src/auth";
-import { createRequest, validateRequest } from "../../apps/api/src/requests";
+import {
+  createRequest,
+  preview,
+  validateRequest,
+} from "../../apps/api/src/requests";
 import {
   provisionRegisteredCenter,
   type PreparedRegistrationTemplate,
@@ -25,11 +29,15 @@ import { provision } from "../../scripts/setup";
 const sha256 = (bytes: Buffer) =>
   createHash("sha256").update(bytes).digest("hex");
 
-test("neutral, explicit special and LMS upgrade appends all 22 unapproved manifest versions and preserves historical records, renderer and authenticated downloads", async () => {
+test("current archive, retained neutral, special and LMS upgrade appends 22 unapproved versions and preserves history, approvals and authenticated downloads", async () => {
   assertTestDatabase();
   assert.ok(process.env.DEMO_ARTIFACT_ROOT, "Use an isolated artifact store");
   const previousPort = process.env.PORT;
   const previousOrigin = process.env.DEMO_ORIGIN;
+  const evidence =
+    process.env.DEMO_REGISTRATION_EVIDENCE_ROOT ||
+    join(PRODUCT_ROOT, "docs/evidence/autofill-cycle-20261005");
+  await mkdir(evidence, { recursive: true });
   process.env.PORT = "0";
   process.env.DEMO_ORIGIN = "http://localhost:3119";
   const store = new ArtifactStore();
@@ -329,11 +337,175 @@ test("neutral, explicit special and LMS upgrade appends all 22 unapproved manife
           !row.approved &&
           ((row.contract as Record<string, unknown>).renderPolicy ===
             "NEUTRAL_FORMS_V1" ||
+            (row.contract as Record<string, unknown>).renderPolicy ===
+              "USER_ARCHIVE_20261109_V1" ||
             (row.contract as Record<string, unknown>).program === "SPECIAL" ||
             (row.templateId.startsWith("lms-") &&
               (row.contract as Record<string, unknown>).renderPolicy ===
-                "LMS_CENTER_FORMS_V1")),
+                "LMS_CENTER_FORMS_V3")),
       ),
+    );
+    for (const row of appended) {
+      const expected = currentTemplates.find(
+        (template) =>
+          template.id === row.templateId &&
+          String(template.version) === row.version &&
+          template.sha256 === row.checksum,
+      );
+      assert.ok(
+        expected,
+        "Every appended contract must be an exact current manifest version",
+      );
+      assert.deepEqual(row.contract, expected);
+    }
+    const afterValidation = await validateRequest(c, draft.id, {
+      expectedRevision: draft.revision,
+    });
+    assert.ok(
+      !afterValidation.issues.some(
+        (issue) => issue.code === "TEMPLATE_NOT_APPROVED",
+      ),
+      "A new unapproved version must not disable the existing approved form",
+    );
+    const assertPreviewTemplate = async (expected: typeof oldCard) => {
+      const result = await preview(c, draft.id, {
+        expectedRevision: draft.revision,
+      });
+      const snapshotIds = [
+        ...new Set(result.jobs.map((job) => job.snapshotId)),
+      ];
+      try {
+        assert.equal(result.jobs.length, 4);
+        assert.equal(snapshotIds.length, 2);
+        const inputs = await db.renderInputSnapshot.findMany({
+          where: { tenantId, id: { in: snapshotIds } },
+        });
+        assert.deepEqual(
+          inputs
+            .map((row) => (row.input as Record<string, unknown>).templateId)
+            .sort(),
+          ["pb-card", "pb-protocol"],
+          "The PERSON card retains its companion protocol",
+        );
+        for (const row of inputs) {
+          const input = row.input as Record<string, unknown>;
+          const selected =
+            input.templateId === "pb-card"
+              ? expected
+              : oldRows.find(
+                  (form) =>
+                    form.templateId === "pb-protocol" &&
+                    (form.contract as Record<string, unknown>).ownerKind !==
+                      "GROUP",
+                )!;
+          assert.equal(row.templateVersionId, selected.id);
+          assert.equal(input.templateVersion, selected.version);
+          assert.equal(input.templateChecksum, selected.checksum);
+          assert.equal(input.templateStorageKey, selected.storageKey);
+          assert.deepEqual(
+            result.jobs
+              .filter((job) => job.snapshotId === row.id)
+              .map((job) => job.kind)
+              .sort(),
+            ["DOCX", "PDF"],
+          );
+        }
+      } finally {
+        // These isolated selection probes need no worker execution or artifacts.
+        // Their immutable input snapshots remain in this disposable database.
+        await db.generationJob.deleteMany({
+          where: { tenantId, id: { in: result.jobs.map((job) => job.id) } },
+        });
+      }
+    };
+    await assertPreviewTemplate(oldCard);
+    const archiveForms = appended.filter(
+      (row) =>
+        (row.contract as Record<string, unknown>).renderPolicy ===
+        "USER_ARCHIVE_20261109_V1",
+    );
+    assert.equal(archiveForms.length, 14);
+    const samples = [];
+    const sampleFailures: string[] = [];
+    const sampleDirectory = join(evidence, "server-template-samples");
+    await mkdir(sampleDirectory, { recursive: true });
+    for (const form of archiveForms) {
+      const ownerKind =
+        (form.contract as Record<string, unknown>).ownerKind === "GROUP"
+          ? "group"
+          : "individual";
+      assert.equal(form.approved, false);
+      for (const format of ["DOCX", "PDF"] as const) {
+        const file = `${form.templateId}-${ownerKind}-v${form.version}.${format.toLowerCase()}`;
+        try {
+          const response = await fetch(
+            `${base}/settings/templates/${form.id}/sample?format=${format}`,
+            { headers: { cookie: `demo_session=${session.token}` } },
+          );
+          assert.equal(
+            response.status,
+            200,
+            `${file}: ${response.status === 200 ? "OK" : (await response.text()).slice(0, 2000)}`,
+          );
+          assert.equal(response.headers.get("content-type"), MIME[format]);
+          assert.equal(
+            response.headers.get("cache-control"),
+            "private, no-store",
+          );
+          const bytes = Buffer.from(await response.arrayBuffer());
+          assert.ok(bytes.length > 1000, `${file}: nonempty real document`);
+          assert.equal(
+            bytes.subarray(0, format === "PDF" ? 5 : 4).toString("latin1"),
+            format === "PDF" ? "%PDF-" : "PK\x03\x04",
+            `${file}: expected document signature`,
+          );
+          await writeFile(join(sampleDirectory, file), bytes);
+          samples.push({
+            templateId: form.templateId,
+            version: form.version,
+            ownerKind,
+            format,
+            file,
+            size: bytes.length,
+            sha256: sha256(bytes),
+            beforeApproval: true,
+            status: "PASS",
+          });
+        } catch (error) {
+          const message = `${file}: ${error instanceof Error ? error.message : String(error)}`;
+          sampleFailures.push(message);
+          samples.push({
+            templateId: form.templateId,
+            version: form.version,
+            ownerKind,
+            format,
+            file,
+            status: "FAIL",
+            message,
+          });
+        }
+        await writeFile(
+          join(evidence, "server-template-samples.json"),
+          JSON.stringify({ syntheticOnly: true, samples }, null, 2) + "\n",
+        );
+      }
+    }
+    assert.deepEqual(
+      sampleFailures,
+      [],
+      "Every real settings preview must render",
+    );
+    assert.equal(samples.length, 28);
+    assert.equal(
+      await db.templateVersion.count({
+        where: {
+          tenantId,
+          id: { in: archiveForms.map((form) => form.id) },
+          approved: true,
+        },
+      }),
+      0,
+      "Downloading samples must never approve templates",
     );
     for (const row of oldRows) {
       assert.equal(
@@ -357,15 +529,6 @@ test("neutral, explicit special and LMS upgrade appends all 22 unapproved manife
       assert.equal(latest.checksum, template.sha256);
       assert.equal(latest.approved, false);
     }
-    const afterValidation = await validateRequest(c, draft.id, {
-      expectedRevision: draft.revision,
-    });
-    assert.ok(
-      afterValidation.issues.some(
-        (issue) => issue.code === "TEMPLATE_NOT_APPROVED",
-      ),
-      "New unapproved version must not fall back to an old approved form",
-    );
     assert.deepEqual(
       await db.issuance.findUniqueOrThrow({ where: { id: issuance.id } }),
       issuance,
@@ -384,6 +547,32 @@ test("neutral, explicit special and LMS upgrade appends all 22 unapproved manife
     const reproduced = await runRender("docx", frozen);
     assert.equal(reproduced.metadata.renderPolicy, "LEGACY_REFERENCE_90D5");
     assert.deepEqual(reproduced.buffer, historical.buffer);
+    // A real HTTP approval of this isolated fixture must also survive repeat
+    // provisioning. This never approves any production center's forms.
+    const selectedNew = appended.find((row) => row.templateId === "pb-card")!;
+    const approval = await fetch(
+      `${base}/settings/templates/${selectedNew.id}/approve`,
+      {
+        method: "POST",
+        headers: {
+          cookie: `demo_session=${session.token}`,
+          origin: process.env.DEMO_ORIGIN!,
+          "content-type": "application/json",
+          "x-csrf-token": session.csrf,
+        },
+        body: JSON.stringify({ approved: true }),
+      },
+    );
+    assert.equal(approval.status, 201, await approval.clone().text());
+    const approvedRows = await db.templateVersion.findMany({
+      where: { tenantId },
+      orderBy: { id: "asc" },
+    });
+    assert.equal(
+      approvedRows.find((row) => row.id === selectedNew.id)?.approved,
+      true,
+    );
+    await assertPreviewTemplate(selectedNew);
     // Re-running the supported provisioner is idempotent and keeps approvals.
     await provision({
       email: data.email,
@@ -396,16 +585,20 @@ test("neutral, explicit special and LMS upgrade appends all 22 unapproved manife
       oldRows.length + currentTemplates.length,
     );
     assert.deepEqual(
+      await db.templateVersion.findMany({
+        where: { tenantId },
+        orderBy: { id: "asc" },
+      }),
+      approvedRows,
+      "Repeated provisioning must preserve old and explicitly approved new versions",
+    );
+    assert.deepEqual(
       await db.numberSequence.findMany({
         where: { tenantId },
         orderBy: { namespace: "asc" },
       }),
       oldSequences,
     );
-    const evidence =
-      process.env.DEMO_REGISTRATION_EVIDENCE_ROOT ||
-      join(PRODUCT_ROOT, "docs/evidence/autofill-cycle-20261005");
-    await mkdir(evidence, { recursive: true });
     await writeFile(
       join(evidence, "registration-history-upgrade.json"),
       JSON.stringify(
@@ -419,13 +612,16 @@ test("neutral, explicit special and LMS upgrade appends all 22 unapproved manife
           appendedLegacyTemplateCount: 19,
           appendedLmsTemplateCount: 3,
           existingNumberSequencesUnchanged: true,
-          newApprovedCount: 0,
+          newApprovedCountAfterRegistration: 0,
+          explicitSyntheticApprovalPreservedOnRepeat: true,
+          archiveServerSamplesBeforeApproval: samples,
           oldRowsAndStoredTemplateBytesUnchanged: true,
           historicalSnapshotAndArtifactUnchanged: true,
           authenticatedHttpBeforeAfterSha256: beforeDownload,
           historicalRendererPolicy: reproduced.metadata.renderPolicy,
           historicalReproductionByteIdentical: true,
-          currentSelectionRejectsUnapprovedVersion: true,
+          existingApprovedVersionRemainsSelectedUntilApproval: true,
+          exactNewVersionSelectedAfterExplicitApproval: true,
           provisioningRepeatDoesNotDuplicate: true,
           realIssuanceApprovalOrSignatureClaim: false,
         },

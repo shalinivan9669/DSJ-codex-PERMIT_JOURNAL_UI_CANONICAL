@@ -3,15 +3,16 @@ import hashlib,json,tempfile,unittest
 from pathlib import Path
 from zipfile import ZipFile
 from lxml import etree as E
-from test_render import fixture, ROOT, STORE
-from test_group_protocol import group_fixture, FORMS
+from test_render import ROOT, STORE
+from test_group_protocol import FORMS
+from neutral_fixture import fixture, group_fixture, MANIFEST
 from renderer import preflight, render_docx
 from neutral_forms import neutral_source_entry, identify_neutral
 from group_protocol import W, roster_table
 
 class NeutralPreflightTests(unittest.TestCase):
     def test_current_group_sources_keep_template_identity_with_shared_bytes(self):
-        manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf8'))
+        manifest=MANIFEST
         snapshots=[]
         for template_id in FORMS:
             template=next(t for t in manifest['groupTemplates'] if t['id']==template_id)

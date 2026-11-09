@@ -1,5 +1,38 @@
 {
   "version": "2026-09-22.2",
+  "userArchiveForms20261109": {
+    "status": "LOCAL_ACCEPTANCE_PASS_DEPLOYMENT_PENDING",
+    "archiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+    "sourceFiles": 93,
+    "officeLockFiles": 10,
+    "sourceDocxSelected": 9,
+    "intentionallyRetained": [
+      "biot-itr-certificate",
+      "ps-witness"
+    ],
+    "verification": {
+      "builder": "PASS 14 tests",
+      "historicalSnapshotFields": "PASS 24 tests including real DOCX/PDF",
+      "sourceVisual": "PASS all selected source pages inspected",
+      "filledVisual": "PASS source pages, short/long cards, mixed/group PS and final API PB sample",
+      "archiveOriginals": "UNCHANGED",
+      "release": "PASS 6 isolated tests",
+      "upload": "PASS 22 tests; 14 candidate checks; 4/7 editor roundtrips accepted, 3 safely refused",
+      "focusedPython": "PASS 81 including Word package and PB frame/tail regressions",
+      "activePhysical": "PASS 5 including all 11 forms and real 250-person PTM PDF",
+      "neutralHistory": "PASS 38",
+      "unit": "PASS 663",
+      "lint": "PASS",
+      "typecheck": "PASS",
+      "build": "PASS Windows DEMO_STANDALONE=0",
+      "upgradeIntegration": "PASS 1; 28 real HTTP DOCX/PDF samples; approval selection and immutable history verified"
+    },
+    "pending": [
+      "Commit/push, deployment and tenant adoption"
+    ],
+    "rawEvidence": ".runtime/government-forms-20261109",
+    "professionGradeRule": "User confirmed 2026-11-09: one shared result in all three protocol grade columns"
+  },
   "safirebriefBrand20261109": {
     "status": "LOCAL_VERIFICATION_PASS_DEPLOYMENT_PENDING",
     "scope": "User-visible product name Safirebrief: shared shell/login/register, learner invitations/catalogue, page titles, export names, XLSX/PDF metadata and new TOTP issuer label",
@@ -7656,5 +7689,11 @@
       "sourceFiles": 581,
       "sourceSetSha256": "3c0560a243846c63a1fd47701250c7dc4d8064ba555b2790a03bc6b2a983ee60"
     }
+  },
+  "recentTestDataCleanup20261109": {
+    "status": "NOT_STARTED",
+    "scope": "Confirmed recent test business records only; no backup per user; preserve staff logins, courses, learning materials, templates, configuration and older data",
+    "profile": "User supplied RCОiPK requisites; not yet applied",
+    "productionMutations": false
   }
 }

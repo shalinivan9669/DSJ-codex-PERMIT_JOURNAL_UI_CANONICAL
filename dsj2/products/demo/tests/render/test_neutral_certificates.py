@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / 'scripts/render'))
 from legacy_reference import reference_sources, render_reference_files, freeze_reference_dates
 from neutral_certificates import repair_certificate_files, W
 from renderer import render_docx
-from test_render import fixture
+from neutral_fixture import fixture
 
 
 def source(snapshot):

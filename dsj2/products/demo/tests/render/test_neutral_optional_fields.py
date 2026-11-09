@@ -1,5 +1,4 @@
 """Empty optional values must not revive sample data or leave neutral markers."""
-import json
 from pathlib import Path
 import sys
 import tempfile
@@ -11,13 +10,13 @@ from lxml import etree as E
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/render'))
 from renderer import render_docx
-from test_render import fixture
+from neutral_fixture import fixture, MANIFEST
 import test_neutral_identity_audit as identity_audit
 
 
 class NeutralOptionalFieldTests(unittest.TestCase):
     def test_all_eleven_individual_forms_accept_empty_optional_values(self):
-        manifest = json.loads((ROOT / 'assets/templates/manifest.json').read_text(encoding='utf8'))
+        manifest = MANIFEST
         self.assertEqual(len(manifest['templates']), 11)
         with tempfile.TemporaryDirectory(prefix='demo-neutral-optional-') as directory:
             for template in manifest['templates']:

@@ -5,7 +5,8 @@ import os,unittest
 from zipfile import ZipFile
 from lxml import etree as E
 import pymupdf
-from test_render import fixture, EVIDENCE_ROOT
+from test_render import EVIDENCE_ROOT
+from neutral_fixture import fixture
 from renderer import render_docx,convert_pdf
 W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 

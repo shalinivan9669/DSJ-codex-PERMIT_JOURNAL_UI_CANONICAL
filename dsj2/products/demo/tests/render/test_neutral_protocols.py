@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT / 'scripts/render'))
 from group_protocol import W, roster_table
 from legacy_reference import reference_sources, render_reference_group_files
 from neutral_protocols import COMMISSION_BOOKMARK, PROTOCOL_IDS, repair_protocol_files
-from test_group_protocol import group_fixture
+from neutral_fixture import group_fixture
 
 
 def text(element):

@@ -1,15 +1,17 @@
 {
   "version": 1,
-  "rendererVersion": "demo-ooxml-14/libreoffice-26.2.6.3",
+  "rendererVersion": "demo-ooxml-15/libreoffice-26.2.6.3",
   "templates": [
     {
       "id": "biot-worker-card",
-      "version": 21,
-      "file": "biot-worker-card.v21.docx",
-      "sha256": "e10043bd9b87dfc490a106c6cf4e9ab7689233f946a45d6031bb67818233dfc7",
-      "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+      "version": 22,
+      "file": "biot-worker-card.v22.docx",
+      "sha256": "aa40d1d72e4a808133a1982dcddff347f026d9f064d473b11a2cd27a3bfa7b1b",
+      "sourceSha256": "c4f4692682ce6de006129bc16baafb041f9543daf6e2692bda0b4df1c4c633e8",
       "fields": [
         "CHAIR_NAME",
+        "EXAM_STATEMENT_KZ",
+        "EXAM_STATEMENT_RU",
         "FULL_NAME_KZ",
         "FULL_NAME_RU",
         "ISSUER_BOTH",
@@ -20,8 +22,6 @@
         "PROTOCOL_DAY_MONTH",
         "PROTOCOL_NUMBER",
         "PROTOCOL_YEAR",
-        "SERIES",
-        "SUBJECT",
         "WORKPLACE_KZ",
         "WORKPLACE_RU"
       ],
@@ -50,19 +50,12 @@
       ],
       "protocolSemantics": null,
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "biot-worker-card.v20.docx",
-        "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "sourceIdentityImagesReplaced": true,
-      "renderPolicy": "NEUTRAL_FORMS_V1"
+      "previousTemplateSha256": "e10043bd9b87dfc490a106c6cf4e9ab7689233f946a45d6031bb67818233dfc7",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "biot-itr-certificate",
@@ -111,10 +104,10 @@
     },
     {
       "id": "biot-protocol",
-      "version": 15,
-      "file": "biot-protocol.v15.docx",
-      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
-      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "version": 16,
+      "file": "biot-protocol.v16.docx",
+      "sha256": "85c28030a8ceb7214afec9280b6c2b20c93572041eae943812fc5f5efa01fcf3",
+      "sourceSha256": "519e651bf954c191a769970f02a2a57f1dbf9caee7bac235247c7d9dc8d2c81c",
       "fields": [
         "ADDRESS_KZ",
         "ADDRESS_RU",
@@ -123,18 +116,18 @@
         "CHAIR",
         "CHAIR_NAME",
         "FULL_NAME_BOTH",
-        "ISSUER_BIN",
-        "ISSUER_BOTH",
+        "MEMBERS_FROM_SECOND",
         "MEMBER_1",
         "MEMBER_1_NAME",
-        "MEMBER_2",
         "MEMBER_2_NAME",
         "POSITION_BOTH",
         "PROTOCOL_DATE",
         "PROTOCOL_NUMBER",
-        "RESULT",
-        "WORKPLACE_BOTH",
-        "WORKPLACE_KZ"
+        "REASON_KZ",
+        "REASON_RU",
+        "RESULT_BOTH",
+        "ROW_NUMBER",
+        "WORKPLACE_BOTH"
       ],
       "sections": [
         {
@@ -153,37 +146,33 @@
       ],
       "protocolSemantics": "INDIVIDUAL",
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "biot-protocol.v14.docx",
-        "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "sourceIdentityImagesReplaced": true,
-      "renderPolicy": "NEUTRAL_FORMS_V1"
+      "previousTemplateSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "ptm-card",
-      "version": 18,
-      "file": "ptm-card.v18.docx",
-      "sha256": "5c79ada917fcca2ce83f0693853ba6ec76446f7c14892115101f1e6e10189881",
-      "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+      "version": 19,
+      "file": "ptm-card.v19.docx",
+      "sha256": "e3c6eecd4aef09209ac7987a23d4208ec33190ef71d69395a0f615b5a268eaf7",
+      "sourceSha256": "83e3f05d94d64da7eecf6590050f239866cf139933fe1d415245a90d8a1109cf",
       "fields": [
-        "CHAIR_NAME",
-        "DOCUMENT_DAY_MONTH",
-        "DOCUMENT_YEAR",
+        "EXAM_STATEMENT_KZ",
+        "EXAM_STATEMENT_RU",
         "FULL_NAME_RU",
+        "HEAD_NAME",
         "ISSUER_BOTH",
         "NUMBER",
         "POSITION_KZ",
         "POSITION_RU",
+        "PROTOCOL_DATE",
+        "PROTOCOL_DAY_MONTH",
         "PROTOCOL_NUMBER",
-        "SUBJECT",
+        "PROTOCOL_YEAR",
+        "VALID_DATE",
         "VALID_DAY_MONTH",
         "VALID_YEAR",
         "WORKPLACE_KZ",
@@ -207,44 +196,37 @@
       ],
       "protocolSemantics": null,
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "sourceIdentityImagesReplaced": true,
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "ptm-card.v17.docx",
-        "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "renderPolicy": "NEUTRAL_FORMS_V1"
+      "previousTemplateSha256": "5c79ada917fcca2ce83f0693853ba6ec76446f7c14892115101f1e6e10189881",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "ptm-protocol",
-      "version": 13,
-      "file": "ptm-protocol.v13.docx",
-      "sha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
-      "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+      "version": 14,
+      "file": "ptm-protocol.v14.docx",
+      "sha256": "2f1ddc42561083c6eab61b17f9fe4049db90d4d24ae04da7cca7b18b58c934ee",
+      "sourceSha256": "7cf2e53bf2bdd23ad55325e1205ca6cab52017236f02b5f14de149c4292b3edb",
       "fields": [
         "ADDRESS_KZ",
         "ADDRESS_RU",
         "APPROVAL_BASIS",
-        "CHAIR",
         "CHAIR_NAME",
+        "CHAIR_POSITION",
         "FULL_NAME_BOTH",
-        "ISSUER_BIN",
         "ISSUER_BOTH",
-        "MEMBER_1",
+        "MEMBERS_FROM_SECOND",
         "MEMBER_1_NAME",
-        "MEMBER_2",
+        "MEMBER_1_POSITION",
         "MEMBER_2_NAME",
         "POSITION_BOTH",
         "PROTOCOL_DATE",
         "PROTOCOL_NUMBER",
-        "REASON",
-        "RESULT",
+        "REASON_BOTH",
+        "RESULT_BOTH",
+        "ROW_NUMBER",
         "WORKPLACE_BOTH"
       ],
       "sections": [
@@ -264,26 +246,19 @@
       ],
       "protocolSemantics": "individual",
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "sourceIdentityImagesReplaced": true,
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "ptm-protocol.v12.docx",
-        "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "renderPolicy": "NEUTRAL_FORMS_V1"
+      "previousTemplateSha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "pb-card",
-      "version": 18,
-      "file": "pb-card.v18.docx",
-      "sha256": "edd414481ae70bc82a170494cf668d9963db007b3946bd2f9e2f766ce2589ab6",
-      "sourceSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+      "version": 19,
+      "file": "pb-card.v19.docx",
+      "sha256": "61e2cfd73d42f048daf73cc9912337d7016787ca7aec6ddc1938eaddf2775a5d",
+      "sourceSha256": "f20d6c1ed485960f0a72aa017f5941d1900ba8e6c3d1607c326fc6c26bcaade8",
       "fields": [
         "CHAIR_NAME",
         "DOCUMENT_DAY",
@@ -291,10 +266,16 @@
         "DOCUMENT_YEAR",
         "FULL_NAME_RU",
         "ISSUER_BOTH",
+        "ISSUER_RU",
         "NUMBER",
         "POSITION_BOTH",
+        "PROTOCOL_DAY",
+        "PROTOCOL_MONTH",
         "PROTOCOL_NUMBER",
-        "SUBJECT",
+        "PROTOCOL_YEAR",
+        "SUBJECT_BOTH",
+        "VALID_DAY",
+        "VALID_MONTH",
         "VALID_YEAR",
         "WORKPLACE_BOTH"
       ],
@@ -316,44 +297,37 @@
       ],
       "protocolSemantics": null,
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "sourceIdentityImagesReplaced": true,
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "pb-card.v17.docx",
-        "sourceSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "renderPolicy": "NEUTRAL_FORMS_V1"
+      "previousTemplateSha256": "edd414481ae70bc82a170494cf668d9963db007b3946bd2f9e2f766ce2589ab6",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "pb-protocol",
-      "version": 13,
-      "file": "pb-protocol.v13.docx",
-      "sha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
-      "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+      "version": 14,
+      "file": "pb-protocol.v14.docx",
+      "sha256": "785ab89266674fa83b48aaa67fb1af688e489991574dd1eaf31b3d6a71e47628",
+      "sourceSha256": "f6fa0a899212d49b0443574d9a2e26fa641f9c348dd3f5a9ce56f290e11b2a4f",
       "fields": [
         "ADDRESS_KZ",
         "ADDRESS_RU",
-        "CHAIR",
         "CHAIR_NAME",
+        "CHAIR_POSITION",
         "EDUCATION",
         "FULL_NAME_BOTH",
         "HOURS",
-        "ISSUER_BIN",
         "ISSUER_BOTH",
-        "MEMBER_1",
+        "MEMBERS_FROM_SECOND",
         "MEMBER_1_NAME",
-        "MEMBER_2",
+        "MEMBER_1_POSITION",
         "MEMBER_2_NAME",
         "POSITION_BOTH",
         "PROTOCOL_DATE",
         "PROTOCOL_NUMBER",
-        "RESULT",
+        "RESULT_BOTH",
+        "ROW_NUMBER",
         "WORKPLACE_BOTH"
       ],
       "sections": [
@@ -373,45 +347,45 @@
       ],
       "protocolSemantics": "individual",
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "sourceIdentityImagesReplaced": true,
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "pb-protocol.v12.docx",
-        "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "renderPolicy": "NEUTRAL_FORMS_V1"
+      "previousTemplateSha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "ps-card",
-      "version": 19,
-      "file": "ps-card.v19.docx",
-      "sha256": "78f97e1c1fe91f6229ba40581d6f6c2fb21df6a107d490b71e93d93695faadd1",
-      "sourceSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+      "version": 20,
+      "file": "ps-card.v20.docx",
+      "sha256": "6ba3e23f05c439478ad386042b7934294cbe5b8486b7d344bfc809fb7db6e381",
+      "sourceSha256": "8b0bfae6341b39cb6f6422d4a5a2297dba5e4aefb046d3f86a661496034ea793",
       "fields": [
-        "CHAIR_NAME",
         "FULL_NAME_BOTH",
         "ISSUER_BOTH",
-        "MEMBER_1_NAME",
-        "MEMBER_2_NAME",
         "NUMBER",
-        "ONE",
         "POSITION_KZ",
         "POSITION_RU",
         "PROTOCOL_DAY_MONTH",
         "PROTOCOL_NUMBER",
         "PROTOCOL_YEAR",
-        "RESULT",
-        "SERIES",
-        "SUBJECT",
-        "TWO"
+        "PS_GENERAL_NUMBER",
+        "PS_GENERAL_SUBJECT_KZ",
+        "PS_GENERAL_SUBJECT_RU",
+        "PS_SPECIAL_NUMBER",
+        "PS_SPECIAL_SUBJECT_KZ",
+        "PS_SPECIAL_SUBJECT_RU",
+        "QUALIFICATION_STATUS_KZ",
+        "QUALIFICATION_STATUS_RU",
+        "RESULT_KZ",
+        "RESULT_RU",
+        "SERIES"
       ],
       "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+        },
         {
           "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
           "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
@@ -436,47 +410,48 @@
       ],
       "protocolSemantics": null,
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "sourceIdentityImagesReplaced": true,
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "ps-card.v18.docx",
-        "sourceSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "renderPolicy": "NEUTRAL_FORMS_V1"
+      "previousTemplateSha256": "78f97e1c1fe91f6229ba40581d6f6c2fb21df6a107d490b71e93d93695faadd1",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "ps-protocol",
-      "version": 13,
-      "file": "ps-protocol.v13.docx",
-      "sha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
-      "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+      "version": 14,
+      "file": "ps-protocol.v14.docx",
+      "sha256": "8eed731f1aec04c205a4d9a5f7ab2ba3637d83c8f5328177a9f52757898f9161",
+      "sourceSha256": "445893091680eccf855db5575e54fd8de44ddc07cf27b9978a2c38e2c4321d25",
       "fields": [
         "ADDRESS_KZ",
         "ADDRESS_RU",
-        "APPROVAL_BASIS",
         "CHAIR",
         "CHAIR_NAME",
         "CREDENTIAL_NUMBER",
-        "FULL_NAME_BOTH",
-        "ISSUER_BIN",
-        "ISSUER_BOTH",
+        "FULL_NAME_KZ",
+        "FULL_NAME_RU",
+        "MEMBERS_FROM_SECOND",
         "MEMBER_1",
         "MEMBER_1_NAME",
-        "MEMBER_2",
         "MEMBER_2_NAME",
-        "POSITION_BOTH",
         "PROTOCOL_DAY_MONTH",
         "PROTOCOL_NUMBER",
         "PROTOCOL_YEAR",
-        "RESULT"
+        "PS_AWARDED_QUALIFICATION_KZ",
+        "PS_AWARDED_QUALIFICATION_RU",
+        "PS_DECISION_KZ",
+        "PS_DECISION_RU",
+        "RESULT_KZ",
+        "RESULT_RU",
+        "ROW_NUMBER"
       ],
       "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}orient": "landscape"
+        },
         {
           "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
           "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906",
@@ -494,19 +469,12 @@
       ],
       "protocolSemantics": "individual",
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "sourceIdentityImagesReplaced": true,
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "ps-protocol.v12.docx",
-        "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "renderPolicy": "NEUTRAL_FORMS_V1"
+      "previousTemplateSha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "ps-witness",
@@ -578,10 +546,10 @@
     },
     {
       "id": "biot-itr-protocol",
-      "version": 6,
-      "file": "biot-itr-protocol.v6.docx",
-      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
-      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "version": 7,
+      "file": "biot-itr-protocol.v7.docx",
+      "sha256": "8441e4e2a85e1a9bb12aff046439752239747c6c1931ea8ca5d074ff2d42248c",
+      "sourceSha256": "519e651bf954c191a769970f02a2a57f1dbf9caee7bac235247c7d9dc8d2c81c",
       "fields": [
         "ADDRESS_KZ",
         "ADDRESS_RU",
@@ -590,18 +558,18 @@
         "CHAIR",
         "CHAIR_NAME",
         "FULL_NAME_BOTH",
-        "ISSUER_BIN",
-        "ISSUER_BOTH",
+        "MEMBERS_FROM_SECOND",
         "MEMBER_1",
         "MEMBER_1_NAME",
-        "MEMBER_2",
         "MEMBER_2_NAME",
         "POSITION_BOTH",
         "PROTOCOL_DATE",
         "PROTOCOL_NUMBER",
-        "RESULT",
-        "WORKPLACE_BOTH",
-        "WORKPLACE_KZ"
+        "REASON_KZ",
+        "REASON_RU",
+        "RESULT_BOTH",
+        "ROW_NUMBER",
+        "WORKPLACE_BOTH"
       ],
       "sections": [
         {
@@ -620,28 +588,21 @@
       ],
       "protocolSemantics": "INDIVIDUAL",
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "biot-itr-protocol.v5.docx",
-        "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "sourceIdentityImagesReplaced": true,
-      "renderPolicy": "NEUTRAL_FORMS_V1"
+      "previousTemplateSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     }
   ],
   "groupTemplates": [
     {
       "id": "biot-protocol",
-      "version": "15-group-1",
-      "file": "biot-protocol.group-v6.docx",
-      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
-      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "version": "16-group-1",
+      "file": "biot-protocol.group-v7.docx",
+      "sha256": "85c28030a8ceb7214afec9280b6c2b20c93572041eae943812fc5f5efa01fcf3",
+      "sourceSha256": "519e651bf954c191a769970f02a2a57f1dbf9caee7bac235247c7d9dc8d2c81c",
       "fields": [
         "ADDRESS_KZ",
         "ADDRESS_RU",
@@ -650,18 +611,18 @@
         "CHAIR",
         "CHAIR_NAME",
         "FULL_NAME_BOTH",
-        "ISSUER_BIN",
-        "ISSUER_BOTH",
+        "MEMBERS_FROM_SECOND",
         "MEMBER_1",
         "MEMBER_1_NAME",
-        "MEMBER_2",
         "MEMBER_2_NAME",
         "POSITION_BOTH",
         "PROTOCOL_DATE",
         "PROTOCOL_NUMBER",
-        "RESULT",
-        "WORKPLACE_BOTH",
-        "WORKPLACE_KZ"
+        "REASON_KZ",
+        "REASON_RU",
+        "RESULT_BOTH",
+        "ROW_NUMBER",
+        "WORKPLACE_BOTH"
       ],
       "sections": [
         {
@@ -680,47 +641,40 @@
       ],
       "protocolSemantics": "GROUP",
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "biot-protocol.group-v5.docx",
-        "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "sourceIdentityImagesReplaced": true,
-      "renderPolicy": "NEUTRAL_FORMS_V1",
+      "previousTemplateSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
       "ownerKind": "GROUP",
       "groupContractVersion": 1,
-      "groupRenderer": "neutral_forms.py:source-row-clone-v1"
+      "groupRenderer": "archive_forms.py:render_archive_group",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "ptm-protocol",
-      "version": "13-group-1",
-      "file": "ptm-protocol.group-v5.docx",
-      "sha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
-      "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+      "version": "14-group-1",
+      "file": "ptm-protocol.group-v6.docx",
+      "sha256": "2f1ddc42561083c6eab61b17f9fe4049db90d4d24ae04da7cca7b18b58c934ee",
+      "sourceSha256": "7cf2e53bf2bdd23ad55325e1205ca6cab52017236f02b5f14de149c4292b3edb",
       "fields": [
         "ADDRESS_KZ",
         "ADDRESS_RU",
         "APPROVAL_BASIS",
-        "CHAIR",
         "CHAIR_NAME",
+        "CHAIR_POSITION",
         "FULL_NAME_BOTH",
-        "ISSUER_BIN",
         "ISSUER_BOTH",
-        "MEMBER_1",
+        "MEMBERS_FROM_SECOND",
         "MEMBER_1_NAME",
-        "MEMBER_2",
+        "MEMBER_1_POSITION",
         "MEMBER_2_NAME",
         "POSITION_BOTH",
         "PROTOCOL_DATE",
         "PROTOCOL_NUMBER",
-        "REASON",
-        "RESULT",
+        "REASON_BOTH",
+        "RESULT_BOTH",
+        "ROW_NUMBER",
         "WORKPLACE_BOTH"
       ],
       "sections": [
@@ -740,47 +694,40 @@
       ],
       "protocolSemantics": "GROUP",
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "sourceIdentityImagesReplaced": true,
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "ptm-protocol.group-v4.docx",
-        "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "renderPolicy": "NEUTRAL_FORMS_V1",
+      "previousTemplateSha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
       "ownerKind": "GROUP",
       "groupContractVersion": 1,
-      "groupRenderer": "neutral_forms.py:source-row-clone-v1"
+      "groupRenderer": "archive_forms.py:render_archive_group",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "pb-protocol",
-      "version": "13-group-1",
-      "file": "pb-protocol.group-v5.docx",
-      "sha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
-      "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+      "version": "14-group-1",
+      "file": "pb-protocol.group-v6.docx",
+      "sha256": "785ab89266674fa83b48aaa67fb1af688e489991574dd1eaf31b3d6a71e47628",
+      "sourceSha256": "f6fa0a899212d49b0443574d9a2e26fa641f9c348dd3f5a9ce56f290e11b2a4f",
       "fields": [
         "ADDRESS_KZ",
         "ADDRESS_RU",
-        "CHAIR",
         "CHAIR_NAME",
+        "CHAIR_POSITION",
         "EDUCATION",
         "FULL_NAME_BOTH",
         "HOURS",
-        "ISSUER_BIN",
         "ISSUER_BOTH",
-        "MEMBER_1",
+        "MEMBERS_FROM_SECOND",
         "MEMBER_1_NAME",
-        "MEMBER_2",
+        "MEMBER_1_POSITION",
         "MEMBER_2_NAME",
         "POSITION_BOTH",
         "PROTOCOL_DATE",
         "PROTOCOL_NUMBER",
-        "RESULT",
+        "RESULT_BOTH",
+        "ROW_NUMBER",
         "WORKPLACE_BOTH"
       ],
       "sections": [
@@ -800,50 +747,51 @@
       ],
       "protocolSemantics": "GROUP",
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "sourceIdentityImagesReplaced": true,
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "pb-protocol.group-v4.docx",
-        "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "renderPolicy": "NEUTRAL_FORMS_V1",
+      "previousTemplateSha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
       "ownerKind": "GROUP",
       "groupContractVersion": 1,
-      "groupRenderer": "neutral_forms.py:source-row-clone-v1"
+      "groupRenderer": "archive_forms.py:render_archive_group",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "ps-protocol",
-      "version": "13-group-1",
-      "file": "ps-protocol.group-v5.docx",
-      "sha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
-      "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+      "version": "14-group-1",
+      "file": "ps-protocol.group-v6.docx",
+      "sha256": "8eed731f1aec04c205a4d9a5f7ab2ba3637d83c8f5328177a9f52757898f9161",
+      "sourceSha256": "445893091680eccf855db5575e54fd8de44ddc07cf27b9978a2c38e2c4321d25",
       "fields": [
         "ADDRESS_KZ",
         "ADDRESS_RU",
-        "APPROVAL_BASIS",
         "CHAIR",
         "CHAIR_NAME",
         "CREDENTIAL_NUMBER",
-        "FULL_NAME_BOTH",
-        "ISSUER_BIN",
-        "ISSUER_BOTH",
+        "FULL_NAME_KZ",
+        "FULL_NAME_RU",
+        "MEMBERS_FROM_SECOND",
         "MEMBER_1",
         "MEMBER_1_NAME",
-        "MEMBER_2",
         "MEMBER_2_NAME",
-        "POSITION_BOTH",
         "PROTOCOL_DAY_MONTH",
         "PROTOCOL_NUMBER",
         "PROTOCOL_YEAR",
-        "RESULT"
+        "PS_AWARDED_QUALIFICATION_KZ",
+        "PS_AWARDED_QUALIFICATION_RU",
+        "PS_DECISION_KZ",
+        "PS_DECISION_RU",
+        "RESULT_KZ",
+        "RESULT_RU",
+        "ROW_NUMBER"
       ],
       "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}orient": "landscape"
+        },
         {
           "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
           "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906",
@@ -861,29 +809,22 @@
       ],
       "protocolSemantics": "GROUP",
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "sourceIdentityImagesReplaced": true,
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "ps-protocol.group-v4.docx",
-        "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "renderPolicy": "NEUTRAL_FORMS_V1",
+      "previousTemplateSha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
       "ownerKind": "GROUP",
       "groupContractVersion": 1,
-      "groupRenderer": "neutral_forms.py:source-row-clone-v1"
+      "groupRenderer": "archive_forms.py:render_archive_group",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     },
     {
       "id": "biot-itr-protocol",
-      "version": "6-group-1",
-      "file": "biot-itr-protocol.group-v6.docx",
-      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
-      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "version": "7-group-1",
+      "file": "biot-itr-protocol.group-v7.docx",
+      "sha256": "8441e4e2a85e1a9bb12aff046439752239747c6c1931ea8ca5d074ff2d42248c",
+      "sourceSha256": "519e651bf954c191a769970f02a2a57f1dbf9caee7bac235247c7d9dc8d2c81c",
       "fields": [
         "ADDRESS_KZ",
         "ADDRESS_RU",
@@ -892,18 +833,18 @@
         "CHAIR",
         "CHAIR_NAME",
         "FULL_NAME_BOTH",
-        "ISSUER_BIN",
-        "ISSUER_BOTH",
+        "MEMBERS_FROM_SECOND",
         "MEMBER_1",
         "MEMBER_1_NAME",
-        "MEMBER_2",
         "MEMBER_2_NAME",
         "POSITION_BOTH",
         "PROTOCOL_DATE",
         "PROTOCOL_NUMBER",
-        "RESULT",
-        "WORKPLACE_BOTH",
-        "WORKPLACE_KZ"
+        "REASON_KZ",
+        "REASON_RU",
+        "RESULT_BOTH",
+        "ROW_NUMBER",
+        "WORKPLACE_BOTH"
       ],
       "sections": [
         {
@@ -922,22 +863,15 @@
       ],
       "protocolSemantics": "GROUP",
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
-      "formRevision": "NEUTRAL_FORMS_V1",
-      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
-      "restoration": {
-        "sourceFile": "biot-itr-protocol.group-v5.docx",
-        "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
-        "layoutPolicy": "NEUTRAL_FORMS_V1",
-        "sourcePackageUnmodified": false,
-        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
-      },
-      "sourceIdentityImagesReplaced": true,
-      "renderPolicy": "NEUTRAL_FORMS_V1",
+      "previousTemplateSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "formRevision": "USER_ARCHIVE_20261109_V1",
+      "verificationStatus": "LOCAL_DOCX_AND_APPLICATION_PDF_VERIFIED",
+      "renderPolicy": "USER_ARCHIVE_20261109_V1",
       "ownerKind": "GROUP",
       "groupContractVersion": 1,
-      "groupRenderer": "neutral_forms.py:source-row-clone-v1"
+      "groupRenderer": "archive_forms.py:render_archive_group",
+      "sourceArchiveSha256": "8e0f85f825b2e58b668ae7a1c43c173a19175a53977ed999441cc365bb234bda",
+      "sourceIdentityPolicy": "FROZEN_CENTRE_AND_RECIPIENT_DATA_NO_SPECIMEN_IDENTITIES"
     }
   ],
   "specialTemplates": [
@@ -1505,6 +1439,828 @@
       "renderPolicy": "LMS_CENTER_FORMS_V2",
       "formRevision": "LMS_CENTER_FORMS_V2",
       "verificationStatus": "ENGINEERING_TEMPLATE_REQUIRES_RENDER_ACCEPTANCE"
+    },
+    {
+      "id": "biot-worker-card",
+      "version": 21,
+      "file": "biot-worker-card.v21.docx",
+      "sha256": "e10043bd9b87dfc490a106c6cf4e9ab7689233f946a45d6031bb67818233dfc7",
+      "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+      "fields": [
+        "CHAIR_NAME",
+        "FULL_NAME_KZ",
+        "FULL_NAME_RU",
+        "ISSUER_BOTH",
+        "MEMBER_1_NAME",
+        "NUMBER",
+        "POSITION_KZ",
+        "POSITION_RU",
+        "PROTOCOL_DAY_MONTH",
+        "PROTOCOL_NUMBER",
+        "PROTOCOL_YEAR",
+        "SERIES",
+        "SUBJECT",
+        "WORKPLACE_KZ",
+        "WORKPLACE_RU"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+        },
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+        },
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": null,
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "biot-worker-card.v20.docx",
+        "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "sourceIdentityImagesReplaced": true,
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    {
+      "id": "biot-protocol",
+      "version": 15,
+      "file": "biot-protocol.v15.docx",
+      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "fields": [
+        "ADDRESS_KZ",
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "BIOT_NOTES",
+        "CHAIR",
+        "CHAIR_NAME",
+        "FULL_NAME_BOTH",
+        "ISSUER_BIN",
+        "ISSUER_BOTH",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT",
+        "WORKPLACE_BOTH",
+        "WORKPLACE_KZ"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": "INDIVIDUAL",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "biot-protocol.v14.docx",
+        "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "sourceIdentityImagesReplaced": true,
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    {
+      "id": "ptm-card",
+      "version": 18,
+      "file": "ptm-card.v18.docx",
+      "sha256": "5c79ada917fcca2ce83f0693853ba6ec76446f7c14892115101f1e6e10189881",
+      "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+      "fields": [
+        "CHAIR_NAME",
+        "DOCUMENT_DAY_MONTH",
+        "DOCUMENT_YEAR",
+        "FULL_NAME_RU",
+        "ISSUER_BOTH",
+        "NUMBER",
+        "POSITION_KZ",
+        "POSITION_RU",
+        "PROTOCOL_NUMBER",
+        "SUBJECT",
+        "VALID_DAY_MONTH",
+        "VALID_YEAR",
+        "WORKPLACE_KZ",
+        "WORKPLACE_RU"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}code": "9"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": true,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": null,
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "sourceIdentityImagesReplaced": true,
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "ptm-card.v17.docx",
+        "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    {
+      "id": "ptm-protocol",
+      "version": 13,
+      "file": "ptm-protocol.v13.docx",
+      "sha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+      "fields": [
+        "ADDRESS_KZ",
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "CHAIR",
+        "CHAIR_NAME",
+        "FULL_NAME_BOTH",
+        "ISSUER_BIN",
+        "ISSUER_BOTH",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "REASON",
+        "RESULT",
+        "WORKPLACE_BOTH"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": "individual",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "sourceIdentityImagesReplaced": true,
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "ptm-protocol.v12.docx",
+        "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    {
+      "id": "pb-card",
+      "version": 18,
+      "file": "pb-card.v18.docx",
+      "sha256": "edd414481ae70bc82a170494cf668d9963db007b3946bd2f9e2f766ce2589ab6",
+      "sourceSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+      "fields": [
+        "CHAIR_NAME",
+        "DOCUMENT_DAY",
+        "DOCUMENT_MONTH",
+        "DOCUMENT_YEAR",
+        "FULL_NAME_RU",
+        "ISSUER_BOTH",
+        "NUMBER",
+        "POSITION_BOTH",
+        "PROTOCOL_NUMBER",
+        "SUBJECT",
+        "VALID_YEAR",
+        "WORKPLACE_BOTH"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}code": "9"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": true,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": null,
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "sourceIdentityImagesReplaced": true,
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "pb-card.v17.docx",
+        "sourceSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    {
+      "id": "pb-protocol",
+      "version": 13,
+      "file": "pb-protocol.v13.docx",
+      "sha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
+      "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+      "fields": [
+        "ADDRESS_KZ",
+        "ADDRESS_RU",
+        "CHAIR",
+        "CHAIR_NAME",
+        "EDUCATION",
+        "FULL_NAME_BOTH",
+        "HOURS",
+        "ISSUER_BIN",
+        "ISSUER_BOTH",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT",
+        "WORKPLACE_BOTH"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": "individual",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "sourceIdentityImagesReplaced": true,
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "pb-protocol.v12.docx",
+        "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    {
+      "id": "ps-card",
+      "version": 19,
+      "file": "ps-card.v19.docx",
+      "sha256": "78f97e1c1fe91f6229ba40581d6f6c2fb21df6a107d490b71e93d93695faadd1",
+      "sourceSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+      "fields": [
+        "CHAIR_NAME",
+        "FULL_NAME_BOTH",
+        "ISSUER_BOTH",
+        "MEMBER_1_NAME",
+        "MEMBER_2_NAME",
+        "NUMBER",
+        "ONE",
+        "POSITION_KZ",
+        "POSITION_RU",
+        "PROTOCOL_DAY_MONTH",
+        "PROTOCOL_NUMBER",
+        "PROTOCOL_YEAR",
+        "RESULT",
+        "SERIES",
+        "SUBJECT",
+        "TWO"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+        },
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+        },
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": true,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": null,
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "sourceIdentityImagesReplaced": true,
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "ps-card.v18.docx",
+        "sourceSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    {
+      "id": "ps-protocol",
+      "version": 13,
+      "file": "ps-protocol.v13.docx",
+      "sha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
+      "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+      "fields": [
+        "ADDRESS_KZ",
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "CHAIR",
+        "CHAIR_NAME",
+        "CREDENTIAL_NUMBER",
+        "FULL_NAME_BOTH",
+        "ISSUER_BIN",
+        "ISSUER_BOTH",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DAY_MONTH",
+        "PROTOCOL_NUMBER",
+        "PROTOCOL_YEAR",
+        "RESULT"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}orient": "landscape"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": "individual",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "sourceIdentityImagesReplaced": true,
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "ps-protocol.v12.docx",
+        "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    {
+      "id": "biot-itr-protocol",
+      "version": 6,
+      "file": "biot-itr-protocol.v6.docx",
+      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "fields": [
+        "ADDRESS_KZ",
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "BIOT_NOTES",
+        "CHAIR",
+        "CHAIR_NAME",
+        "FULL_NAME_BOTH",
+        "ISSUER_BIN",
+        "ISSUER_BOTH",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT",
+        "WORKPLACE_BOTH",
+        "WORKPLACE_KZ"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": "INDIVIDUAL",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "biot-itr-protocol.v5.docx",
+        "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "sourceIdentityImagesReplaced": true,
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    {
+      "id": "biot-protocol",
+      "version": "15-group-1",
+      "file": "biot-protocol.group-v6.docx",
+      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "fields": [
+        "ADDRESS_KZ",
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "BIOT_NOTES",
+        "CHAIR",
+        "CHAIR_NAME",
+        "FULL_NAME_BOTH",
+        "ISSUER_BIN",
+        "ISSUER_BOTH",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT",
+        "WORKPLACE_BOTH",
+        "WORKPLACE_KZ"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": "GROUP",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "biot-protocol.group-v5.docx",
+        "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "sourceIdentityImagesReplaced": true,
+      "renderPolicy": "NEUTRAL_FORMS_V1",
+      "ownerKind": "GROUP",
+      "groupContractVersion": 1,
+      "groupRenderer": "neutral_forms.py:source-row-clone-v1"
+    },
+    {
+      "id": "ptm-protocol",
+      "version": "13-group-1",
+      "file": "ptm-protocol.group-v5.docx",
+      "sha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+      "fields": [
+        "ADDRESS_KZ",
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "CHAIR",
+        "CHAIR_NAME",
+        "FULL_NAME_BOTH",
+        "ISSUER_BIN",
+        "ISSUER_BOTH",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "REASON",
+        "RESULT",
+        "WORKPLACE_BOTH"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": "GROUP",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "sourceIdentityImagesReplaced": true,
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "ptm-protocol.group-v4.docx",
+        "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "renderPolicy": "NEUTRAL_FORMS_V1",
+      "ownerKind": "GROUP",
+      "groupContractVersion": 1,
+      "groupRenderer": "neutral_forms.py:source-row-clone-v1"
+    },
+    {
+      "id": "pb-protocol",
+      "version": "13-group-1",
+      "file": "pb-protocol.group-v5.docx",
+      "sha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
+      "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+      "fields": [
+        "ADDRESS_KZ",
+        "ADDRESS_RU",
+        "CHAIR",
+        "CHAIR_NAME",
+        "EDUCATION",
+        "FULL_NAME_BOTH",
+        "HOURS",
+        "ISSUER_BIN",
+        "ISSUER_BOTH",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT",
+        "WORKPLACE_BOTH"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": "GROUP",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "sourceIdentityImagesReplaced": true,
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "pb-protocol.group-v4.docx",
+        "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "renderPolicy": "NEUTRAL_FORMS_V1",
+      "ownerKind": "GROUP",
+      "groupContractVersion": 1,
+      "groupRenderer": "neutral_forms.py:source-row-clone-v1"
+    },
+    {
+      "id": "ps-protocol",
+      "version": "13-group-1",
+      "file": "ps-protocol.group-v5.docx",
+      "sha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
+      "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+      "fields": [
+        "ADDRESS_KZ",
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "CHAIR",
+        "CHAIR_NAME",
+        "CREDENTIAL_NUMBER",
+        "FULL_NAME_BOTH",
+        "ISSUER_BIN",
+        "ISSUER_BOTH",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DAY_MONTH",
+        "PROTOCOL_NUMBER",
+        "PROTOCOL_YEAR",
+        "RESULT"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}orient": "landscape"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": "GROUP",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "sourceIdentityImagesReplaced": true,
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "ps-protocol.group-v4.docx",
+        "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "renderPolicy": "NEUTRAL_FORMS_V1",
+      "ownerKind": "GROUP",
+      "groupContractVersion": 1,
+      "groupRenderer": "neutral_forms.py:source-row-clone-v1"
+    },
+    {
+      "id": "biot-itr-protocol",
+      "version": "6-group-1",
+      "file": "biot-itr-protocol.group-v6.docx",
+      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "fields": [
+        "ADDRESS_KZ",
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "BIOT_NOTES",
+        "CHAIR",
+        "CHAIR_NAME",
+        "FULL_NAME_BOTH",
+        "ISSUER_BIN",
+        "ISSUER_BOTH",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT",
+        "WORKPLACE_BOTH",
+        "WORKPLACE_KZ"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": "GROUP",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "formRevision": "NEUTRAL_FORMS_V1",
+      "verificationStatus": "LOCAL_WORD_AND_APPLICATION_PDF_VERIFIED",
+      "restoration": {
+        "sourceFile": "biot-itr-protocol.group-v5.docx",
+        "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "layoutPolicy": "NEUTRAL_FORMS_V1",
+        "sourcePackageUnmodified": false,
+        "dataPolicy": "FROZEN_SNAPSHOT_VALUES_IN_EXISTING_FIELDS"
+      },
+      "sourceIdentityImagesReplaced": true,
+      "renderPolicy": "NEUTRAL_FORMS_V1",
+      "ownerKind": "GROUP",
+      "groupContractVersion": 1,
+      "groupRenderer": "neutral_forms.py:source-row-clone-v1"
     }
   ]
 }

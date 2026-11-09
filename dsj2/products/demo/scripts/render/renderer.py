@@ -33,7 +33,7 @@ W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 R='{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
 PKG='{http://schemas.openxmlformats.org/package/2006/relationships}'
 NS={'w':W[1:-1]}
-RENDERER_VERSION='demo-ooxml-14/libreoffice-26.2.6.3'
+RENDERER_VERSION='demo-ooxml-15/libreoffice-26.2.6.3'
 RU=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря']
 KZ=['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан']
 Image.MAX_IMAGE_PIXELS=20_000_000
@@ -338,6 +338,9 @@ def validated_fields(snapshot,item):
 
 
 def render_one(snapshot,item,template):
+    from archive_forms import identify_archive,render_archive_one
+    if identify_archive(template,snapshot.get('templateId')):
+        return render_archive_one(snapshot,item,template)
     from lms_templates import identify_lms,render_lms_one
     if identify_lms(template,snapshot.get('templateId')):
         return render_lms_one(snapshot,item,template)
@@ -601,6 +604,11 @@ def preflight(payload,out):
         validate_english(snapshot)
         if not snapshot.get('groupEvent') and len(snapshot['items'])!=1: raise ValueError('PREFLIGHT_SINGLE_RECIPIENT')
         try:
+            from archive_forms import identify_archive,render_archive_group
+            if identify_archive(path,snapshot['templateId']):
+                if snapshot.get('groupEvent'):render_archive_group(snapshot,path)
+                else:render_one(snapshot,snapshot['items'][0],path)
+                continue
             if snapshot.get('groupEvent'):
                 from neutral_forms import identify_neutral,render_neutral_group
                 from legacy_reference import identify_reference,render_reference_group_files
@@ -630,6 +638,10 @@ def render_docx(snapshot,out):
     from english_appendix import append_english_pages, validate_english
     validate_english(snapshot)
     template,path=resolve_template(snapshot)
+    from archive_forms import identify_archive,render_archive_document,POLICY as ARCHIVE_POLICY
+    if identify_archive(path,snapshot['templateId']):
+        render_archive_document(snapshot,out,path)
+        return {'format':'DOCX','templateVersion':snapshot.get('templateVersion',template['version']),'rendererVersion':RENDERER_VERSION,'renderPolicy':ARCHIVE_POLICY}
     from neutral_forms import identify_neutral,render_neutral_document,POLICY
     if identify_neutral(path,snapshot['templateId']):
         for item in snapshot['items']:validated_fields(snapshot,item)

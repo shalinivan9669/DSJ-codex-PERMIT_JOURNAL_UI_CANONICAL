@@ -1,6 +1,5 @@
 """Independent package audit and mutations of hidden historical identity data."""
 import hashlib
-import json
 from pathlib import Path
 import posixpath
 import re
@@ -14,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/render'))
 from neutral_identity import sanitize_identity, OLD_IMAGE_HASHES
 from legacy_reference import legacy_payload, reference_sources
-from test_render import fixture
+from neutral_fixture import fixture, MANIFEST
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 OLD_IDENTITY = re.compile(r'\bстандарт\b|солтанов|флеглер|жакибеков|баянов|есен\s+д\.|анет\s+баба|160440010815|технологии\s+гостеприимства|саратов|QNP\s+Solutions', re.I)
@@ -51,8 +50,7 @@ class NeutralIdentityAuditTests(unittest.TestCase):
                 self.assertIn(target, files, name + ': ' + target)
 
     def test_all_sixteen_new_template_packages_have_no_old_identity_or_dangling_parts(self):
-        manifest = json.loads((ROOT / 'assets/templates/manifest.json').read_text(encoding='utf8'))
-        records = manifest['templates'] + manifest['groupTemplates']
+        records = MANIFEST['templates'] + MANIFEST['groupTemplates']
         self.assertEqual(len(records), 16)
         for record in records:
             with self.subTest(template=record['file']):
