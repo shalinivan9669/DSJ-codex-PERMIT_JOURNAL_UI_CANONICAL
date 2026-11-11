@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Notice } from "@demo/ui";
 import type { PreviewTarget } from "@demo/contracts";
-import { api, ApiError, errorText, json } from "@/lib/api";
+import { api, ApiError, artifactUrl, errorText, json } from "@/lib/api";
 import {
   documentTitle,
   type Draft,
@@ -341,7 +341,7 @@ export function DocumentPreview({
         {pdfs.map((job) => (
           <a
             key={job.id}
-            href={`/api/artifacts/${job.artifactId}?inline=1`}
+            href={artifactUrl(job.artifactId!, { inline: true })}
             target="_blank"
             rel="noreferrer"
           >
@@ -350,7 +350,7 @@ export function DocumentPreview({
           </a>
         ))}
         {docxs.map((job) => (
-          <a key={job.id} href={`/api/artifacts/${job.artifactId}`} download>
+          <a key={job.id} href={artifactUrl(job.artifactId!)} download>
             Скачать DOCX
             {docxs.length > 1
               ? `: ${job.artifact?.fileName || "документ"}`

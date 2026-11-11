@@ -6,6 +6,7 @@ import { Icon, Modal, Notice } from "@demo/ui";
 import {
   api,
   ApiError,
+  artifactUrl,
   downloadArtifact,
   downloadExport,
   errorText,
@@ -528,7 +529,7 @@ export function FilesPanel({
                     )}
                     <a
                       className="button"
-                      href={`/api/artifacts/${artifact.id}`}
+                      href={artifactUrl(artifact.id)}
                       download
                       aria-disabled={
                         !!busy ||
@@ -945,17 +946,13 @@ export function FilesPanel({
             )}
             <a
               className="button"
-              href={`/api/artifacts/${viewArtifact.id}?inline=1`}
+              href={artifactUrl(viewArtifact.id, { inline: true })}
               target="_blank"
               rel="noreferrer"
             >
               Открыть PDF отдельно
             </a>
-            <a
-              className="button"
-              href={`/api/artifacts/${viewArtifact.id}`}
-              download
-            >
+            <a className="button" href={artifactUrl(viewArtifact.id)} download>
               Скачать PDF
             </a>
             <button onClick={() => setViewArtifact(null)}>Закрыть</button>

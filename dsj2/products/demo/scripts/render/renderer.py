@@ -914,6 +914,9 @@ def main():
     elif command=='preflight': result=preflight(payload,out)
     elif command=='docx': result=render_docx(payload,out)
     elif command=='pdf': result=convert_pdf(payload['docxPath'],out)
+    elif command=='signature-copy':
+        from signature_copy import signature_copy
+        result=signature_copy(payload,out,convert_pdf)
     elif command=='photo': result=photo_normalize(payload['inputPath'],out,payload)
     elif command=='qr':
         from verification_qr import verification_qr

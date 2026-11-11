@@ -15,6 +15,7 @@ import {
   transaction,
   type Context,
 } from "./core";
+import { persistedSignatureMockMode } from "./artifact-access";
 
 export const PUBLIC_RECORD_LIMITATION =
   "Проверяется запись в реестре этого центра. Страница не подтверждает неизменность любой копии документа и не заменяет проверку подписи.";
@@ -54,6 +55,18 @@ export async function createVerificationLink(c: Context, input: unknown) {
     select: { id: true, issuanceId: true },
   });
   if (!target) fail(404, "NOT_FOUND", "Выданный документ не найден");
+  const mockMode = await persistedSignatureMockMode(
+    c.tenantId,
+    target.issuanceId,
+  );
+  if (mockMode)
+    fail(
+      409,
+      mockMode === "LOCAL_TEST_MOCK"
+        ? "LOCAL_TEST_PUBLICATION_DENIED"
+        : "HOSTED_TEST_PUBLICATION_DENIED",
+      "Выпуск с тестовой ЭЦП нельзя публиковать для проверки. Проверка НУЦ не выполнялась",
+    );
   const workflow = await db.issuanceWorkflow.findFirst({
     where: { tenantId: c.tenantId, issuanceId: target.issuanceId },
   });
@@ -74,6 +87,19 @@ export async function createVerificationLink(c: Context, input: unknown) {
       where: { tenantId: c.tenantId, id: data.documentId },
     });
     if (!document) fail(404, "NOT_FOUND", "Выданный документ не найден");
+    const currentMockMode = await persistedSignatureMockMode(
+      c.tenantId,
+      document.issuanceId,
+      tx,
+    );
+    if (currentMockMode)
+      fail(
+        409,
+        currentMockMode === "LOCAL_TEST_MOCK"
+          ? "LOCAL_TEST_PUBLICATION_DENIED"
+          : "HOSTED_TEST_PUBLICATION_DENIED",
+        "Выпуск с тестовой ЭЦП нельзя публиковать для проверки. Проверка НУЦ не выполнялась",
+      );
     const link = await tx.publicDocumentVerification.create({
       data: {
         tenantId: c.tenantId,
@@ -205,6 +231,15 @@ async function published(token: string) {
   });
   if (!link)
     fail(404, "RECORD_UNAVAILABLE", "Сведения по этой ссылке не опубликованы");
+  const document = await db.issuedDocument.findFirst({
+    where: { tenantId: link.tenantId, id: link.documentId },
+    select: { issuanceId: true },
+  });
+  if (
+    !document ||
+    (await persistedSignatureMockMode(link.tenantId, document.issuanceId))
+  )
+    fail(404, "RECORD_UNAVAILABLE", "Сведения по этой ссылке не опубликованы");
   return link;
 }
 export async function publicVerificationRecord(token: string) {
@@ -288,6 +323,8 @@ async function recordForLink(link: PublicDocumentVerification) {
   const document = await db.issuedDocument.findFirstOrThrow({
     where: { tenantId: link.tenantId, id: link.documentId },
   });
+  if (await persistedSignatureMockMode(link.tenantId, document.issuanceId))
+    fail(404, "RECORD_UNAVAILABLE", "Сведения по этой ссылке не опубликованы");
   const issuance = await db.issuance.findFirstOrThrow({
     where: { tenantId: link.tenantId, id: document.issuanceId },
   });

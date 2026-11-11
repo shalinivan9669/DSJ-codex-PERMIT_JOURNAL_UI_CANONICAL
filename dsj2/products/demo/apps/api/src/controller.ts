@@ -42,6 +42,7 @@ import * as requests from "./requests";
 import * as trainingRemovals from "./training-removals";
 import * as approvals from "./approvals";
 import * as signing from "./signing";
+import * as signingBatch from "./signing-batch";
 import { suggestTranslations } from "./translation-suggestions";
 import * as files from "./files";
 import * as people from "./recipients";
@@ -49,6 +50,7 @@ import * as imports from "./imports";
 import * as delivery from "./delivery";
 import { staffDirectory } from "./staff-directory";
 import { openArtifact } from "./storage";
+import { signaturePrintInfo } from "./signature-print-copy";
 import { RENDERER_VERSION } from "@demo/printing";
 import { randomUUID } from "node:crypto";
 import { mkdir, open, unlink } from "node:fs/promises";
@@ -423,6 +425,20 @@ export class DemoController {
   ) {
     return signing.completeSigning(ctx(req, true), id, body);
   }
+  @Post("print-requests/:id/signing/batch/start") startSigningBatch(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return signingBatch.startSigningBatch(ctx(req, true), id, body);
+  }
+  @Post("signing/batch/:id/complete") completeSigningBatch(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return signingBatch.completeSigningBatch(ctx(req, true), id, body);
+  }
   @Post("print-requests/:id/paper-signatures") paperSignatures(
     @Req() req: DemoRequest,
     @Param("id") id: string,
@@ -621,7 +637,11 @@ export class DemoController {
     @Param("id") id: string,
     @Res() res: Response,
   ) {
-    const { artifact, stream } = await openArtifact(ctx(req), id);
+    const { artifact, stream } = await openArtifact(
+      ctx(req),
+      id,
+      req.query.copy === "signature-print",
+    );
     res.setHeader("Content-Type", artifact.mimeType);
     res.setHeader(
       "Content-Disposition",
@@ -632,6 +652,12 @@ export class DemoController {
     res.once("close", () => stream.destroy());
     stream.once("error", () => res.destroy());
     stream.pipe(res);
+  }
+  @Get("artifacts/:id/signature-evidence") signatureEvidence(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+  ) {
+    return signaturePrintInfo(ctx(req), id);
   }
   @Post("artifacts/:id/restore") restore(
     @Req() req: DemoRequest,

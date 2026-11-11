@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
-import { api, json } from "@/lib/api";
+import { api, artifactUrl, json } from "@/lib/api";
 import { LmsErrorDiagnostic, Status, lmsError, type Translate } from "./common";
 import { PaperSignature } from "./paper-signature";
 
@@ -234,7 +234,7 @@ export function LmsDocument({
           <a
             className="button"
             key={artifact.id}
-            href={`/api/${base}/artifacts/${artifact.id}`}
+            href={artifactUrl(artifact.id, { prefix: `/${base}/artifacts` })}
             download
           >
             {data.status === "ISSUED"
@@ -250,7 +250,10 @@ export function LmsDocument({
           .map((artifact) => (
             <a
               key={`preview-${artifact.id}`}
-              href={`/api/${base}/artifacts/${artifact.id}?inline=1`}
+              href={artifactUrl(artifact.id, {
+                prefix: `/${base}/artifacts`,
+                inline: true,
+              })}
               target="_blank"
               rel="noreferrer"
             >

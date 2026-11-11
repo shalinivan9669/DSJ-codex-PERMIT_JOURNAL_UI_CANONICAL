@@ -86,7 +86,9 @@ export function proposalDiff(
 }
 export function assertStaff(c: Context, write = false) {
   if (
-    !["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role) ||
+    !["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(
+      c.role,
+    ) ||
     (write && c.role === "VIEWER")
   )
     fail(403, "ROLE_DENIED", "Недостаточно прав сотрудника центра");
@@ -675,7 +677,7 @@ export async function approvalDetail(c: Context, id: string) {
     where: { id, tenantId: c.tenantId },
   });
   if (!proposal) fail(404, "NOT_FOUND", "Предложенная редакция не найдена");
-  const [request, author, decision] = await Promise.all([
+  const [request, author, decision, issuance] = await Promise.all([
     scopedRequest(c, proposal.requestId),
     db.user.findFirst({
       where: { tenantId: c.tenantId, id: proposal.submittedBy },
@@ -683,6 +685,15 @@ export async function approvalDetail(c: Context, id: string) {
     }),
     db.proposalDecision.findFirst({
       where: { tenantId: c.tenantId, proposalId: id },
+    }),
+    db.issuanceWorkflow.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        requestId: proposal.requestId,
+        proposalId: id,
+      },
+      select: { issuanceId: true, createdAt: true },
+      orderBy: { createdAt: "desc" },
     }),
   ]);
   const { before, diff, ...safeProposal } = proposal;
@@ -774,6 +785,11 @@ export async function approvalDetail(c: Context, id: string) {
     payloadHash: proposal.proposalHash,
     expectedProposalHash: proposal.proposalHash,
     requestedAction: proposal.operation,
+    // A director opens this exact approved batch, never the request's latest
+    // unrelated release. Signing still checks the selected immutable issuance.
+    issuance: issuance
+      ? { id: issuance.issuanceId, createdAt: issuance.createdAt }
+      : null,
     review,
     reviewUnavailable,
     needsPreparation: needsPreparation(proposal),
@@ -974,6 +990,7 @@ export async function requireApproved(
   expectedRevision: number,
   tx: Prisma.TransactionClient = db,
   assignments?: AssignmentIdentity[],
+  expectedProposalId?: string,
 ) {
   const record = await workingRequest(c, id, tx);
   if (record.revision !== expectedRevision)
@@ -988,6 +1005,7 @@ export async function requireApproved(
       requestId: id,
       operation: "SAVE",
       status: "APPROVED",
+      ...(expectedProposalId ? { id: expectedProposalId } : {}),
     },
     orderBy: { revision: "desc" },
   });

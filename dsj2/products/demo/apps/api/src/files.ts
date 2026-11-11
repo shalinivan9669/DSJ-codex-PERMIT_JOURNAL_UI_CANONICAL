@@ -38,7 +38,12 @@ import {
 import { assertStaff, submitProposal, workingRequest } from "./approvals";
 import { replaceableImportScaffoldId } from "./import-scaffold";
 import { companyEmployerId } from "./request-customer";
-import { assertArtifactDownloadAllowed } from "./artifact-access";
+import {
+  assertArtifactDownloadAllowed,
+  assertLocalMockIssuancesAllowed,
+} from "./artifact-access";
+import { signingMockModeForProvider } from "./local-signing-mock";
+import { signaturePrintCopy } from "./signature-print-copy";
 import {
   customerExportProfileSchema,
   deliveryFileNames,
@@ -764,6 +769,19 @@ export async function buildSavedRegistryDelivery(
   source: Awaited<ReturnType<typeof collectRegistryRows>>,
   id?: string,
 ) {
+  await assertLocalMockIssuancesAllowed(
+    c,
+    source.eligibleIssuanceIds ||
+      (
+        await db.issuance.findMany({
+          where: {
+            tenantId: c.tenantId,
+            requestId: { in: source.records.map((record) => record.id) },
+          },
+          select: { id: true },
+        })
+      ).map((issuance) => issuance.id),
+  );
   const query = registryDeliveryQuery(input);
   const requested = id ? await scopedRequest(c, id) : null;
   let profile = await resolveExportProfile(c, query.profileId, query.profile);
@@ -990,15 +1008,39 @@ export async function buildSavedRegistryDelivery(
         provider: signature.provider,
         certificateSerial: signature.certificateSerial,
         certificateFingerprint: signature.certificateFingerprint,
-        verifiedAt: signature.createdAt,
+        ...(signingMockModeForProvider(signature.provider)
+          ? {
+              acceptedAt: signature.createdAt,
+              verificationMode: signingMockModeForProvider(signature.provider),
+              verified: false,
+            }
+          : { verifiedAt: signature.createdAt }),
       });
     }
-    if (signatureManifest.length)
+    const printCopies = [];
+    for (const artifact of artifacts) {
+      const copy = await signaturePrintCopy(c, artifact);
+      if (!copy) continue;
+      const stem = (fileNames?.get(artifact.id) || copy.fileName).replace(
+        /\.(pdf|docx)$/i,
+        "",
+      );
+      const fileName = `print-copies/${artifact.id}-${safeFilePart(stem, 100)}.${artifact.format.toLowerCase()}`;
+      attachments.push({ fileName, base64: copy.buffer.toString("base64") });
+      printCopies.push({
+        fileName,
+        sha256: copy.sha256,
+        size: copy.size,
+        provenance: "SIGNATURE_PRINT_COPY",
+        ...copy.signatureEvidence,
+      });
+    }
+    if (signatureManifest.length || printCopies.length)
       attachments.push({
         fileName: "signatures.json",
         base64: Buffer.from(
           JSON.stringify(
-            { version: 1, signatures: signatureManifest },
+            { version: 1, signatures: signatureManifest, printCopies },
             null,
             2,
           ),

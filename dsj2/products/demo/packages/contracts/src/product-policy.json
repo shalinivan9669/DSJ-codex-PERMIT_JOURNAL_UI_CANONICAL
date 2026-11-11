@@ -80,6 +80,16 @@
     {
       "method": "POST",
       "surface": "api",
+      "path": "/print-requests/:id/signing/batch/start"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/signing/batch/:id/complete"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
       "path": "/print-requests/:id/paper-signatures"
     },
     {
@@ -196,6 +206,21 @@
       "method": "GET",
       "surface": "api",
       "path": "/artifacts/:id"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/artifacts/:id/signature-evidence"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/signature-evidence/:id"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/signature-evidence/:id"
     },
     {
       "method": "GET",

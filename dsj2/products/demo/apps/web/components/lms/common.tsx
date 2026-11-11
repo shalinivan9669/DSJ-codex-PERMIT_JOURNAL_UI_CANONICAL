@@ -153,6 +153,7 @@ export function lmsError(error: unknown, t: Translate) {
       "Байланыс жоқ. Енгізілген деректер бетте қалады. Байланыс қалпына келгенде қайталаңыз.",
     );
   const messages: Record<string, [string, string]> = {
+    LOGIN_FAILED: ["Неверный логин или пароль", "Логин немесе құпиясөз қате"],
     LMS_DEPLOYMENT_REVIEW_REQUIRED: [
       "Обучение пока недоступно. Обратитесь к администратору.",
       "Оқу әзірге қолжетімсіз. Әкімшіге хабарласыңыз.",

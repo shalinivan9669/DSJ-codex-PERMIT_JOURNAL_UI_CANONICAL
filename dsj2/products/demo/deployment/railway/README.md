@@ -2,7 +2,7 @@
 
 Use the current release commit of `dsj2/products/demo`. This directory is the complete Docker build context; the wrapper and frozen DSJ workspace must not enter the image. The Vercel frontend is a separate release of the same commit.
 
-The backend service runs two existing processes: Nest API and the render worker. Both use the same PostgreSQL queue, immutable snapshots and private filesystem at `/data/artifacts`. Both need Python and LibreOffice: the API performs render preflight, while the worker produces issued files. The service exposes only the API on Railway's `PORT`; there is no public directory for stored files.
+The backend service runs three existing processes: Nest API, the render worker and the integration worker. They share the same PostgreSQL and private filesystem at `/data/artifacts`. API and render worker need Python and LibreOffice: the API performs render preflight, while the worker produces issued files from the queue and immutable snapshots. The service exposes only the API on Railway's `PORT`; there is no public directory for stored files.
 
 ## Service configuration
 
@@ -50,6 +50,8 @@ Use an appropriate memory/CPU allocation for concurrent API preflight and render
 Railway mounts volumes as root at service start. The image starts its supervisor as root only to create and assign the top-level `/data` and `/data/artifacts` directories to UID/GID 1000, then permanently drops privileges before starting either process. It refuses a missing mount, a symlinked storage root, an unexpected owner or a noncanonical HTTPS origin. It does not recursively change existing files. Existing data must already have the correct ownership. Administrative storage writes must use the same UID helper below. [Railway volume permissions and lifecycle](https://docs.railway.com/volumes), [volume limitations](https://docs.railway.com/volumes/reference).
 
 ## Migrations and initial setup
+
+For an explicitly designated synthetic center, the [hosted NCALayer test guide](HOSTED_NCALAYER_TEST_RU.md) covers provisioning, the single-tenant mock allowlist, signer assignments, verification and disabling the mode. Its flags default to off; it does not replace the official verifier or change ordinary centers. `DEMO_API_ORIGIN` must also be configured on the backend for this mode.
 
 The supervisor never migrates, seeds, provisions an account or approves templates during normal startup. Select and authorize the exact database/environment before running these commands. They are not executed by adding this documentation.
 

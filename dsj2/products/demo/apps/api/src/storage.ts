@@ -4,16 +4,29 @@ import { relative, isAbsolute } from "node:path";
 import { ArtifactStore } from "@demo/printing";
 import { db, fail, audit, type Context } from "./core";
 import { assertArtifactDownloadAllowed } from "./artifact-access";
+import { Readable } from "node:stream";
+import { signaturePrintCopy } from "./signature-print-copy";
 
 const store = new ArtifactStore();
 /** Verify using bounded buffers, then stream the SAME open inode to the response. */
-export async function openArtifact(c: Context, id: string) {
+export async function openArtifact(
+  c: Context,
+  id: string,
+  signaturePrint = false,
+) {
   const artifact = await db.artifact.findFirst({
     where: { id, tenantId: c.tenantId },
   });
   if (!artifact) fail(404, "NOT_FOUND", "Файл не найден");
   // Authorization precedes storage verification so a denied bundle stays 409.
   await assertArtifactDownloadAllowed(c, artifact);
+  if (signaturePrint) {
+    const copy = await signaturePrintCopy(c, artifact);
+    if (copy) {
+      const { buffer, ...printArtifact } = copy;
+      return { artifact: printArtifact, stream: Readable.from(buffer) };
+    }
+  }
   let handle: Awaited<ReturnType<typeof open>> | undefined;
   try {
     const actual = await realpath(store.path(artifact.storageKey));

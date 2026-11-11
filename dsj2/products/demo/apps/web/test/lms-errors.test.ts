@@ -3,6 +3,12 @@ import assert from "node:assert/strict";
 import { ApiError } from "../lib/api";
 import { lmsError } from "../components/lms/common";
 
+test("login failure explains invalid credentials in both languages without exposing diagnostics", () => {
+  const error = new ApiError(401, "PRIVATE_DETAIL", { code: "LOGIN_FAILED" }, "private-id");
+  assert.equal(lmsError(error, (ru) => ru), "Неверный логин или пароль");
+  assert.equal(lmsError(error, (_ru, kz) => kz), "Логин немесе құпиясөз қате");
+});
+
 test("F3 known access, row, material and document errors localize from code and unknown errors hide technical/server text", () => {
   const ru = (a: string, _b: string) => a;
   const kz = (_a: string, b: string) => b;

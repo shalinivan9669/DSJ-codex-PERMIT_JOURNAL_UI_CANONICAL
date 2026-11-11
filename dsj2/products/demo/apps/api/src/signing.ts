@@ -22,6 +22,15 @@ import { readArtifact, store } from "./files";
 import { runRender } from "@demo/printing";
 import { lmsTemplateTypes } from "./lms/document-metadata";
 import { assertCommissionAccess } from "./lms/commission-access";
+import {
+  LOCAL_SIGNING_MOCK_PROVIDER,
+  localSigningMockEnabled,
+  hostedSigningMockEnabled,
+  signingMockMode,
+  signingMockModeForProvider,
+  signingMockProvider,
+  testMockVerification,
+} from "./local-signing-mock";
 
 type RequiredSigner = {
   kind: "DIRECTOR" | "CHAIR" | "MEMBER" | "TEACHER";
@@ -411,7 +420,7 @@ export function connectorUrl(value: string | undefined) {
     return null;
   }
 }
-export function signingConfiguration() {
+export function signingConfiguration(localMock = false) {
   const verifier = connectorUrl(process.env.DEMO_SIGNATURE_VERIFIER_URL);
   const verifierToken = process.env.DEMO_SIGNATURE_VERIFIER_TOKEN;
   const egov = connectorUrl(process.env.DEMO_EGOV_SIGNING_CONNECTOR_URL);
@@ -423,9 +432,9 @@ export function signingConfiguration() {
     egovToken,
     providers: {
       NCALAYER: {
-        available: !!(verifier && verifierToken),
+        available: localMock || !!(verifier && verifierToken),
         reason:
-          verifier && verifierToken
+          localMock || (verifier && verifierToken)
             ? null
             : "Не подключён сервер проверки ЭЦП НУЦ РК",
       },
@@ -438,6 +447,29 @@ export function signingConfiguration() {
       },
     },
   };
+}
+export async function localMockForRequest(
+  c: Context,
+  request: { demoMode: boolean },
+  tx: Prisma.TransactionClient = db,
+) {
+  return (await mockModeForRequest(c, request, tx)) === "LOCAL_TEST_MOCK";
+}
+export async function mockModeForRequest(
+  c: Context,
+  request: { demoMode: boolean },
+  tx: Prisma.TransactionClient = db,
+) {
+  if (!localSigningMockEnabled() && !hostedSigningMockEnabled()) return null;
+  const tenant = await tx.tenant.findFirst({
+    where: { id: c.tenantId, active: true },
+    select: { demoOnly: true },
+  });
+  return signingMockMode({
+    tenantId: c.tenantId,
+    demoOnly: tenant?.demoOnly === true,
+    demoMode: request.demoMode,
+  });
 }
 async function connectorRequest(
   base: string,
@@ -1022,7 +1054,7 @@ export function assertSigningPolicy(
       { missingBindings: [...new Set(missing)] },
     );
 }
-async function assertEligible(
+export async function assertEligible(
   c: Context,
   issuanceId: string,
   tx: Prisma.TransactionClient = db,
@@ -1107,7 +1139,9 @@ export async function signingState(
     },
     orderBy: { createdAt: "desc" },
   });
-  const providers = signingConfiguration().providers;
+  const mockMode = await mockModeForRequest(c, request, tx);
+  const localMock = mockMode === "LOCAL_TEST_MOCK";
+  const providers = signingConfiguration(!!mockMode).providers;
   if (selection && !workflow)
     fail(404, "NOT_FOUND", "Выпуск не найден в этой заявке");
   if (workflow && !isLmsStaffRole(c.role) && c.role !== "VIEWER")
@@ -1118,6 +1152,9 @@ export async function signingState(
       lifecycle: request.status === "FINALIZED" ? "LEGACY_ISSUED" : null,
       archived: !!request.archivedAt,
       providers,
+      localMock,
+      mockMode,
+      testMode: !!mockMode,
       documents: [],
       missingBindings: [],
       unavailableSigners: [],
@@ -1205,7 +1242,9 @@ export async function signingState(
           (signature) =>
             signature.artifactId === artifact.id &&
             signature.bindingId === signer.bindingId &&
-            signature.documentSha256 === artifact.sha256,
+            signature.documentSha256 === artifact.sha256 &&
+            (!signingMockModeForProvider(signature.provider) ||
+              signingMockModeForProvider(signature.provider) === mockMode),
         )
       );
       return {
@@ -1442,6 +1481,22 @@ export async function signingState(
       invalid?.kind || (request.status === "CANCELLED" ? "CANCELLED" : null),
     archived,
     providers,
+    localMock:
+      localMock ||
+      signatures.some(
+        (signature) => signature.provider === LOCAL_SIGNING_MOCK_PROVIDER,
+      ),
+    mockMode:
+      mockMode ||
+      signatures
+        .map((signature) => signingMockModeForProvider(signature.provider))
+        .find(Boolean) ||
+      null,
+    testMode:
+      !!mockMode ||
+      signatures.some(
+        (signature) => !!signingMockModeForProvider(signature.provider),
+      ),
     documents: details,
     missingBindings: [
       ...new Set(
@@ -1530,8 +1585,10 @@ export async function startSigning(c: Context, id: string, input: unknown) {
       .strict(),
     input,
   );
-  const configuration = signingConfiguration();
   const request = await scopedRequest(c, id);
+  const mockMode = await mockModeForRequest(c, request);
+  const localMock = mockMode === "LOCAL_TEST_MOCK";
+  const configuration = signingConfiguration(!!mockMode);
   const targetArtifact = await db.artifact.findFirst({
     where: {
       id: data.artifactId,
@@ -1588,6 +1645,20 @@ export async function startSigning(c: Context, id: string, input: unknown) {
       "SIGNATORY_REQUIRED",
       "У вас нет назначенной непоставленной подписи этого документа",
     );
+  const priorSignature = state.signatures.find(
+    (signature) =>
+      signature.artifactId === data.artifactId &&
+      signature.bindingId === signer.bindingId,
+  );
+  if (
+    priorSignature &&
+    signingMockModeForProvider(priorSignature.provider) !== mockMode
+  )
+    fail(
+      409,
+      "SIGNATURE_MODE_MISMATCH",
+      "Документ содержит подпись другого режима. Подготовьте новый выпуск для подписания",
+    );
   if (signer.kind === "DIRECTOR" && !isDirectorRole(c.role))
     fail(
       403,
@@ -1624,6 +1695,10 @@ export async function startSigning(c: Context, id: string, input: unknown) {
       artifactId: artifact.id,
       bindingId: binding.id,
       provider: data.provider,
+      providerReference:
+        mockMode && data.provider === "NCALAYER"
+          ? signingMockProvider(mockMode)
+          : null,
       documentSha256: artifact.sha256,
       inputHash: artifact.inputHash,
       createdBy: c.userId,
@@ -1637,6 +1712,9 @@ export async function startSigning(c: Context, id: string, input: unknown) {
     format: "CMS",
     artifactId: artifact.id,
     documentSha256: artifact.sha256,
+    localMock: localMock && data.provider === "NCALAYER",
+    mockMode: data.provider === "NCALAYER" ? mockMode : null,
+    testMode: !!mockMode && data.provider === "NCALAYER",
   };
   if (data.provider === "NCALAYER")
     return {
@@ -1652,8 +1730,8 @@ export async function startSigning(c: Context, id: string, input: unknown) {
           signingParams: { decode: true, encapsulate: false, digested: false },
           signerParams: {
             extKeyUsageOids: ["1.3.6.1.5.5.7.3.4"],
-            iin: binding.iin,
-            ...(binding.bin ? { bin: binding.bin } : {}),
+            ...(!mockMode ? { iin: binding.iin } : {}),
+            ...(!mockMode && binding.bin ? { bin: binding.bin } : {}),
           },
           locale: "ru",
         },
@@ -1719,27 +1797,59 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
     where: { id, tenantId: c.tenantId, createdBy: c.userId },
   });
   if (!session) fail(404, "NOT_FOUND", "Сеанс подписания не найден");
+  const mockMode =
+    session.provider === "NCALAYER"
+      ? signingMockModeForProvider(session.providerReference)
+      : null;
+  const localMock = mockMode === "LOCAL_TEST_MOCK";
+  function checkedSignature<T extends { provider: string }>(signature: T) {
+    if (signingMockModeForProvider(signature.provider) !== mockMode)
+      fail(
+        409,
+        "SIGNATURE_MODE_MISMATCH",
+        "Сохранённая подпись относится к другому режиму и не может считаться проверенной ЭЦП",
+      );
+    return signature;
+  }
+  if (mockMode) {
+    const mockIssuance = await db.issuance.findFirstOrThrow({
+      where: { id: session.issuanceId, tenantId: c.tenantId },
+    });
+    const mockRequest = await scopedRequest(c, mockIssuance.requestId);
+    if ((await mockModeForRequest(c, mockRequest)) !== mockMode)
+      fail(
+        403,
+        localMock ? "LOCAL_SIGNING_MOCK_DENIED" : "HOSTED_SIGNING_MOCK_DENIED",
+        "Тестовое подписание недоступно для этого центра или режима",
+      );
+  }
   if (!isLmsStaffRole(c.role))
     await assertCommissionAccess(c, session.issuanceId);
   await assertEligible(c, session.issuanceId);
-  if (session.status === "VERIFIED")
+  if (session.status === "VERIFIED") {
+    const signature = await db.documentSignature.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        artifactId: session.artifactId,
+        bindingId: session.bindingId,
+        documentSha256: session.documentSha256,
+      },
+    });
+    if (!signature)
+      fail(409, "SIGNATURE_NOT_SAVED", "Сохранённая подпись не найдена");
+    checkedSignature(signature);
     return {
       status: "VERIFIED",
-      signatureId: (
-        await db.documentSignature.findFirst({
-          where: {
-            tenantId: c.tenantId,
-            artifactId: session.artifactId,
-            bindingId: session.bindingId,
-            documentSha256: session.documentSha256,
-          },
-        })
-      )?.id,
+      localMock,
+      mockMode,
+      testMode: !!mockMode,
+      signatureId: signature.id,
     };
+  }
   if (session.expiresAt.getTime() <= Date.now() || session.status !== "PENDING")
     fail(409, "SIGNING_SESSION_EXPIRED", "Начните новый сеанс подписания");
   const configuration = signingConfiguration();
-  if (!configuration.verifier || !configuration.verifierToken)
+  if (!mockMode && (!configuration.verifier || !configuration.verifierToken))
     fail(
       503,
       "SIGNATURE_VERIFIER_UNAVAILABLE",
@@ -1813,20 +1923,43 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
       "SIGNATURE_REQUIRED",
       "Передайте откреплённую CMS-подпись в Base64",
     );
-  const verification = assertVerification(
-    await connectorRequest(
-      configuration.verifier,
-      "/verify/cms-detached",
-      configuration.verifierToken,
-      {
-        documentBase64: artifact.buffer.toString("base64"),
+  const expectedSigner = {
+    documentSha256: artifact.sha256,
+    iin: binding.iin,
+    bin: binding.bin,
+  };
+  let mockVerification: ReturnType<typeof testMockVerification> | undefined;
+  if (mockMode) {
+    try {
+      mockVerification = testMockVerification(
         signatureBase64,
-        expectedAuthority: "NCA_RK",
-        checkRevocation: true,
-      },
-    ),
-    { documentSha256: artifact.sha256, iin: binding.iin, bin: binding.bin },
-  );
+        expectedSigner,
+        mockMode,
+      );
+    } catch {
+      fail(
+        422,
+        "SIGNATURE_INVALID",
+        "NCALayer должен вернуть CMS-подпись для тестового режима",
+      );
+    }
+  }
+  const verification =
+    mockVerification ||
+    assertVerification(
+      await connectorRequest(
+        configuration.verifier!,
+        "/verify/cms-detached",
+        configuration.verifierToken!,
+        {
+          documentBase64: artifact.buffer.toString("base64"),
+          signatureBase64,
+          expectedAuthority: "NCA_RK",
+          checkRevocation: true,
+        },
+      ),
+      expectedSigner,
+    );
   const stored = await store.put(Buffer.from(signatureBase64, "base64"), "p7s");
   const signature = await transaction(async (tx) => {
     await tx.$executeRaw`SELECT id FROM "SigningSession" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
@@ -1836,14 +1969,16 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
     // Another copy of this command may have committed while the verifier was
     // responding. Return that genuine signature instead of asking to restart.
     if (active?.status === "VERIFIED")
-      return tx.documentSignature.findFirstOrThrow({
-        where: {
-          tenantId: c.tenantId,
-          artifactId: active.artifactId,
-          bindingId: active.bindingId,
-          documentSha256: active.documentSha256,
-        },
-      });
+      return checkedSignature(
+        await tx.documentSignature.findFirstOrThrow({
+          where: {
+            tenantId: c.tenantId,
+            artifactId: active.artifactId,
+            bindingId: active.bindingId,
+            documentSha256: active.documentSha256,
+          },
+        }),
+      );
     if (
       !active ||
       active.status !== "PENDING" ||
@@ -1862,6 +1997,19 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
       where: { id: session.issuanceId, tenantId: c.tenantId },
     });
     await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${issuance.requestId} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+    if (
+      mockMode &&
+      (await mockModeForRequest(
+        c,
+        await scopedRequest(c, issuance.requestId, tx),
+        tx,
+      )) !== mockMode
+    )
+      fail(
+        403,
+        localMock ? "LOCAL_SIGNING_MOCK_DENIED" : "HOSTED_SIGNING_MOCK_DENIED",
+        "Тестовый режим отключён для этого центра",
+      );
     if (!isLmsStaffRole(c.role)) {
       await tx.$executeRaw`SELECT id FROM "LmsTeachingBinding" WHERE "tenantId"=${c.tenantId} AND "userId"=${c.userId} ORDER BY id FOR UPDATE`;
       await assertCommissionAccess(c, session.issuanceId, tx);
@@ -1879,6 +2027,7 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
       },
     });
     if (existing) {
+      checkedSignature(existing);
       // Two tabs can have different sessions for the same required signature.
       // Both finish with the already verified evidence; only its original
       // session owns that immutable signature and its audit event.
@@ -1902,7 +2051,7 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
         signerBin: verification.signerBin,
         certificateSerial: verification.certificateSerial,
         certificateFingerprint: verification.certificateFingerprint,
-        provider: session.provider,
+        provider: mockMode ? signingMockProvider(mockMode) : session.provider,
         verification: json(verification),
         createdBy: c.userId,
       },
@@ -1911,11 +2060,22 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
       where: { id },
       data: { status: "VERIFIED" },
     });
-    await audit(tx, c, "SIGNATURE_VERIFIED", session.issuanceId, {
-      signatureId: value.id,
-      artifactId: artifact.id,
-      documentSha256: artifact.sha256,
-    });
+    await audit(
+      tx,
+      c,
+      mockMode
+        ? localMock
+          ? "LOCAL_TEST_SIGNATURE_ACCEPTED"
+          : "HOSTED_TEST_SIGNATURE_ACCEPTED"
+        : "SIGNATURE_VERIFIED",
+      session.issuanceId,
+      {
+        signatureId: value.id,
+        artifactId: artifact.id,
+        documentSha256: artifact.sha256,
+        ...(mockMode ? { verificationMode: mockMode } : {}),
+      },
+    );
     return value;
   });
   const issuance = await db.issuance.findFirstOrThrow({
@@ -1929,6 +2089,9 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
   );
   return {
     status: "VERIFIED",
+    localMock,
+    mockMode,
+    testMode: !!mockMode,
     signatureId: signature.id,
     lifecycle: state.status,
   };

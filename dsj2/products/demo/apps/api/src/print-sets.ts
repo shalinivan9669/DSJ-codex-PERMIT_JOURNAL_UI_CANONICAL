@@ -20,6 +20,7 @@ import {
 import { assertArtifactDownloadAllowed } from "./artifact-access";
 import { registryExport } from "./files";
 import { assertStaff } from "./approvals";
+import { signaturePrintCopy } from "./signature-print-copy";
 
 export const PRINT_SET_PART_BYTES = 64 * 1024 * 1024;
 const selectionSchema = z
@@ -277,12 +278,27 @@ export async function buildPrintSet(c: Context, id: string, input: unknown) {
   const files = parts[part];
   if (!files)
     fail(422, "PRINT_SET_PART", "Выбранная часть комплекта не существует");
-  const sources = files.map((file) => ({
-    ...file,
-    templateId: data.documents.find(
-      (document) => document.id === file.documentId,
-    )?.templateId,
-  }));
+  const sources = [];
+  for (const file of files) {
+    const copy =
+      selection.format !== "ZIP" ? await signaturePrintCopy(c, file) : null;
+    const savedCopy = copy
+      ? await store.put(copy.buffer, file.format.toLowerCase())
+      : null;
+    sources.push({
+      ...file,
+      ...(savedCopy || {}),
+      ...(copy
+        ? {
+            provenance: copy.provenance,
+            signatureEvidence: copy.signatureEvidence,
+          }
+        : {}),
+      templateId: data.documents.find(
+        (document) => document.id === file.documentId,
+      )?.templateId,
+    });
+  }
   const out =
     selection.format === "ZIP"
       ? {
@@ -322,6 +338,10 @@ export async function buildPrintSet(c: Context, id: string, input: unknown) {
       storageKey: file.storageKey,
       templateId: file.templateId,
       templateVersion: file.templateVersion,
+      provenance: file.provenance,
+      ...(file.signatureEvidence
+        ? { signatureEvidence: file.signatureEvidence }
+        : {}),
     })),
     part,
     partCount: parts.length,

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Notice } from "@demo/ui";
+import { artifactUrl } from "@/lib/api";
 
 /** Print every saved PDF page at its physical size, including mixed page sizes. */
 export async function printPdfArtifact(artifactId: string) {
@@ -11,7 +12,7 @@ export async function printPdfArtifact(artifactId: string) {
     import.meta.url,
   ).toString();
   const task = pdfjs.getDocument({
-    url: `/api/artifacts/${encodeURIComponent(artifactId)}?inline=1`,
+    url: artifactUrl(artifactId, { inline: true }),
     withCredentials: true,
   });
   const frame = document.createElement("iframe");
@@ -101,14 +102,11 @@ export function PdfPreview({ artifactId }: { artifactId: string }) {
       // Fetch once so the storage error code remains available; pdf.js only
       // reports an HTTP status for URL loading and cannot distinguish a lost
       // saved artifact from a temporary upstream failure.
-      const response = await fetch(
-        `/api/artifacts/${encodeURIComponent(artifactId)}?inline=1`,
-        {
-          credentials: "same-origin",
-          cache: "no-store",
-          signal: controller.signal,
-        },
-      );
+      const response = await fetch(artifactUrl(artifactId, { inline: true }), {
+        credentials: "same-origin",
+        cache: "no-store",
+        signal: controller.signal,
+      });
       if (!response.ok) {
         let code = "";
         try {

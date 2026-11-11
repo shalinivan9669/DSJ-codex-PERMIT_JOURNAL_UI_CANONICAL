@@ -7,10 +7,12 @@ import {
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
-import { canManageSystem } from "@demo/contracts";
-import { ApiError, api, downloadArtifact, json } from "@/lib/api";
+import { canManageSystem, isDirectorRole } from "@demo/contracts";
+import { ApiError, api, artifactUrl, downloadArtifact, json } from "@/lib/api";
 import { documentTitle, type Issuance } from "@/lib/types";
-import { signWithNCALayer } from "@/lib/ncalayer";
+import { signManyWithNCALayer, signWithNCALayer } from "@/lib/ncalayer";
+import { ownPendingSigningDocuments } from "@/lib/signing-batch";
+import { isTestSigning, type SigningTestContext } from "@/lib/signing-mode";
 import {
   attestedSignerName,
   signingRole,
@@ -20,7 +22,7 @@ import { PaperDocumentSignature } from "./paper-document-signature";
 import { OperatorError } from "./operator-error";
 
 type Provider = "EGOV_QR" | "NCALAYER";
-type SigningState = {
+type SigningState = SigningTestContext & {
   issuanceId?: string;
   status: string | null;
   archived: boolean;
@@ -53,7 +55,7 @@ type SigningState = {
   }[];
   missingBindings: string[];
 };
-type Session = {
+type Session = SigningTestContext & {
   id: string;
   provider: Provider;
   dataBase64?: string;
@@ -61,6 +63,27 @@ type Session = {
   qrUrl?: string;
   qrDataUrl?: string;
   ncalayerRequest?: { args: { signerParams: { iin?: string; bin?: string } } };
+};
+type SigningBatch = SigningTestContext & {
+  batchId: string;
+  issuanceId: string;
+  entries: { sessionId: string; artifactId: string; dataBase64: string }[];
+  signerParams: { iin?: string; bin?: string };
+};
+type PendingBatch = SigningTestContext & {
+  batchId: string;
+  entries: { sessionId: string; signatureBase64: string }[];
+};
+type BatchResult = {
+  results: {
+    sessionId: string;
+    status: "COMPLETED" | "FAILED";
+    error?: string;
+    retryable?: boolean;
+  }[];
+  completedCount: number;
+  failedCount: number;
+  remainingCount: number;
 };
 
 export function SigningPanel({
@@ -90,6 +113,10 @@ export function SigningPanel({
     session: Session;
     signature: string;
   } | null>(null);
+  const [pendingBatch, setPendingBatch] = useState<PendingBatch | null>(null);
+  const batchOperation = useRef<{ issuanceId: string; key: string } | null>(
+    null,
+  );
   const loadScope = useRef(0);
   const loadRequest = useRef(0);
   const pendingLoads = useRef(0);
@@ -140,6 +167,7 @@ export function SigningPanel({
         setError("");
         setSession(null);
         setPendingSignature(null);
+        setPendingBatch(null);
       }
       if (
         previousStatus.current &&
@@ -160,6 +188,8 @@ export function SigningPanel({
     setSuccess("");
     setSession(null);
     setPendingSignature(null);
+    setPendingBatch(null);
+    batchOperation.current = null;
     setBusy("");
     setRefreshing(false);
     acting.current = false;
@@ -227,7 +257,14 @@ export function SigningPanel({
     if (!isCurrent(scope)) return;
     setSession(null);
     setPendingSignature(null);
-    setSuccess(tr("Подпись проверена."));
+    setSuccess(
+      isTestSigning(value)
+        ? t(
+            "CMS сохранена в тестовом режиме. Проверка НУЦ не выполнялась.",
+            "CMS сынақ режимінде сақталды. ҰКО тексеруі орындалмады.",
+          )
+        : tr("Подпись проверена."),
+    );
     await load().catch((caught) => setLoadError(caught));
     if (isCurrent(scope)) changed.current();
   }
@@ -275,6 +312,122 @@ export function SigningPanel({
       }
     }
   }
+  async function completeBatch(value: PendingBatch, scope = operationScope()) {
+    if (!isCurrent(scope)) return;
+    setBusy("batch-save");
+    const result = await api<BatchResult>(
+      `/signing/batch/${value.batchId}/complete`,
+      {
+        method: "POST",
+        body: json({ entries: value.entries }),
+      },
+    );
+    if (!isCurrent(scope)) return;
+    const completed = new Set(
+      result.results
+        .filter((entry) => entry.status === "COMPLETED")
+        .map((entry) => entry.sessionId),
+    );
+    const remaining = value.entries.filter(
+      (entry) =>
+        !completed.has(entry.sessionId) &&
+        result.results.find((item) => item.sessionId === entry.sessionId)
+          ?.retryable !== false,
+    );
+    setPendingBatch(remaining.length ? { ...value, entries: remaining } : null);
+    setSuccess(
+      !result.completedCount
+        ? ""
+        : isTestSigning(value)
+          ? t(
+              `Подписи комплекта сохранены для теста: ${result.completedCount}. Проверка НУЦ не выполнялась.`,
+              `Жинақтың сынақ қолтаңбалары сақталды: ${result.completedCount}. ҰКО тексеруі орындалмады.`,
+            )
+          : t(
+              `Подписи комплекта проверены и сохранены: ${result.completedCount}.`,
+              `Жинақтың қолтаңбалары тексерілді және сақталды: ${result.completedCount}.`,
+            ),
+    );
+    if (result.failedCount)
+      setError(
+        result.results.find((entry) => entry.status === "FAILED")?.error ||
+          t(
+            "Часть подписей не сохранена. Повторите сохранение ниже.",
+            "Кейбір қолтаңбалар сақталмады. Төменде сақтауды қайталаңыз.",
+          ),
+      );
+    await load().catch((caught) => setLoadError(caught));
+    if (isCurrent(scope)) changed.current();
+  }
+  function batchError(caught: unknown) {
+    setError(caught);
+    // Re-authentication and transient failures can reuse the received CMS.
+    // A terminal scope/session error needs a fresh batch of remaining slots.
+    if (
+      caught instanceof ApiError &&
+      caught.status > 0 &&
+      caught.status < 500 &&
+      ![401, 429].includes(caught.status)
+    )
+      setPendingBatch(null);
+  }
+  async function startBatch() {
+    const issuanceId = state?.issuanceId || effectiveIssuanceId;
+    if (acting.current || !issuanceId || pendingBatch) return;
+    acting.current = true;
+    // Freeze a known selection without changing the load scope mid-operation.
+    if (effectiveIssuanceId) setSelectedIssuanceId(effectiveIssuanceId);
+    const scope = operationScope();
+    setBusy("batch-prepare");
+    setError("");
+    setSuccess("");
+    try {
+      if (batchOperation.current?.issuanceId !== issuanceId)
+        batchOperation.current = { issuanceId, key: crypto.randomUUID() };
+      const value = await api<SigningBatch>(
+        `/print-requests/${requestId}/signing/batch/start`,
+        {
+          method: "POST",
+          body: json({ issuanceId, operationKey: batchOperation.current.key }),
+        },
+      );
+      if (!isCurrent(scope)) return;
+      batchOperation.current = null;
+      setBusy("batch-ncalayer");
+      const signatures = await signManyWithNCALayer({
+        dataBase64: value.entries.map((entry) => entry.dataBase64),
+        ...value.signerParams,
+      });
+      if (!isCurrent(scope)) return;
+      const pending: PendingBatch = {
+        batchId: value.batchId,
+        localMock: value.localMock,
+        testMode: value.testMode,
+        mockMode: value.mockMode,
+        entries: value.entries.map((entry, index) => ({
+          sessionId: entry.sessionId,
+          signatureBase64: signatures[index],
+        })),
+      };
+      setPendingBatch(pending);
+      await completeBatch(pending, scope);
+    } catch (caught) {
+      if (isCurrent(scope)) {
+        batchError(caught);
+        if (
+          caught instanceof ApiError &&
+          caught.status > 0 &&
+          caught.status < 500
+        )
+          batchOperation.current = null;
+      }
+    } finally {
+      if (isCurrent(scope)) {
+        setBusy("");
+        acting.current = false;
+      }
+    }
+  }
   const awaiting = state?.status === "AWAITING_SIGNATURE";
   const paperAvailable = !!state?.documents.some(
     (document) =>
@@ -296,7 +449,17 @@ export function SigningPanel({
     (state.unavailableSigners
       ? state.unavailableSigners.length > 0
       : state.missingBindings.length > 0);
-  const locked = !!busy || !!session || !!pendingSignature;
+  const batchDocuments = ownPendingSigningDocuments(state?.documents || []);
+  const batchRoles = [
+    ...new Set(
+      batchDocuments.flatMap((document) =>
+        document.requiredSigners
+          .filter((signer) => signer.canSign && !signer.signed)
+          .map((signer) => signer.kind),
+      ),
+    ),
+  ];
+  const locked = !!busy || !!session || !!pendingSignature || !!pendingBatch;
   return (
     <section className="panel signing-panel" id="signing">
       <div className="section-heading">
@@ -345,6 +508,76 @@ export function SigningPanel({
           </select>
         </label>
       )}
+      {!commissionIssuanceId && isDirectorRole(role) && (
+        <div
+          className="signing-batch-actions"
+          aria-busy={busy.startsWith("batch-")}
+        >
+          <button
+            className="primary"
+            disabled={
+              locked ||
+              refreshing ||
+              !!loadError ||
+              !awaiting ||
+              !batchDocuments.length ||
+              !state?.providers.NCALAYER.available
+            }
+            onClick={() => void startBatch()}
+          >
+            {busy === "batch-prepare"
+              ? t("Готовим комплект…", "Жинақты дайындаймыз…")
+              : busy === "batch-ncalayer"
+                ? t(
+                    "Подтвердите комплект в NCALayer…",
+                    "Жинақты NCALayer-де растаңыз…",
+                  )
+                : busy === "batch-save"
+                  ? t("Сохраняем подписи…", "Қолтаңбаларды сақтаймыз…")
+                  : t(
+                      "Подписать весь комплект через NCALayer",
+                      "Бүкіл жинаққа NCALayer арқылы қол қою",
+                    )}
+          </button>
+          <p className="fine-print" role="status">
+            {!state ? (
+              tr("Проверяем готовность документов…")
+            ) : awaiting && batchDocuments.length ? (
+              <>
+                {t("Документов", "Құжаттар")}: {batchDocuments.length}.{" "}
+                {t("Ваши роли", "Сіздің рөлдеріңіз")}:{" "}
+                {batchRoles.map((kind) => tr(signingRole(kind))).join(", ")}.
+              </>
+            ) : state.status === "ISSUED" ? (
+              t(
+                "Комплект оформлен. Способ подписания указан у каждого документа.",
+                "Жинақ рәсімделді. Қол қою тәсілі әр құжатта көрсетілген.",
+              )
+            ) : awaiting ? (
+              t(
+                "Для вашей ЭЦП нет неподписанных документов. Состояние подписей указано ниже.",
+                "Сіздің ЭЦҚ-ңыз үшін қол қойылмаған құжаттар жоқ. Қолтаңбалардың күйі төменде көрсетілген.",
+              )
+            ) : (
+              t(
+                "Кнопка станет доступна после подготовки документов к подписанию.",
+                "Түйме құжаттар қол қоюға дайындалғаннан кейін қолжетімді болады.",
+              )
+            )}
+            {awaiting &&
+              batchDocuments.length > 0 &&
+              !state?.providers.NCALAYER.available && (
+                <>
+                  {" "}
+                  {tr(
+                    state?.providers.NCALAYER.reason ||
+                      "NCALayer не подключён.",
+                  )}
+                </>
+              )}
+          </p>
+        </div>
+      )}
       {error && (
         <Notice>
           <OperatorError text={error} />
@@ -356,6 +589,59 @@ export function SigningPanel({
         </Notice>
       )}
       {success && <Notice kind="success">{success}</Notice>}
+      {pendingBatch && !busy && (
+        <Notice kind="info">
+          <p>
+            {t(
+              "Подписи получены из NCALayer. Повторите сохранение — выбирать ключ заново не нужно.",
+              "Қолтаңбалар NCALayer-ден алынды. Сақтауды қайталаңыз — кілтті қайта таңдаудың қажеті жоқ.",
+            )}
+          </p>
+          <div className="button-row">
+            <button
+              className="primary"
+              onClick={async () => {
+                if (acting.current) return;
+                acting.current = true;
+                const scope = operationScope();
+                setError("");
+                try {
+                  await completeBatch(pendingBatch, scope);
+                } catch (caught) {
+                  if (isCurrent(scope)) batchError(caught);
+                } finally {
+                  if (isCurrent(scope)) {
+                    setBusy("");
+                    acting.current = false;
+                  }
+                }
+              }}
+            >
+              {t(
+                "Повторить сохранение подписей",
+                "Қолтаңбаларды сақтауды қайталау",
+              )}
+            </button>
+            <button
+              onClick={() => {
+                setPendingBatch(null);
+                setError("");
+                void load().catch((caught) => setLoadError(caught));
+              }}
+            >
+              {tr("Закрыть")}
+            </button>
+          </div>
+        </Notice>
+      )}
+      {isTestSigning(state) && (
+        <Notice kind="info">
+          {t(
+            "Тестовый режим ЭЦП: NCALayer использует ваш ключ, серверная проверка работает в моковом режиме. ИИН, доверие НУЦ и отзыв сертификата не проверяются; выпуск только тестовый.",
+            "ЭЦҚ сынақ режимі: NCALayer сіздің кілтіңізді қолданады, серверлік тексеру мок режимінде. ЖСН, ҰКО сенімі және сертификаттың қайтарып алынуы тексерілмейді; шығарылым тек сынаққа арналған.",
+          )}
+        </Notice>
+      )}
       {!state && !loadError && (
         <p role="status">{tr("Проверяем готовность документов…")}</p>
       )}
@@ -369,17 +655,11 @@ export function SigningPanel({
       )}
       {state?.status === "LEGACY_ISSUED" && (
         <p>
-          {tr(
-            "Ранее выданный комплект. Проверенная ЭЦП не зарегистрирована.",
-          )}
+          {tr("Ранее выданный комплект. Проверенная ЭЦП не зарегистрирована.")}
         </p>
       )}
       {state?.status === "RENDERING" && (
-        <p role="status">
-          {tr(
-            "Готовим документы для подписания…",
-          )}
-        </p>
+        <p role="status">{tr("Готовим документы для подписания…")}</p>
       )}
       {state?.status === "FAILED" && (
         <Notice>
@@ -398,24 +678,23 @@ export function SigningPanel({
                     "Не удалось проверить файл. Обратитесь к администратору.",
                     "Файлды тексеру мүмкін болмады. Әкімшіге хабарласыңыз.",
                   )
-                : tr(
-                    "Не все файлы готовы. Повторите формирование документов.",
-                  )}
+                : tr("Не все файлы готовы. Повторите формирование документов.")}
         </Notice>
       )}
       {state?.status === "ISSUED" && (
         <Notice kind="success">
-          {state.documents.some((document) => document.paperSignature)
-            ? tr(
-                "Выпуск оформлен. Способ подписания указан у каждого документа.",
+          {isTestSigning(state)
+            ? t(
+                "Тестовый выпуск оформлен. Проверка НУЦ не выполнялась.",
+                "Сынақ шығарылымы рәсімделді. ҰКО тексеруі орындалмады.",
               )
-            : state.archived
+            : state.documents.some((document) => document.paperSignature)
               ? tr(
-                  "Подписи проверены. Комплект выдан и помещён в архив.",
+                  "Выпуск оформлен. Способ подписания указан у каждого документа.",
                 )
-              : tr(
-                  "Подписи проверены. Выпуск оформлен.",
-                )}
+              : state.archived
+                ? tr("Подписи проверены. Комплект выдан и помещён в архив.")
+                : tr("Подписи проверены. Выпуск оформлен.")}
         </Notice>
       )}
       {state && awaiting && (
@@ -629,7 +908,9 @@ export function SigningPanel({
                     signer.displayName}{" "}
                   —{" "}
                   {signer.signed
-                    ? tr("ЭЦП проверена")
+                    ? isTestSigning(state)
+                      ? t("CMS принята для теста", "CMS сынақ үшін қабылданды")
+                      : tr("ЭЦП проверена")
                     : document.paperSignature
                       ? tr("оформлено на бумаге")
                       : state.status === "FAILED"
@@ -680,9 +961,13 @@ export function SigningPanel({
                 (commissionIssuanceId ? (
                   <a
                     className="button"
-                    href={`/api/lms/commission/${commissionIssuanceId}/artifacts/${document.artifactId}`}
+                    href={artifactUrl(document.artifactId, {
+                      prefix: `/lms/commission/${commissionIssuanceId}/artifacts`,
+                    })}
                   >
-                    {tr("Скачать PDF")}
+                    {document.requiredSigners.some((signer) => signer.signed)
+                      ? t("PDF для печати", "Басып шығаруға арналған PDF")
+                      : tr("Скачать PDF")}
                   </a>
                 ) : (
                   <button
@@ -694,9 +979,31 @@ export function SigningPanel({
                       ).catch((caught) => setError(caught))
                     }
                   >
-                    {tr("Скачать PDF")}
+                    {document.requiredSigners.some((signer) => signer.signed)
+                      ? t("PDF для печати", "Басып шығаруға арналған PDF")
+                      : tr("Скачать PDF")}
                   </button>
                 ))}
+              {document.artifactId &&
+                document.requiredSigners.some((signer) => signer.signed) && (
+                  <a
+                    href={artifactUrl(document.artifactId, {
+                      original: true,
+                      ...(commissionIssuanceId
+                        ? {
+                            prefix: `/lms/commission/${commissionIssuanceId}/artifacts`,
+                          }
+                        : {}),
+                    })}
+                    title={t(
+                      "Исходный файл, для которого создана ЭЦП",
+                      "ЭЦҚ жасалған бастапқы файл",
+                    )}
+                    download
+                  >
+                    {t("Оригинал PDF", "PDF түпнұсқасы")}
+                  </a>
+                )}
               {role !== "VIEWER" &&
                 !document.paperSignature &&
                 document.artifactId &&
@@ -706,7 +1013,12 @@ export function SigningPanel({
                 state.status === "AWAITING_SIGNATURE" && (
                   <>
                     <button
-                      className="primary"
+                      className={
+                        commissionIssuanceId &&
+                        state.providers.EGOV_QR.available
+                          ? "primary"
+                          : undefined
+                      }
                       disabled={locked || !state.providers.EGOV_QR.available}
                       onClick={() =>
                         void start(document.artifactId!, "EGOV_QR")

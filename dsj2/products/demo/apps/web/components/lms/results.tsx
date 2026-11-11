@@ -5,7 +5,7 @@ import type { AccessPolicy } from "@demo/contracts/src/lms";
 import { AccessPolicyEditor } from "./access-policy-editor";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Notice } from "@demo/ui";
-import { api, downloadExport, json } from "@/lib/api";
+import { api, artifactUrl, downloadExport, json } from "@/lib/api";
 import { type Enrollment, type Learning, type Paged } from "@/lib/lms-api";
 import {
   resultsApi,
@@ -704,7 +704,7 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
               <a
                 className="button"
                 key={file.id}
-                href={`/api/lms/artifacts/${file.id}`}
+                href={artifactUrl(file.id, { prefix: "/lms/artifacts" })}
                 download
               >
                 {file.fileName}

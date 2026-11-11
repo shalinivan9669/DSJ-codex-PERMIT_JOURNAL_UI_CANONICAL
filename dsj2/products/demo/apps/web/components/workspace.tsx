@@ -35,6 +35,7 @@ import { LanguageSwitch, lmsError, useLanguage } from "./lms/common";
 import { PublicCatalogue } from "./lms/public-catalogue";
 import { SecuritySettings } from "./security";
 import { CabinetLanguageProvider } from "./cabinet-language";
+import { SignatureEvidence } from "./signature-evidence";
 
 export function Workspace() {
   const pathname = usePathname();
@@ -163,6 +164,7 @@ export function Workspace() {
                 ? "settings"
                 : "requests";
   const requestMatch = /^\/requests\/([^/]+)(?:\/edit)?$/.exec(pathname);
+  const signatureEvidenceMatch = /^\/signature-evidence\/([A-Za-z0-9_-]+)$/.exec(pathname);
   const teachingRole = ["TEACHER", "METHODIST", "EXPERT"].includes(
     context.user.role,
   );
@@ -260,7 +262,13 @@ export function Workspace() {
             </button>
           </Notice>
         )}
-        {section === "lms" ||
+        {signatureEvidenceMatch ? (
+          <SignatureEvidence
+            key={`${context.tenant.id}:${context.user.id}:${signatureEvidenceMatch[1]}`}
+            artifactId={signatureEvidenceMatch[1]}
+            timezone={context.tenant.timezone}
+          />
+        ) : section === "lms" ||
         context.user.role === "LEARNER" ||
         teachingRole ? (
           <LmsWorkspace context={context} pathname={pathname} />

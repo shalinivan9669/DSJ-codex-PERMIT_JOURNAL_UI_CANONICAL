@@ -1781,7 +1781,32 @@ export async function finalize(
   key: unknown,
 ) {
   assertStaff(c, true);
-  const data = parse(finalizeSchema, input);
+  const data = parse(
+    finalizeSchema.extend({ expectedProposalId: z.string().uuid().optional() }),
+    input,
+  );
+  async function assertSelectedProposal(
+    tx: Prisma.TransactionClient,
+    issuanceId: string,
+  ) {
+    if (
+      data.expectedProposalId &&
+      !(await tx.issuanceWorkflow.findFirst({
+        where: {
+          tenantId: c.tenantId,
+          requestId: id,
+          issuanceId,
+          proposalId: data.expectedProposalId,
+        },
+        select: { id: true },
+      }))
+    )
+      fail(
+        409,
+        "APPROVAL_STALE",
+        "Выпуск относится к другой редакции. Обновите кабинет директора",
+      );
+  }
   if (typeof key !== "string" || !/^[a-zA-Z0-9_-]{16,128}$/.test(key))
     fail(400, "KEY_REQUIRED", "Требуется ключ повторяемости команды");
   const payloadHash = hash({ requestId: id, ...data });
@@ -1838,6 +1863,7 @@ export async function finalize(
       OR: [{ scopeHash: requestedScopeHash }, { scopeHash: null }],
     },
   });
+  if (matchingIssuance) await assertSelectedProposal(db, matchingIssuance.id);
   const checkedApproval =
     before.status === "DRAFT" && !matchingIssuance
       ? await requireApproved(
@@ -1846,6 +1872,7 @@ export async function finalize(
           data.expectedRevision,
           db,
           data.assignments,
+          data.expectedProposalId,
         )
       : null;
   let layoutFingerprint: string | undefined;
@@ -1901,6 +1928,7 @@ export async function finalize(
       },
     });
     if (existing) {
+      await assertSelectedProposal(tx, existing.id);
       const savedResult = await tx.idempotencyOperation.findFirst({
         where: {
           tenantId: c.tenantId,
@@ -1951,6 +1979,7 @@ export async function finalize(
       data.expectedRevision,
       tx,
       data.assignments,
+      data.expectedProposalId,
     );
     const v = await validation(
       tx,

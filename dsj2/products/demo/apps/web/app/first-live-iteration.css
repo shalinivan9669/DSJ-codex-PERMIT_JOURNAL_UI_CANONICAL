@@ -125,6 +125,11 @@
   min-width: 0;
   padding: 24px;
 }
+.approval-detail .signing-panel {
+  border: 0;
+  padding: 0;
+  margin: 24px 0;
+}
 .approval-diff {
   width: 100%;
   border-collapse: collapse;
@@ -155,6 +160,16 @@
 .signing-panel {
   padding: 24px;
   margin-block: 20px;
+}
+.signing-batch-actions {
+  margin-block: 16px 20px;
+}
+.signing-batch-actions > button {
+  max-width: 100%;
+  white-space: normal;
+}
+.signing-batch-actions > p {
+  margin: 8px 0 0;
 }
 .signing-document {
   padding-block: 16px;

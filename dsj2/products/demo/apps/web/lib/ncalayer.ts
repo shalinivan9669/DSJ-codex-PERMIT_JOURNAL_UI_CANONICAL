@@ -1,9 +1,54 @@
-/** Official knca.basics CMS flow; the server independently verifies the result. */
-export function signWithNCALayer(input: {
-  dataBase64: string;
+// knca.basics returns CMS in PEM as well as bare Base64. Remove only a single,
+// complete CMS envelope; keep the signed bytes unchanged for server verification.
+function cmsBase64(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const pem =
+    /^[\r\n]*-----BEGIN CMS-----\r?\n?([A-Za-z0-9+/=\r\n]+)-----END CMS-----[\r\n]*$/.exec(
+      value,
+    );
+  const compact = (pem ? pem[1] : value).replace(/[\r\n]/g, "");
+  return /^[A-Za-z0-9+/]+={0,2}$/.test(compact) && compact.length > 100
+    ? compact
+    : null;
+}
+
+type SignerSelection = {
   iin?: string;
   bin?: string;
-}): Promise<string> {
+};
+
+/** Official knca.basics CMS flow; the server independently verifies the result. */
+export async function signWithNCALayer(
+  input: SignerSelection & { dataBase64: string },
+): Promise<string> {
+  const signatures = await requestSignatures(input);
+  return signatures[0];
+}
+
+/** One Basics request signs the array with one key selection/confirmation flow.
+ * Results retain request order; each CMS must still be verified against its
+ * corresponding original by the server before that document is completed.
+ * https://github.com/pkigovkz/NCALayerJSExample/blob/master/js/ncalayer.js */
+export function signManyWithNCALayer(
+  input: SignerSelection & { dataBase64: readonly string[] },
+): Promise<string[]> {
+  if (
+    !Array.isArray(input.dataBase64) ||
+    input.dataBase64.length === 0 ||
+    Array.from(input.dataBase64).some(
+      (data) => typeof data !== "string" || data.length === 0,
+    )
+  )
+    return Promise.reject(new Error("Выберите документы для подписания."));
+  // Freeze the positional association before waiting for the local socket.
+  return requestSignatures({ ...input, dataBase64: [...input.dataBase64] });
+}
+
+function requestSignatures(
+  input: SignerSelection & { dataBase64: string | readonly string[] },
+): Promise<string[]> {
+  const batch = Array.isArray(input.dataBase64);
+  const expectedCount = batch ? input.dataBase64.length : 1;
   return new Promise((resolve, reject) => {
     let finished = false;
     let socket: WebSocket;
@@ -24,15 +69,16 @@ export function signWithNCALayer(input: {
         ),
       120000,
     );
-    function finish(error?: Error, signature?: string) {
+    function finish(error?: Error, signatures?: string[]) {
       if (finished) return;
       finished = true;
       window.clearTimeout(timeout);
       socket.close();
       if (error) reject(error);
-      else if (signature) resolve(signature);
+      else if (signatures) resolve(signatures);
     }
     socket.onopen = () => {
+      if (finished) return;
       try {
         socket.send(
           JSON.stringify({
@@ -64,6 +110,7 @@ export function signWithNCALayer(input: {
       }
     };
     socket.onmessage = (event) => {
+      if (finished) return;
       let response: {
         status?: boolean;
         body?: { result?: unknown };
@@ -97,24 +144,26 @@ export function signWithNCALayer(input: {
         typeof value === "object" && value !== null && "signatures" in value
           ? (value as { signatures: unknown }).signatures
           : value;
-      const signature = Array.isArray(signatures)
-        ? signatures.length === 1
-          ? signatures[0]
-          : null
-        : signatures;
-      const compactSignature =
-        typeof signature === "string" ? signature.replace(/[\r\n]/g, "") : null;
+      const entries = Array.isArray(signatures)
+        ? signatures
+        : batch
+          ? []
+          : [signatures];
+      // Never truncate, flatten, sort, or retry a partial batch as single calls.
+      // All results must be usable before any are returned to the caller.
+      const normalized = entries.map(cmsBase64);
       if (
         response.status === true &&
-        compactSignature !== null &&
-        /^[A-Za-z0-9+/]+={0,2}$/.test(compactSignature) &&
-        compactSignature.length > 100
+        normalized.length === expectedCount &&
+        normalized.every((signature): signature is string => signature !== null)
       )
-        finish(undefined, compactSignature);
+        finish(undefined, normalized);
       else if (response.status !== undefined)
         finish(
           new Error(
-            "NCALayer не вернул подпись документа. Повторите подписание.",
+            batch
+              ? "NCALayer не вернул полный набор подписей документов. Повторите подписание."
+              : "NCALayer не вернул подпись документа. Повторите подписание.",
           ),
         );
     };

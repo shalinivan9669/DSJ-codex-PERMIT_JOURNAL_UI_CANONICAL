@@ -368,7 +368,7 @@ export class OperatorValueController {
   ) {
     const c = employerContext(req);
     await value.employerArtifactAccess(c, id);
-    const { artifact, stream } = await openArtifact(c, id);
+    const { artifact, stream } = await openArtifact(c, id, req.query.copy === "signature-print");
     fileHeaders(res, artifact);
     try {
       await audit(db, c, "EMPLOYER_ARTIFACT_DOWNLOADED", id);

@@ -53,6 +53,7 @@ export type RenderCommand =
   | "zip"
   | "merge-pdf"
   | "merge-docx"
+  | "signature-copy"
   | "health"
   | "preflight"
   | "control-sheet"
@@ -212,19 +213,23 @@ export async function runRender(
 ): Promise<RenderResult> {
   const work = await mkdtemp(join(tmpdir(), "demo-render-"));
   const extension =
-    command === "photo" || command === "qr"
-      ? "png"
-      : command === "template-validate"
+    command === "signature-copy"
+      ? (payload as { format: string }).format === "DOCX"
         ? "docx"
-        : command === "import"
-          ? "json"
-          : command === "import-template"
-            ? "xlsx"
-            : command === "control-sheet" ||
-                command === "regulatory-list" ||
-                command === "lms-report"
-              ? "pdf"
-              : command;
+        : "pdf"
+      : command === "photo" || command === "qr"
+        ? "png"
+        : command === "template-validate"
+          ? "docx"
+          : command === "import"
+            ? "json"
+            : command === "import-template"
+              ? "xlsx"
+              : command === "control-sheet" ||
+                  command === "regulatory-list" ||
+                  command === "lms-report"
+                ? "pdf"
+                : command;
   const output = join(work, "output." + extension);
   const input = { ...(payload as Record<string, unknown>) };
   if (options.inputBytes) {

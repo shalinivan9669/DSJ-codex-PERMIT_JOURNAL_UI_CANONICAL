@@ -837,7 +837,7 @@ export class LmsDocumentsController {
   ) {
     const c = lmsContext(req);
     await artifactAccess(c, id);
-    const { artifact, stream } = await openArtifact(c, id);
+    const { artifact, stream } = await openArtifact(c, id, req.query.copy === "signature-print");
     res.setHeader("Content-Type", artifact.mimeType);
     res.setHeader("Content-Length", artifact.size);
     res.setHeader(

@@ -113,10 +113,24 @@ export async function copyRegistry(path: string, payload: unknown) {
   const value = await response.text();
   await navigator.clipboard.writeText(value.replace(/^\uFEFF/, ""));
 }
-export async function downloadArtifact(id: string, fileName: string) {
+export function artifactUrl(
+  id: string,
+  options: { inline?: boolean; original?: boolean; prefix?: string } = {},
+) {
+  const query = new URLSearchParams();
+  if (!options.original) query.set("copy", "signature-print");
+  if (options.inline) query.set("inline", "1");
+  const suffix = query.toString();
+  return `/api${options.prefix || "/artifacts"}/${encodeURIComponent(id)}${suffix ? `?${suffix}` : ""}`;
+}
+export async function downloadArtifact(
+  id: string,
+  fileName: string,
+  options: { original?: boolean } = {},
+) {
   let response: Response;
   try {
-    response = await fetch(`/api/artifacts/${id}`, {
+    response = await fetch(artifactUrl(id, options), {
       credentials: "same-origin",
       cache: "no-store",
     });
@@ -138,7 +152,10 @@ export async function downloadArtifact(id: string, fileName: string) {
   const url = URL.createObjectURL(await response.blob());
   const link = document.createElement("a");
   link.href = url;
-  link.download = fileName;
+  link.download = exportFileName(
+    response.headers.get("content-disposition"),
+    fileName,
+  );
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

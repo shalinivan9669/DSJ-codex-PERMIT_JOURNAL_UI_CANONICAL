@@ -98,7 +98,7 @@ export class LmsCommissionController {
     await assertCommissionAccess(c, id);
     const found = await db.artifact.findFirst({ where: { tenantId: c.tenantId, issuanceId: id, id: artifactId, provenance: "ORIGINAL", format: "PDF" } });
     if (!found) fail(404, "NOT_FOUND", "PDF протокола не найден");
-    const { artifact, stream } = await openArtifact(c, artifactId);
+    const { artifact, stream } = await openArtifact(c, artifactId, req.query.copy === "signature-print");
     res.setHeader("Content-Type", artifact.mimeType);
     res.setHeader("Content-Disposition", `attachment; filename*=UTF-8''${encodeURIComponent(artifact.fileName)}`);
     res.setHeader("Content-Length", artifact.size);

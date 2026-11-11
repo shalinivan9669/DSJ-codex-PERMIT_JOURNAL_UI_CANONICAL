@@ -17,6 +17,7 @@ import type { ApprovalReview } from "@/lib/approval-review";
 import { ApprovalReviewPanel } from "./approval-review";
 import { approvalRefreshRequired } from "@/lib/approval-refresh";
 import { ApprovalPreview } from "./approval-preview";
+import { SigningPanel } from "./signing-panel";
 
 type Proposal = {
   id: string;
@@ -39,6 +40,7 @@ type Proposal = {
   reviewUnavailable?: boolean;
   currentRevision?: number;
   needsPreparation?: boolean;
+  issuance?: { id: string; createdAt: string } | null;
 };
 const labels: Record<string, string> = {
   title: "Название заявки",
@@ -358,6 +360,8 @@ export function Approvals({ context }: { context: AppContext }) {
   const [status, setStatus] = useState("PENDING");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState("");
+  const currentSelection = useRef(selected);
+  currentSelection.current = selected;
   const [detail, setDetail] = useState<Proposal | null>(null);
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState("");
@@ -367,6 +371,8 @@ export function Approvals({ context }: { context: AppContext }) {
     ReturnType<typeof validationErrors>
   >([]);
   const [refresh, setRefresh] = useState(0);
+  const preparing = useRef(false);
+  const issuanceCommand = useRef<{ scope: string; key: string } | null>(null);
   const director = isDirectorRole(context.user.role);
   useEffect(() => {
     setSelected(
@@ -403,6 +409,7 @@ export function Approvals({ context }: { context: AppContext }) {
     const result = await api<Proposal>(
       `/approvals/${encodeURIComponent(selected)}`,
     );
+    if (currentSelection.current !== selected) return;
     setDetail(result);
     setReason("");
   }, [selected]);
@@ -465,6 +472,10 @@ export function Approvals({ context }: { context: AppContext }) {
           : "Редакция возвращена менеджеру с замечанием.",
       );
       await loadDetail();
+      if (decision === "APPROVE") {
+        setStatus("APPROVED");
+        setPage(1);
+      }
       setRefresh((value) => value + 1);
     } catch (caught) {
       setError(errorText(caught));
@@ -492,6 +503,36 @@ export function Approvals({ context }: { context: AppContext }) {
       setBusy("");
     }
   }
+  async function prepareSigning() {
+    if (!detail || preparing.current) return;
+    preparing.current = true;
+    setBusy("signing");
+    setError("");
+    setMessage("");
+    setDataIssues([]);
+    const revision = detail.currentRevision ?? detail.requestRevision;
+    const scope = `${detail.id}:${revision}`;
+    if (issuanceCommand.current?.scope !== scope)
+      issuanceCommand.current = { scope, key: crypto.randomUUID() };
+    try {
+      await api(`/print-requests/${detail.requestId}/finalize`, {
+        method: "POST",
+        headers: { "Idempotency-Key": issuanceCommand.current.key },
+        body: json({
+          expectedRevision: revision,
+          assignments: detail.assignments,
+          expectedProposalId: detail.id,
+        }),
+      });
+      await loadDetail();
+    } catch (caught) {
+      setError(errorText(caught));
+      setDataIssues(validationErrors(caught));
+    } finally {
+      preparing.current = false;
+      setBusy("");
+    }
+  }
   const issueGroups = approvalIssueGroups(dataIssues, detail?.draft);
   const changes = (detail?.diff || []).filter(
     (change) =>
@@ -505,7 +546,6 @@ export function Approvals({ context }: { context: AppContext }) {
       <div className="page-heading">
         <div>
           <h1>{director ? "Кабинет директора" : "Согласование заявок"}</h1>
-
         </div>
         <button
           onClick={() => setRefresh((value) => value + 1)}
@@ -562,6 +602,7 @@ export function Approvals({ context }: { context: AppContext }) {
           Состояние
           <select
             value={status}
+            disabled={!!busy}
             onChange={(event) => {
               setStatus(event.target.value);
               setPage(1);
@@ -602,6 +643,7 @@ export function Approvals({ context }: { context: AppContext }) {
             {rows.items.map((row) => (
               <li key={row.id}>
                 <button
+                  disabled={!!busy}
                   aria-pressed={selected === row.id}
                   onClick={() => {
                     setSelected(row.id);
@@ -648,12 +690,59 @@ export function Approvals({ context }: { context: AppContext }) {
             <>
               <h2>{detail.request?.title || detail.title || "Новая заявка"}</h2>
               <p>
-                {detail.author?.displayName}{" "}
-                ·{" "}
+                {detail.author?.displayName} ·{" "}
                 <Status
                   value={detail.needsPreparation ? "DRAFT" : detail.status}
                 />
               </p>
+              {director &&
+                detail.status === "APPROVED" &&
+                detail.requestedAction === "SAVE" &&
+                !detail.needsPreparation && (
+                  <section aria-label="Подписание и выпуск согласованной редакции">
+                    {detail.issuance ? (
+                      <SigningPanel
+                        key={detail.issuance.id}
+                        requestId={detail.requestId}
+                        issuances={[detail.issuance]}
+                        role={context.user.role}
+                        onChanged={() =>
+                          void loadDetail().catch((caught) =>
+                            setError(errorText(caught)),
+                          )
+                        }
+                      />
+                    ) : (
+                      <>
+                        <h3>Подписание и выпуск</h3>
+                        <p>
+                          Согласование сохранено. Подготовьте окончательные PDF,
+                          затем подпишите документы здесь.
+                        </p>
+                        <button
+                          className="primary"
+                          disabled={!!busy}
+                          onClick={() => void prepareSigning()}
+                        >
+                          {busy === "signing"
+                            ? "Готовим документы…"
+                            : "Подготовить к подписанию"}
+                        </button>
+                        <p className="fine-print">
+                          Документам будут присвоены номера. Изменения после
+                          этого оформляются через исправление выпуска.
+                        </p>
+                      </>
+                    )}
+                    <p>
+                      <Link
+                        href={`/requests/${detail.requestId}#request-files`}
+                      >
+                        Документы и печать
+                      </Link>
+                    </p>
+                  </section>
+                )}
               {detail.needsPreparation && (
                 <Notice kind="info">
                   <strong>Предыдущая редакция: требуется подготовка</strong>

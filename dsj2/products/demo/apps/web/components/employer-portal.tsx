@@ -2,7 +2,7 @@
 import { useCabinetText, useCabinetError } from "./cabinet-language";
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
-import { api, json } from "@/lib/api";
+import { api, artifactUrl, json } from "@/lib/api";
 import { PortalEvidence } from "./portal-evidence";
 type Row = {
   id: string;
@@ -157,7 +157,7 @@ export function EmployerPortal() {
                   <a
                     className="button"
                     key={a.id}
-                    href={`/api/portal/artifacts/${a.id}`}
+                    href={artifactUrl(a.id, { prefix: "/portal/artifacts" })}
                     download
                   >
                     {a.label || a.fileName}
