@@ -205,7 +205,7 @@ export function FilesPanel({
         artifact.fileName ||
           artifact.filename ||
           artifact.name ||
-          "Safirebrief-document",
+          "Safety Brief-document",
       );
     } catch (caught) {
       setError(errorText(caught));
@@ -390,7 +390,7 @@ export function FilesPanel({
               void downloadExport(
                 `/print-requests/${requestId}/export`,
                 { format: "XLSX" },
-                "Safirebrief-registry.xlsx",
+                "Safety Brief-registry.xlsx",
               )
                 .catch((caught) => setError(errorText(caught)))
                 .finally(() => setBusy(""));
@@ -414,7 +414,7 @@ export function FilesPanel({
                 void downloadExport(
                   `/print-requests/${requestId}/export`,
                   { format: "ZIP", allowPartial: partialBundle },
-                  partialBundle ? "Safirebrief-PARTIAL.zip" : "Safirebrief-complete.zip",
+                  partialBundle ? "Safety Brief-PARTIAL.zip" : "Safety Brief-complete.zip",
                 )
                   .catch((caught) => setError(errorText(caught)))
                   .finally(() => setBusy(""));

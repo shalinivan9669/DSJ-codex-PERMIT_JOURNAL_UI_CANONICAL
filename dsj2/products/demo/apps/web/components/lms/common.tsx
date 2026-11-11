@@ -227,8 +227,8 @@ export function lmsError(error: unknown, t: Translate) {
       "Жүктеу үзілді. Файлды таңдап, қайта жүктеңіз.",
     ],
     SESSION_REQUIRED: [
-      "Войдите в Safirebrief, затем повторите действие.",
-      "Safirebrief жүйесіне кіріп, әрекетті қайталаңыз.",
+      "Войдите в Safety Brief, затем повторите действие.",
+      "Safety Brief жүйесіне кіріп, әрекетті қайталаңыз.",
     ],
     ACCESS_EXPIRED: [
       "Срок обучения завершён. Обратитесь в учебный центр.",

@@ -1728,7 +1728,7 @@ export async function exportOrderDossier(c: Context, id: string) {
   return {
     buffer: result.buffer,
     mimeType: "application/zip",
-      fileName: `Safirebrief-dossier-${id}.zip`,
+      fileName: `Safety Brief-dossier-${id}.zip`,
   };
 }
 

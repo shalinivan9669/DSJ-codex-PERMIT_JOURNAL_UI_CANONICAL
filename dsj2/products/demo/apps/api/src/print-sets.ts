@@ -380,7 +380,7 @@ export async function buildPrintSet(c: Context, id: string, input: unknown) {
         jobId: job.id,
         format,
         mimeType: MIME[format],
-        fileName: `Safirebrief — выпуск ${data.issuanceId?.slice(0, 8) || "выбранный состав"} — часть ${part + 1} из ${parts.length}.${format.toLowerCase()}`,
+        fileName: `Safety Brief — выпуск ${data.issuanceId?.slice(0, 8) || "выбранный состав"} — часть ${part + 1} из ${parts.length}.${format.toLowerCase()}`,
         rendererVersion: RENDERER_VERSION,
         inputHash,
         provenance: "PRINT_SET_DERIVATIVE",

@@ -313,6 +313,7 @@ pre {
 .brand {
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
   gap: 10px;
   color: var(--ink);
   font-size: 24px;

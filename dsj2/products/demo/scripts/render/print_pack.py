@@ -55,7 +55,7 @@ def merge_pdf(payload, out):
         # media/crop boxes, fonts, pictures and full text. No rescaling.
         for page in reader.pages:
             writer.add_page(page)
-    writer.add_metadata({'/Title': 'Safirebrief — сохранённый печатный комплект', '/Subject': json.dumps(counts, ensure_ascii=True), '/Producer': 'Safirebrief immutable print set'})
+    writer.add_metadata({'/Title': 'Safety Brief — сохранённый печатный комплект', '/Subject': json.dumps(counts, ensure_ascii=True), '/Producer': 'Safety Brief immutable print set'})
     with open(out, 'wb') as stream:
         writer.write(stream)
     return {'pages': len(writer.pages), 'files': counts, 'scale': 1, 'originalsUnchanged': True}

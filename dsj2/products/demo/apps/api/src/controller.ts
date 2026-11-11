@@ -785,7 +785,7 @@ export class DemoController {
     sendFile(res, {
       buffer: (await importTemplate()).buffer,
       mimeType: MIME.XLSX,
-      fileName: "Safirebrief-import.xlsx",
+      fileName: "Safety Brief-import.xlsx",
     });
   }
   @Get("settings/profile") async profile(@Req() req: DemoRequest) {

@@ -464,7 +464,7 @@ export function ImportDialog({
     );
     const link = document.createElement("a");
     link.href = url;
-    link.download = "Safirebrief-import-report.csv";
+    link.download = "Safety Brief-import-report.csv";
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
