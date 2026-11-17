@@ -16,6 +16,7 @@ import tempfile
 import importlib.metadata
 import threading
 from copy import deepcopy
+from contextlib import closing
 from functools import lru_cache
 from datetime import date, datetime
 from pathlib import Path
@@ -26,6 +27,7 @@ from openpyxl import Workbook, load_workbook
 from sanitize_templates import replace_text_nodes, deterministic_zip
 from package_xml import normalize_package
 from xml_input import validate_xlsx_xml
+from archive_import import original_course_form
 from request_limits import MAX_REQUEST_ROWS
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -799,28 +801,40 @@ def export_registry(payload,out):
 def import_table(payload,out):
     path=Path(payload['inputPath']); mapping=payload.get('mapping',{}); errors=[]
     if path.stat().st_size>10*1024*1024: raise ValueError('IMPORT_BYTES_LIMIT')
-    suffix=payload.get('format',path.suffix.lstrip('.')).lower(); sheets=[]; selected_sheet=None; photos=[]
+    suffix=payload.get('format',path.suffix.lstrip('.')).lower(); sheets=[]; selected_sheet=None; photos=[]; archive_form=None
     if suffix=='xlsx':
         with ZipFile(path) as z:
             if sum(i.file_size for i in z.infolist())>30*1024*1024 or len(z.infolist())>2000: raise ValueError('IMPORT_ARCHIVE_LIMIT')
             if any('vbaProject' in n or 'externalLinks/' in n for n in z.namelist()): raise ValueError('IMPORT_ACTIVE_CONTENT')
             validate_xlsx_xml(z)
         wb=load_workbook(path,read_only=True,data_only=False,keep_links=False); sheets=wb.sheetnames
-        selected_sheet=payload.get('sheet') or sheets[0]
-        if selected_sheet not in sheets: raise ValueError('IMPORT_SHEET_UNKNOWN')
-        ws=wb[selected_sheet]
-        if ws.max_row>10002 or ws.max_column>100: raise ValueError('IMPORT_DIMENSION_LIMIT')
-        table=[]
-        for rowno,cells in enumerate(ws.iter_rows(),1):
-            row=[]
-            for cell in cells:
-                if cell.data_type=='f': errors.append({'row':rowno,'column':cell.column,'code':'FORMULA_NOT_ALLOWED'}); row.append('')
-                elif cell.value is None: row.append('')
-                elif isinstance(cell.value,(datetime,date)): row.append(cell.value.date().isoformat() if isinstance(cell.value,datetime) else cell.value.isoformat())
-                elif isinstance(cell.value,(int,float)) and re.fullmatch('0+',cell.number_format or ''): row.append(str(int(cell.value)).zfill(len(cell.number_format)))
-                else: row.append(str(cell.value))
-            table.append(row)
-        wb.close()
+        try:
+            selected_sheet=payload.get('sheet') or sheets[0]
+            if selected_sheet not in sheets: raise ValueError('IMPORT_SHEET_UNKNOWN')
+            ws=wb[selected_sheet]
+            if ws.max_row is None or ws.max_column is None:
+                ws.calculate_dimension(force=True)
+            if ws.max_row>10002 or ws.max_column>16384: raise ValueError('IMPORT_DIMENSION_LIMIT')
+            if ws.max_column>100:
+                with closing(ws.iter_rows(min_row=1, max_row=1, values_only=True)) as first_row:
+                    header = next(first_row, ())
+                archive_form = original_course_form(header)
+                if not archive_form: raise ValueError('IMPORT_DIMENSION_LIMIT')
+            read_width = max(archive_form[1]) + 1 if archive_form else ws.max_column
+            table=[]
+            for rowno,cells in enumerate(ws.iter_rows(max_col=read_width),1):
+                if archive_form:
+                    cells = [cells[index] for index in archive_form[1]]
+                row=[]
+                for cell in cells:
+                    if cell.data_type=='f': errors.append({'row':rowno,'column':cell.column,'code':'FORMULA_NOT_ALLOWED'}); row.append('')
+                    elif cell.value is None: row.append('')
+                    elif isinstance(cell.value,(datetime,date)): row.append(cell.value.date().isoformat() if isinstance(cell.value,datetime) else cell.value.isoformat())
+                    elif isinstance(cell.value,(int,float)) and re.fullmatch('0+',cell.number_format or ''): row.append(str(int(cell.value)).zfill(len(cell.number_format)))
+                    else: row.append(str(cell.value))
+                table.append(row)
+        finally:
+            wb.close()
     elif suffix in ['csv','tsv','txt']:
         text=path.read_text(encoding='utf-8-sig')
         delimiter='\t' if suffix in ['tsv','txt'] else payload.get('delimiter')
@@ -852,6 +866,8 @@ def import_table(payload,out):
         errors.extend(photo_errors)
     if len(rows)>MAX_REQUEST_ROWS: errors.append({'code':'ROW_LIMIT','count':len(rows),'limit':MAX_REQUEST_ROWS})
     result={'photos':photos,'headers':headers,'sheets':sheets,'sheet':selected_sheet,'rawRows':raw_rows,'rows':rows,'errors':errors,'count':len(rows),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'canApply':len(rows)<=MAX_REQUEST_ROWS and not errors and not any(r['errors'] for r in rows)}
+    if archive_form:
+        result['archive'] = {'course': archive_form[0], 'fields': list(archive_form[1].values())}
     Path(out).write_text(json.dumps(result,ensure_ascii=False),encoding='utf-8'); return result
 
 def safe_bundle_name(value):

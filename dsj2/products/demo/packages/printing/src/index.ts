@@ -1,3 +1,4 @@
+import { trainingDirections, type TrainingDirection } from "@demo/contracts";
 import { createHash, randomUUID } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { spawn } from "node:child_process";
@@ -384,8 +385,20 @@ export async function parseImport(
   );
   return JSON.parse(result.buffer.toString("utf8")) as Record<string, unknown>;
 }
-export async function importTemplate() {
-  return runRender("import-template", {});
+export async function importTemplate(course?: TrainingDirection) {
+  if (course === undefined) return runRender("import-template", {});
+  if (!trainingDirections.includes(course))
+    throw new Error("UNKNOWN_IMPORT_TEMPLATE");
+  return {
+    buffer: await readFile(
+      join(
+        PRODUCT_ROOT,
+        "assets/import-templates",
+        course.toLowerCase() + ".xlsx",
+      ),
+    ),
+    metadata: {},
+  };
 }
 
 export async function exportRegistry(

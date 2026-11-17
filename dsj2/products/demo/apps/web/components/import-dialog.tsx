@@ -4,6 +4,7 @@ import { Modal, Notice } from "@demo/ui";
 import {
   BIOT_CATEGORIES,
   initialImportScaffoldId,
+  trainingDirections,
   LIMITS,
   type BiotCategory,
   type TrainingEventInput,
@@ -19,6 +20,8 @@ import {
   importFields,
   importApplyErrorText,
   recognizedImportMapping,
+  archiveImportTemplates,
+  pendingArchiveAssessment,
   importIssueText,
   mapImportRow,
   initialImportTemplate,
@@ -34,6 +37,7 @@ import {
   inheritImportEmployer,
   type ImportCompany,
 } from "@/lib/import-employer";
+import { trainingDirectionLabel } from "@/lib/training-display";
 import { biotCategoryDescription } from "@/lib/validity-display";
 type Reconciliation = {
   retainedTotal: number;
@@ -47,6 +51,10 @@ type Reconciliation = {
     changes: { field: string; oldValue: unknown; newValue: unknown }[];
     candidates: string[];
   }[];
+};
+
+const archiveCourseLabels = {
+  BIOT: "БиОТ", PB: "Промышленная безопасность", PTM: "ПТМ", PS: "Профессии",
 };
 
 export function ImportDialog({
@@ -94,6 +102,7 @@ export function ImportDialog({
       ? ""
       : initialImportTemplate(bundleEvent),
   );
+  const [courseChosen, setCourseChosen] = useState(false);
   const [useRequestTraining, setUseRequestTraining] = useState(
     !!existingDraft.trainingDefaults?.length,
   );
@@ -250,7 +259,25 @@ export function ImportDialog({
       setCorrections({});
       setReconciliation(null);
       setOperationKey(crypto.randomUUID());
-      const recognized = recognizedImportMapping(result.columns, rules.items);
+      const recognized = recognizedImportMapping(
+        result.columns, rules.items, result.archive,
+      );
+      if (result.archive && !revisionMode && !courseChosen) {
+        const sameDirection =
+          bundleEvent?.protocolTemplateId.split("-")[0] === result.archive.course.toLowerCase();
+        const card = sameDirection && bundle?.card
+          ? bundle.card
+          : archiveImportTemplates[result.archive.course];
+        setTemplateId(card);
+        setBiotCategory(sameDirection ? bundleEvent?.commonFields.biotCategory : undefined);
+        setUseRequestTraining(false);
+      } else if (!result.archive && preview?.archive && !courseChosen) {
+        setTemplateId(
+          existingDraft.trainingDefaults?.length ? "" : initialImportTemplate(bundleEvent),
+        );
+        setBiotCategory(bundleEvent?.commonFields.biotCategory);
+        setUseRequestTraining(!!existingDraft.trainingDefaults?.length);
+      }
       const preserveCurrent =
         !selectedFile &&
         mappingColumns.length === result.columns.length &&
@@ -316,8 +343,11 @@ export function ImportDialog({
             mapping,
             corrections[row.sourceRow] || {},
           );
-          if (!templateId && useRequestTraining && !revisionMode)
+          if (!templateId && useRequestTraining && !revisionMode) {
             mapped = recipientForRequest(existingDraft, mapped);
+            if (preview.archive)
+              mapped.assignments = mapped.assignments.map(pendingArchiveAssessment);
+          }
           if (
             bundleEvent &&
             bundle?.card === templateId &&
@@ -506,6 +536,21 @@ export function ImportDialog({
         </a>
         {" · "}До 5 МБ. Фото JPG/PNG размещайте в колонке «Фото» напротив сотрудника.
       </p>
+      <details className="training-advanced-settings">
+        <summary>Образцы Excel по курсам из архива центра</summary>
+        <ul>
+          {trainingDirections.map((course) => (
+            <li key={course}>
+              <a
+                href={`/api/imports/template?course=${course.toLowerCase()}`}
+                download
+              >
+                {course === "PS" ? "Профессии" : trainingDirectionLabel(course)} — скачать бланк
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
       {error && (
         <div ref={errorRef} tabIndex={-1}>
           <Notice>{error}</Notice>
@@ -607,6 +652,13 @@ export function ImportDialog({
             </label>
           )}
           <p role="status">
+            {preview.archive && (
+              <>
+                Архивный бланк · {archiveCourseLabels[preview.archive.course]}.
+                Переносятся поля слушателя и курса. Номера, оценки и сводная
+                часть протокола пропускаются.{" "}
+              </>
+            )}
             {mappingSource
               ? `Использовано сохранённое сопоставление «${mappingSource}».`
               : "Колонки распознаны по заголовкам."}{" "}
@@ -834,6 +886,7 @@ export function ImportDialog({
                     checked={useRequestTraining && !templateId}
                     disabled={busy || revisionMode}
                     onChange={(event) => {
+                      setCourseChosen(true);
                       setUseRequestTraining(event.target.checked);
                       if (event.target.checked) {
                         setTemplateId("");
@@ -853,6 +906,7 @@ export function ImportDialog({
                     const nextTemplate = event.target.value as
                       | Assignment["templateId"]
                       | "";
+                    setCourseChosen(true);
                     setTemplateId(nextTemplate);
                     setUseRequestTraining(false);
                     setBiotCategory(

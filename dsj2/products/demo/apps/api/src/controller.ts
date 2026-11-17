@@ -14,7 +14,7 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import type { Response } from "express";
-import { z, LIMITS, templateIds, allTemplateIds } from "@demo/contracts";
+import { z, LIMITS, templateIds, allTemplateIds, trainingDirections } from "@demo/contracts";
 import {
   db,
   ctx,
@@ -779,13 +779,23 @@ export class DemoController {
   @Get("imports/template") async importTemplate(
     @Req() req: DemoRequest,
     @Res() res: Response,
+    @Query("course") course?: string,
   ) {
     ctx(req);
+    const direction =
+      course === undefined
+        ? undefined
+        : parse(
+            z.enum(trainingDirections),
+            typeof course === "string" ? course.toUpperCase() : course,
+          );
     const { importTemplate, MIME } = await import("@demo/printing");
     sendFile(res, {
-      buffer: (await importTemplate()).buffer,
+      buffer: (await importTemplate(direction)).buffer,
       mimeType: MIME.XLSX,
-      fileName: "Safety Brief-import.xlsx",
+      fileName: direction
+        ? `Safety Brief-${direction}-import.xlsx`
+        : "Safety Brief-import.xlsx",
     });
   }
   @Get("settings/profile") async profile(@Req() req: DemoRequest) {

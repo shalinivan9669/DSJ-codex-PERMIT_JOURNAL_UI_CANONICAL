@@ -377,6 +377,7 @@ export async function importPreview(
     const stored = record.rows as StoredPreview;
     return {
       importId: record.id,
+      ...(parsed.archive ? { archive: parsed.archive } : {}),
       sheets: parsed.sheets || [],
       sheet: parsed.sheet || "",
       columns: stored.columns,

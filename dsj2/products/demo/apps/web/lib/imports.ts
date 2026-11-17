@@ -32,7 +32,18 @@ export type ImportRow = {
   duplicate?: boolean;
   photoAssetId?: string;
 };
+export const archiveImportTemplates = {
+  BIOT: "biot-worker-card",
+  PB: "pb-card",
+  PTM: "ptm-card",
+  PS: "ps-card",
+} as const;
+export type ArchiveImport = {
+  course: keyof typeof archiveImportTemplates;
+  fields: string[];
+};
 export type ImportPreview = {
+  archive?: ArchiveImport;
   importId: string;
   checksum?: string;
   columns: string[];
@@ -137,6 +148,10 @@ export const importFields: [string, string][] = [
   ["psQualificationRu", "Присвоенная квалификация RU"],
   ["psQualificationKz", "Присвоенная квалификация KZ"],
 
+  ["psGeneralSubjectRu", "Общетехническая дисциплина RU"],
+  ["psGeneralSubjectKz", "Общетехническая дисциплина KZ"],
+  ["psSpecialSubjectRu", "Специальная дисциплина RU"],
+  ["psSpecialSubjectKz", "Специальная дисциплина KZ"],
   ["hours", "Часы"],
   ["productionHours", "Производственное обучение, часов"],
   ["biotCategory", "Категория обучения БиОТ"],
@@ -168,6 +183,7 @@ export type SavedImportMapping = {
 export function recognizedImportMapping(
   columns: string[],
   saved: SavedImportMapping[],
+  archive?: ArchiveImport,
 ) {
   const normalize = (value: string) =>
     value.normalize("NFKC").trim().toLocaleLowerCase("ru").replace(/\s+/g, " ");
@@ -204,12 +220,19 @@ export function recognizedImportMapping(
       needsReview: false,
       conflictingSavedRules: false,
     };
-  const mapping = inferMapping(columns);
+  const archiveMapping =
+    archive?.fields.length === columns.length &&
+    archive.fields.every((field) => !field || allowed.has(field))
+      ? archive.fields
+      : undefined;
+  const mapping = archiveMapping ?? inferMapping(columns);
   return {
     mapping,
     savedName: "",
     needsReview:
-      !uniqueHeaders || variants.size > 1 || mapping.some((field) => !field),
+      !uniqueHeaders ||
+      variants.size > 1 ||
+      (!archiveMapping && mapping.some((field) => !field)),
     conflictingSavedRules: variants.size > 1,
   };
 }
@@ -329,6 +352,22 @@ function importedNonPassedStatus(value: string) {
   return statuses.every(Boolean) && new Set(statuses).size === 1
     ? statuses[0]
     : undefined;
+}
+
+/** Original workbooks register learners; attendance or a grade requires a separate decision. */
+export function pendingArchiveAssessment(assignment: Assignment): Assignment {
+  return {
+    ...assignment,
+    result: "",
+    resultKz: "",
+    outcome: { status: "UNKNOWN", source: "" },
+    fieldOrigins: {
+      ...assignment.fieldOrigins,
+      result: "CLEARED",
+      resultKz: "CLEARED",
+      outcome: "CLEARED",
+    },
+  };
 }
 
 export function mapImportRow(
@@ -489,6 +528,8 @@ export function mapImportRow(
       };
     }
   }
+  if (preview.archive && !mapping.includes("result"))
+    result.assignments = result.assignments.map(pendingArchiveAssessment);
   return result;
 }
 
