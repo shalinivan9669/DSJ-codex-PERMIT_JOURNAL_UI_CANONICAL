@@ -168,7 +168,8 @@ def prepare(source_root, blueprint):
     return prepare_source(source.read_bytes(), blueprint)
 
 
-def prepare_source(data, blueprint, *, original_card_slots=None, attach_frame_photo=True):
+def prepare_source(data, blueprint, *, original_card_slots=None, original_protocol_slots=None,
+                   original_credential_slots=None, attach_frame_photo=True):
     """Project only the hash-pinned source. Raw recipient data never reaches Word."""
     if digest(data) != blueprint['sourceSha256']:
         raise ValueError('ARCHIVE_SOURCE_HASH:'+blueprint['id'])
@@ -184,6 +185,14 @@ def prepare_source(data, blueprint, *, original_card_slots=None, attach_frame_ph
         if re.fullmatch(r'word/(?:document|header\d*|footer\d*)\.xml', part):
             fill_merge_slots(tree(part), blueprint)
     slots = blueprint
+    original_mode = any(callback is not None for callback in
+                        (original_card_slots, original_protocol_slots, original_credential_slots))
+    if original_credential_slots is not None:
+        original_credential_slots(blueprint['id'], trees['word/document.xml'])
+        slots = {}
+    if original_protocol_slots is not None:
+        original_protocol_slots(blueprint, trees)
+        slots = {}
     if original_card_slots is not None:
         if blueprint.get('rosters') or blueprint.get('roster'):
             raise ValueError('ARCHIVE_CARD_ROSTER')
@@ -202,7 +211,7 @@ def prepare_source(data, blueprint, *, original_card_slots=None, attach_frame_ph
             raise ValueError('ARCHIVE_SLOT_NOT_UNIQUE:'+patch['xpath'])
         put_text(nodes[0], patch['value'])
     rosters = blueprint.get('rosters', [blueprint['roster']] if blueprint.get('roster') else [])
-    for roster in rosters:
+    for roster in ([] if original_protocol_slots is not None else rosters):
         tables = list(tree('word/document.xml').iter(W+'tbl'))
         table = tables[roster['tableIndex']]
         rows = table.findall(W+'tr')
@@ -333,10 +342,10 @@ def prepare_source(data, blueprint, *, original_card_slots=None, attach_frame_ph
             for entry in list(root):
                 if entry.get('PartName','').lstrip('/') in removed:
                     root.remove(entry)
-            if original_card_slots is None:
+            if not original_mode:
                 E.SubElement(root, CT+'Override', PartName='/'+MARKER, ContentType='application/json')
         elif part.startswith('docProps/'):
-            if original_card_slots is not None:
+            if original_mode:
                 for node in list(root):
                     root.remove(node)
             else:
@@ -374,13 +383,13 @@ def prepare_source(data, blueprint, *, original_card_slots=None, attach_frame_ph
             marker['rosters'] = entries
     if blueprint.get('fieldLayoutPolicy'):
         marker['fieldLayoutPolicy'] = blueprint['fieldLayoutPolicy']
-    if original_card_slots is None:
+    if not original_mode:
         files[MARKER] = json.dumps(marker, ensure_ascii=False, sort_keys=True).encode('utf8')
     report = {'id':blueprint['id'], 'source':blueprint['source'], 'sourceSha256':blueprint['sourceSha256'],
                    'fields':fields, 'changedParts':sorted(k for k,v in files.items() if original.get(k)!=v),
                    'removedParts':sorted(removed),
                    'preservedParts':{k:digest(v) for k,v in files.items() if original.get(k)==v}}
-    if original_card_slots is not None:
+    if original_mode:
         report['dynamicMedia'] = marker['dynamicMedia']
     return files, report
 

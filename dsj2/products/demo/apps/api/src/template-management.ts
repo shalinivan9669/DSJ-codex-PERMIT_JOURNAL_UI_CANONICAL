@@ -10,10 +10,10 @@ import {
   Query,
   Req,
   Res,
-  UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import type { Response } from "express";
 import { z } from "@demo/contracts";
 import {
@@ -35,8 +35,13 @@ import {
   type DemoRequest,
 } from "./core";
 
+import {
+  originalArchivePolicy,
+  templateRenderSource,
+} from "./template-selection";
+
 const store = new ArtifactStore();
-const originalArchivePolicy = "ORIGINAL_ARCHIVE_20261117";
+
 const originalArchiveCards = new Map<string, [string, string]>([
   ["biot-worker-card", ["Охрана труда", "Еңбек қорғау"]],
   ["pb-card", ["Промбезопасность", "Өнеркәсіптік қауіпсіздік"]],
@@ -44,20 +49,32 @@ const originalArchiveCards = new Map<string, [string, string]>([
   ["ps-card", ["Мастер", "Шебер"]],
 ]);
 
-/** The Python registry decides which exact source is allowed for a card.
- * Supply the candidate digest only in that card's bundled individual scope. */
-export function archiveCardCandidateChecksum(
+const originalProtocolIds = new Set([
+  "biot-protocol",
+  "pb-protocol",
+  "ptm-protocol",
+  "ps-protocol",
+]);
+
+/** Only the renderer's exact archive checksum registry can select original mode. */
+export function archiveCandidateChecksum(
   base: Record<string, unknown>,
   upload: Buffer,
 ) {
-  if (
-    !originalArchiveCards.has(String(base.id)) ||
-    base.program ||
-    (base.ownerKind && base.ownerKind !== "INDIVIDUAL") ||
-    base.renderPolicy !== "USER_ARCHIVE_20261109_V1"
-  )
-    return undefined;
-  return createHash("sha256").update(upload).digest("hex");
+  const id = String(base.id);
+  if (base.program) return undefined;
+  const individual = !base.ownerKind || base.ownerKind === "INDIVIDUAL";
+  const allowed =
+    base.renderPolicy === "USER_ARCHIVE_20261109_V1"
+      ? (individual && originalArchiveCards.has(id)) ||
+        ((individual || base.ownerKind === "GROUP") &&
+          originalProtocolIds.has(id))
+      : base.renderPolicy === "NEUTRAL_FORMS_V1" &&
+        individual &&
+        (id === "ps-witness" || id === "biot-itr-certificate");
+  return allowed
+    ? createHash("sha256").update(upload).digest("hex")
+    : undefined;
 }
 
 const originalInspection = z.object({
@@ -70,6 +87,7 @@ const originalInspection = z.object({
     .min(1)
     .max(256),
   photo: z.boolean(),
+  sourceLanguage: z.literal("KZ").optional(),
   sections: z.array(z.record(z.string(), z.string())).min(1).max(100),
 });
 export const templateManagementRoutes = [
@@ -97,12 +115,12 @@ export function sampleSnapshot(template: {
   contract: unknown;
 }) {
   const contract = template.contract as Record<string, unknown>;
-  const originalCard =
-    contract.renderPolicy === originalArchivePolicy
-      ? originalArchiveCards.get(template.templateId)
-      : undefined;
-  const sample = originalCard ? "ТОО «Үлгі»" : "ОБРАЗЕЦ ФОРМЫ / НЫСАН ҮЛГІСІ";
-  const sampleNumber = originalCard ? "001" : "ОБРАЗЕЦ";
+  const original = contract.renderPolicy === originalArchivePolicy;
+  const originalCard = original
+    ? originalArchiveCards.get(template.templateId)
+    : undefined;
+  const sample = original ? "ТОО «Үлгі»" : "ОБРАЗЕЦ ФОРМЫ / НЫСАН ҮЛГІСІ";
+  const sampleNumber = original ? "001" : "ОБРАЗЕЦ";
   const assignment: Record<string, unknown> = {
     id: "sample-assignment",
     templateId: template.templateId,
@@ -120,7 +138,9 @@ export function sampleSnapshot(template: {
     externalBasisNumber: "ОБРАЗЕЦ",
     protocolMode: "individual",
     biotCategory: template.templateId.startsWith("biot-itr-")
-      ? "OHS_SPECIALIST_SPECIAL"
+      ? contract.program === "SPECIAL"
+        ? "OHS_SPECIALIST_SPECIAL"
+        : "ITR_STANDARD"
       : "WORKER",
     productionHours: "8",
     biotIndustryRu: "учебной",
@@ -129,8 +149,8 @@ export function sampleSnapshot(template: {
     biotKnowledgeResult: "Образец",
     biotProctoringResult: "Образец",
   };
-  if (originalCard) {
-    const [ru, kz] = originalCard;
+  if (original) {
+    const [ru, kz] = originalCard || ["Учебный курс", "Оқу курсы"];
     Object.assign(assignment, {
       trainingSubject: `${ru} / ${kz}`,
       trainingSubjectRu: ru,
@@ -140,6 +160,16 @@ export function sampleSnapshot(template: {
       resultRu: "Сдал",
       resultKz: "Тапсырды",
       externalBasisNumber: sampleNumber,
+      professionRu: "Слесарь",
+      professionKz: "Слесарь",
+      psQualificationRu: "Слесарь",
+      psQualificationKz: "Слесарь",
+      psGeneralSubjectRu: "Материалы",
+      psGeneralSubjectKz: "Материалдар",
+      psSpecialSubjectRu: "Слесарное дело",
+      psSpecialSubjectKz: "Слесарь ісі",
+      biotKnowledgeResult: "Сдал",
+      biotNotes: "",
     });
   }
   if (contract.ownerKind === "GROUP") assignment.eventId = "sample-group";
@@ -172,11 +202,10 @@ export function sampleSnapshot(template: {
     demoMode: true,
     templateId: template.templateId,
     templateVersion: template.version,
-    templateStorageKey: template.storageKey,
-    templateChecksum: template.checksum,
+    ...templateRenderSource(template),
     issuer: {
       nameRu: sample,
-      nameKz: originalCard ? "«Үлгі» ЖШС" : "Нысан үлгісі",
+      nameKz: original ? "«Үлгі» ЖШС" : "Нысан үлгісі",
       cityRu: "Астана",
       cityKz: "Астана",
       approvalBasis: "Образец для проверки формы",
@@ -191,12 +220,12 @@ export function sampleSnapshot(template: {
     items: [
       {
         id: "sample-recipient",
-        fullNameRu: originalCard ? "Үлгі А. Б." : "Образец имени получателя",
-        fullNameKz: originalCard ? "Үлгі А. Б." : "Алушы атының үлгісі",
-        positionRu: originalCard ? "Мастер" : "Специалист",
+        fullNameRu: original ? "Үлгі А. Б." : "Образец имени получателя",
+        fullNameKz: original ? "Үлгі А. Б." : "Алушы атының үлгісі",
+        positionRu: original ? "Мастер" : "Специалист",
         positionKz: "Маман",
-        workplaceRu: originalCard ? sample : "Организация — образец",
-        workplaceKz: originalCard ? "«Үлгі» ЖШС" : "Ұйым — үлгі",
+        workplaceRu: original ? sample : "Организация — образец",
+        workplaceKz: original ? "«Үлгі» ЖШС" : "Ұйым — үлгі",
         departmentRu: "Учебный участок",
         departmentKz: "Оқу учаскесі",
         employerBin: "000000000000",
@@ -215,7 +244,7 @@ export function sampleSnapshot(template: {
             id: "sample-group",
             contractVersion: 1,
             title: sample,
-            protocolNumber: "ОБРАЗЕЦ",
+            protocolNumber: sampleNumber,
             protocolDate: "2026-01-01",
           },
         }
@@ -283,10 +312,43 @@ export async function registerBundledForms(c: Context) {
   });
 }
 
+async function inspectUpload(
+  base: Record<string, unknown>,
+  file: Express.Multer.File,
+  language?: "KZ",
+) {
+  const expected = archiveCandidateChecksum(base, file.buffer);
+  const result = await runRender(
+    "template-validate",
+    {
+      templateId: base.id,
+      sourceFile: base.file,
+      sourceChecksum: base.sha256,
+      ...(expected ? { originalSourceSha256: expected } : {}),
+    },
+    { inputBytes: file.buffer, inputExtension: "docx" },
+  );
+  if (result.metadata.renderPolicy !== originalArchivePolicy) {
+    if (language) throw new Error("ARCHIVE_ORIGINAL_REQUIRED");
+    return { result };
+  }
+  const verified = originalInspection.parse(result.metadata);
+  if (
+    !expected ||
+    verified.originalSourceSha256 !== expected ||
+    verified.templateId !== base.id ||
+    verified.sourceLanguage !== language ||
+    !result.buffer.equals(file.buffer)
+  )
+    throw new Error("ARCHIVE_ORIGINAL_MISMATCH");
+  return { result: { ...result, metadata: verified }, verified };
+}
+
 export async function uploadTemplate(
   c: Context,
   body: unknown,
   file?: Express.Multer.File,
+  kazakhFile?: Express.Multer.File,
 ) {
   const data = parse(
     z
@@ -320,53 +382,68 @@ export async function uploadTemplate(
       "TEMPLATE_UNSUPPORTED",
       "Для этой исторической формы выберите актуальный образец",
     );
-  const originalSourceSha256 = archiveCardCandidateChecksum(base, file.buffer);
-  let inspected: Awaited<ReturnType<typeof runRender>>;
-  let versionContract: Record<string, unknown> = base;
-  try {
-    inspected = await runRender(
-      "template-validate",
-      {
-        templateId: source.templateId,
-        sourceFile: base.file,
-        sourceChecksum: base.sha256,
-        ...(originalSourceSha256 ? { originalSourceSha256 } : {}),
-      },
-      { inputBytes: file.buffer, inputExtension: "docx" },
-    );
-    if (inspected.metadata.renderPolicy === originalArchivePolicy) {
-      const result = originalInspection.parse(inspected.metadata);
-      if (
-        !originalSourceSha256 ||
-        result.originalSourceSha256 !== originalSourceSha256 ||
-        result.templateId !== source.templateId ||
-        !inspected.buffer.equals(file.buffer)
-      )
-        throw new Error("ARCHIVE_ORIGINAL_MISMATCH");
-      // Only normalized field names leave the renderer. The private source can
-      // contain example recipients and local mail-merge paths.
-      inspected.metadata = result;
-      versionContract = {
-        ...base,
-        file: `${source.templateId}-${data.version}.docx`,
-        formRevision: originalArchivePolicy,
-        renderPolicy: originalArchivePolicy,
-        sourceSha256: originalSourceSha256,
-        previousTemplateSha256: source.checksum,
-        fields: result.fields,
-        photo: result.photo,
-        sections: result.sections,
-        sourceIdentityPolicy:
-          "PRIVATE_ARCHIVE_SOURCE_WITH_FROZEN_RENDER_VALUES",
-        verificationStatus: "UPLOAD_VALIDATED_SAMPLE_RENDERED",
-      };
-    }
-  } catch {
+  const primary = await inspectUpload(base, file).catch(() =>
     fail(
       422,
       "TEMPLATE_VALIDATION_FAILED",
-      "Форма не прошла проверку. Используйте исходный DOCX, сохраните поля и структуру, удалите внешние связи и активное содержимое",
+      "Форма не прошла проверку. Используйте исходный DOCX с полями и структурой выбранной формы",
+    ),
+  );
+  const inspected = primary.result;
+  let versionContract: Record<string, unknown> = base;
+  const needsPair = Boolean(
+    primary.verified && source.templateId === "ps-protocol",
+  );
+  if (needsPair !== !!kazakhFile)
+    fail(
+      422,
+      "TEMPLATE_LANGUAGE_PAIR",
+      needsPair
+        ? "К русскому оригиналу протокола по профессии приложите казахский DOCX из архива"
+        : "Второй DOCX предусмотрен для архивной пары протоколов по профессии",
     );
+  if (primary.verified) {
+    const companion = kazakhFile
+      ? await inspectUpload(base, kazakhFile, "KZ").catch(() =>
+          fail(
+            422,
+            "TEMPLATE_LANGUAGE_PAIR",
+            "Для казахской части выберите оригинальный казахский протокол по профессии",
+          ),
+        )
+      : undefined;
+    versionContract = {
+      ...base,
+      file: `${source.templateId}-${data.version}.docx`,
+      formRevision: originalArchivePolicy,
+      renderPolicy: originalArchivePolicy,
+      sourceSha256: primary.verified.originalSourceSha256,
+      previousTemplateSha256: source.checksum,
+      fields: [
+        ...new Set([
+          ...primary.verified.fields,
+          ...(companion?.verified?.fields || []),
+        ]),
+      ],
+      photo: primary.verified.photo,
+      sections: [
+        ...primary.verified.sections,
+        ...(companion?.verified?.sections || []),
+      ],
+      ...(companion
+        ? {
+            originalKazakhSource: await store.put(
+              companion.result.buffer,
+              "docx",
+            ),
+          }
+        : {}),
+      ...(source.templateId === "ps-witness"
+        ? { archivePart: "TITLE_PAGE" }
+        : {}),
+      sourceIdentityPolicy: "PRIVATE_ARCHIVE_SOURCE_WITH_FROZEN_RENDER_VALUES",
+      verificationStatus: "UPLOAD_VALIDATED_SAMPLE_RENDERED",
+    };
   }
   const asset = await store.put(inspected.buffer, "docx");
   let docx: Awaited<ReturnType<typeof store.put>>,
@@ -416,7 +493,17 @@ export async function uploadTemplate(
       },
     });
     if (old) {
-      if (old.checksum === asset.sha256) return old;
+      const oldContract = old.contract as Record<string, unknown>;
+      if (
+        (oldContract.ownerKind || "INDIVIDUAL") ===
+          (versionContract.ownerKind || "INDIVIDUAL") &&
+        oldContract.program === versionContract.program &&
+        old.checksum === asset.sha256 &&
+        templateRenderSource(old).originalKazakhSource?.sha256 ===
+          templateRenderSource({ ...source, contract: versionContract })
+            .originalKazakhSource?.sha256
+      )
+        return old;
       fail(
         409,
         "IMMUTABLE_TEMPLATE_CONFLICT",
@@ -466,23 +553,48 @@ export class TemplateManagementController {
   }
   @Post("settings/templates/upload")
   @UseInterceptors(
-    FileInterceptor("file", {
-      limits: { fileSize: 10 * 1024 * 1024, files: 1, fields: 2 },
-    }),
+    FileFieldsInterceptor(
+      [
+        { name: "file", maxCount: 1 },
+        { name: "kazakhFile", maxCount: 1 },
+      ],
+      {
+        limits: { fileSize: 10 * 1024 * 1024, files: 2, fields: 2 },
+      },
+    ),
   )
   upload(
     @Req() req: DemoRequest,
     @Body() body: unknown,
-    @UploadedFile() file?: Express.Multer.File,
+    @UploadedFiles()
+    files?: {
+      file?: Express.Multer.File[];
+      kazakhFile?: Express.Multer.File[];
+    },
   ) {
-    return uploadTemplate(requireCapability(req, "center:manage"), body, file);
+    return uploadTemplate(
+      requireCapability(req, "center:manage"),
+      body,
+      files?.file?.[0],
+      files?.kazakhFile?.[0],
+    );
   }
   @Get("settings/templates/:id/source") source(
     @Req() req: DemoRequest,
     @Param("id") id: string,
+    @Query() query: unknown,
     @Res() res: Response,
   ) {
-    return this.download(req, id, "SOURCE", res);
+    const { language } = parse(
+      z.object({ language: z.enum(["RU", "KZ"]).optional() }).strict(),
+      query,
+    );
+    return this.download(
+      req,
+      id,
+      language === "KZ" ? "SOURCE-KZ" : "SOURCE",
+      res,
+    );
   }
   @Get("settings/templates/:id/sample") sample(
     @Req() req: DemoRequest,
@@ -507,8 +619,16 @@ export class TemplateManagementController {
       where: { tenantId: c.tenantId, id },
     });
     if (!form) fail(404, "NOT_FOUND", "Форма не найдена");
-    let bytes = await store.read(form.storageKey, form.checksum);
-    if (format !== "SOURCE") {
+    const partner =
+      format === "SOURCE-KZ"
+        ? templateRenderSource(form).originalKazakhSource
+        : undefined;
+    if (format === "SOURCE-KZ" && !partner)
+      fail(404, "NOT_FOUND", "Отдельный казахский исходник не зарегистрирован");
+    let bytes = partner
+      ? await store.read(partner.storageKey, partner.sha256)
+      : await store.read(form.storageKey, form.checksum);
+    if (format === "PDF" || format === "DOCX") {
       const preview = (
         form.contract as {
           preview?: Record<string, { storageKey: string; sha256: string }>;

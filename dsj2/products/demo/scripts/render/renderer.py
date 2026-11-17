@@ -609,6 +609,10 @@ def preflight(payload,out):
         validate_english(snapshot)
         if not snapshot.get('groupEvent') and len(snapshot['items'])!=1: raise ValueError('PREFLIGHT_SINGLE_RECIPIENT')
         try:
+            from original_archive import match_original, render_original_group
+            if snapshot.get('groupEvent') and match_original(path,snapshot['templateId']):
+                render_original_group(snapshot,path)
+                continue
             from archive_forms import identify_archive,render_archive_group
             if identify_archive(path,snapshot['templateId']):
                 if snapshot.get('groupEvent'):render_archive_group(snapshot,path)

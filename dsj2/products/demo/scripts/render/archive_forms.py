@@ -616,7 +616,7 @@ def _unique_ids(root, index):
                 node.text = re.sub(r'(?<!\w)' + re.escape(old) + r'(?!\w)', new, node.text or '')
 
 
-def render_archive_group(snapshot, path):
+def protocol_group_fields(snapshot):
     items = snapshot['items']
     event = snapshot.get('groupEvent', {})
     _require(event.get('contractVersion') == 1 and snapshot['templateId'].endswith('-protocol'), 'GROUP_VERSION')
@@ -644,6 +644,12 @@ def render_archive_group(snapshot, path):
         fields['POSITION_BOTH'] = ' / '.join(dict.fromkeys(fields['POSITION_' + lang] for lang in ['RU', 'KZ'] if fields['POSITION_' + lang]))
         fields.update(_ps_decision_fields(fields['APPROVAL_BASIS'], qualifications['RU'], qualifications['KZ'],
             all((item['assignment'].get('outcome') or {}).get('status') == 'PASSED' for item in items)))
+    return header, fields
+
+
+def render_archive_group(snapshot, path):
+    items = snapshot['items']
+    header, fields = protocol_group_fields(snapshot)
     files, marker, trees = _load(path, snapshot, fields)
     for tree in trees.values():
         _keep_signature_tables(tree, snapshot['templateId'])

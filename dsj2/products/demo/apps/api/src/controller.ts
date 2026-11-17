@@ -24,6 +24,7 @@ import {
   audit,
   type DemoRequest,
 } from "./core";
+import { templateRenderSource } from "./template-selection";
 import { login, logout, changePassword, cookies } from "./auth";
 import { registerCenter } from "./tenant-provisioning";
 import { printingOverview } from "./printing-overview";
@@ -846,6 +847,9 @@ export class DemoController {
         );
       try {
         await files.store.read(template.storageKey, template.checksum);
+        const companion = templateRenderSource(template).originalKazakhSource;
+        if (companion)
+          await files.store.read(companion.storageKey, companion.sha256);
         const contract = template.contract as {
           sourceVersionId?: string;
           preview?: {

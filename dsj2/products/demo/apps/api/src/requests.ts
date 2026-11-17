@@ -46,6 +46,7 @@ import { groupHeaderWorkplace } from "./group-workplace";
 import {
   assignmentTemplateKey,
   registeredTemplateKey,
+  templateRenderSource,
 } from "./template-selection";
 import { replaceableImportScaffoldId } from "./import-scaffold";
 import {
@@ -1468,8 +1469,7 @@ async function prepareLayout(
           englishAppendix: v.draft.englishAppendix || false,
           templateId: template.templateId,
           templateVersion: template.version,
-          templateStorageKey: template.storageKey,
-          templateChecksum: template.checksum,
+          ...templateRenderSource(template),
           issuer:
             (assignment.eventId &&
               v.eventProfiles.get(assignment.eventId)?.profile) ||
@@ -1551,8 +1551,7 @@ async function prepareLayout(
         englishAppendix: v.draft.englishAppendix || false,
         templateId: template.templateId,
         templateVersion: template.version,
-        templateStorageKey: template.storageKey,
-        templateChecksum: template.checksum,
+        ...templateRenderSource(template),
         issuer: v.eventProfiles.get(event.id)?.profile || v.parsedProfile,
         photos: {},
         items: rows,
@@ -1581,9 +1580,15 @@ async function checkLayout(
         ...new Map(
           prepared.plans.map((p) => [p.template.id, p.template]),
         ).values(),
-      ].map((template) =>
-        artifactStore.read(template.storageKey, template.checksum),
-      ),
+      ].flatMap((template) => {
+        const companion = templateRenderSource(template).originalKazakhSource;
+        return [
+          artifactStore.read(template.storageKey, template.checksum),
+          ...(companion
+            ? [artifactStore.read(companion.storageKey, companion.sha256)]
+            : []),
+        ];
+      }),
     );
     await Promise.all(
       [
@@ -2219,8 +2224,7 @@ export async function finalize(
         englishAppendix: v.draft.englishAppendix || false,
         templateId: template.templateId,
         templateVersion: template.version,
-        templateStorageKey: template.storageKey,
-        templateChecksum: template.checksum,
+        ...templateRenderSource(template),
         issuer:
           (assignment.eventId &&
             v.eventProfiles.get(assignment.eventId)?.profile) ||
@@ -2290,8 +2294,7 @@ export async function finalize(
         demoMode: v.draft.demoMode,
         templateId: template.templateId,
         templateVersion: template.version,
-        templateStorageKey: template.storageKey,
-        templateChecksum: template.checksum,
+        ...templateRenderSource(template),
         issuer: v.eventProfiles.get(event.id)?.profile || v.parsedProfile,
         items,
         photos: {},
@@ -2573,8 +2576,7 @@ export async function preview(c: Context, id: string, input: unknown) {
           englishAppendix: v.draft.englishAppendix || false,
           templateId: template.templateId,
           templateVersion: template.version,
-          templateStorageKey: template.storageKey,
-          templateChecksum: template.checksum,
+          ...templateRenderSource(template),
           issuer: issuer.profile,
           items: [
             {
@@ -2675,8 +2677,7 @@ export async function preview(c: Context, id: string, input: unknown) {
         },
         templateId: template.templateId,
         templateVersion: template.version,
-        templateStorageKey: template.storageKey,
-        templateChecksum: template.checksum,
+        ...templateRenderSource(template),
         issuer: v.eventProfiles.get(event.id)?.profile || v.parsedProfile,
         photos: {},
         items,

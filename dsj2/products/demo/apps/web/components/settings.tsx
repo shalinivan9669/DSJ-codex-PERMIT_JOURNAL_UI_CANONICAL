@@ -652,6 +652,7 @@ export function ProfileForm({
 }
 export function Templates({ initial }: { initial: Template[] }) {
   const tr = useCabinetText();
+  const t = useCabinetLanguage();
   const [templates, setTemplates] = useState<
     (Template & {
       approved?: boolean;
@@ -705,6 +706,8 @@ export function Templates({ initial }: { initial: Template[] }) {
                     template.id}
                 {template.contract?.program === "SPECIAL" &&
                   tr(" — специальные компетенции")}
+                {template.contract?.archivePart === "TITLE_PAGE" &&
+                  t(" — титульный лист из архива", " — архивтегі титулдық парақ")}
               </h3>
               <p>
                 {tr("Версия")}{" "}{template.version || "1"} ·{" "}

@@ -362,13 +362,15 @@ def validate_template(payload, out):
         from original_archive import match_original, original_fields, original_layout
         content = uploaded.read_bytes()
         if hashlib.sha256(content).hexdigest() == expected_original and match_original(uploaded, template_id):
+            import original_archive_protocols as protocols
+            language = protocols.language(template_id, expected_original) if template_id in protocols.IDS else None
             fields = original_fields(uploaded, template_id)
             photo, sections = original_layout(uploaded, template_id)
             Path(out).write_bytes(content)
             return {'validated': True, 'templateId': template_id, 'fields': fields,
                     'photo': photo, 'sections': sections,
                     'sourceChecksum': payload['sourceChecksum'],
-                    'originalSourceSha256': expected_original,
+                    'originalSourceSha256': expected_original, **({'sourceLanguage': language} if language else {}),
                     'renderPolicy': 'ORIGINAL_ARCHIVE_20261117', 'version': 1}
     files = inspect_package(uploaded)
     root = E.fromstring(files['word/document.xml'])

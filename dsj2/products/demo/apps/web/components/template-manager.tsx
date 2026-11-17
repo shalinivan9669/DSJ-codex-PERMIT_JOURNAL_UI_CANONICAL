@@ -17,6 +17,8 @@ type FormVersion = {
   checksum: string;
   contract: {
     title?: string;
+    archivePart?: "TITLE_PAGE";
+    originalKazakhSource?: { sha256: string };
     validation?: { fields?: string[] };
     preview?: { sampleOnly?: boolean };
   };
@@ -43,6 +45,11 @@ export function TemplateManager({
     "Исходная форма": "Бастапқы нысан",
     "Выберите форму": "Нысанды таңдаңыз",
     "Скачать исходный DOCX": "Бастапқы DOCX жүктеу",
+    "Казахский оригинал протокола по профессии (DOCX)":
+      "Кәсіп бойынша хаттаманың қазақша түпнұсқасы (DOCX)",
+    "Титульный лист свидетельства из архива":
+      "Куәліктің архивтегі титулдық парағы",
+    "Исходный DOCX на казахском": "Қазақ тіліндегі бастапқы DOCX",
     "Новая версия": "Жаңа нұсқа",
     "Форма DOCX": "DOCX нысаны",
     "Сохраните поля и структуру исходной формы.":
@@ -65,7 +72,8 @@ export function TemplateManager({
   const [forms, setForms] = useState<FormVersion[]>([]),
     [selected, setSelected] = useState("");
   const [version, setVersion] = useState(""),
-    [file, setFile] = useState<File | null>(null);
+    [file, setFile] = useState<File | null>(null),
+    [kazakhFile, setKazakhFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false),
     [message, setMessage] = useState("");
   const [error, setError] = useCabinetError();
@@ -99,6 +107,8 @@ export function TemplateManager({
     body.set("sourceVersionId", selected);
     body.set("version", version);
     body.set("file", file);
+    if (current?.templateId === "ps-protocol" && kazakhFile)
+      body.set("kazakhFile", kazakhFile);
     void run(
       () => api("/settings/templates/upload", { method: "POST", body }),
       "Новая версия проверена и сохранена. Откройте образцы и подтвердите применимость формы.",
@@ -133,7 +143,11 @@ export function TemplateManager({
             <select
               required
               value={selected}
-              onChange={(e) => setSelected(e.target.value)}
+              onChange={(e) => {
+                setSelected(e.target.value);
+                setFile(null);
+                setKazakhFile(null);
+              }}
             >
               <option value="">{tr("Выберите форму")}</option>
               {forms.map((form) => (
@@ -153,6 +167,18 @@ export function TemplateManager({
               <a href={`/api/settings/templates/${current.id}/source`} download>
                 {tr("Скачать исходный DOCX")}
               </a>
+              {current.contract.originalKazakhSource && (
+                <>
+                  {" "}
+                  ·{" "}
+                  <a
+                    href={`/api/settings/templates/${current.id}/source?language=KZ`}
+                    download
+                  >
+                    {tr("Исходный DOCX на казахском")}
+                  </a>
+                </>
+              )}
             </p>
           )}
           <label>
@@ -166,7 +192,7 @@ export function TemplateManager({
               placeholder="4"
             />
           </label>
-          <label>
+          <label key={selected}>
             {tr("Форма DOCX")}
             <input
               required
@@ -175,10 +201,18 @@ export function TemplateManager({
               onChange={(e) => setFile(e.target.files?.[0] || null)}
             />
           </label>
+          {current?.templateId === "ps-protocol" && (
+            <label key={selected + "-kz"}>
+              {tr("Казахский оригинал протокола по профессии (DOCX)")}
+              <input
+                type="file"
+                accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                onChange={(e) => setKazakhFile(e.target.files?.[0] || null)}
+              />
+            </label>
+          )}
           <p className="muted">
-            {tr(
-              "Сохраните поля и структуру исходной формы.",
-            )}
+            {tr("Сохраните поля и структуру исходной формы.")}
           </p>
           <button className="primary" disabled={busy || !file || !selected}>
             {busy
@@ -202,6 +236,9 @@ export function TemplateManager({
                     )}{" "}
                     · {form.version}
                   </strong>
+                  {form.contract.archivePart === "TITLE_PAGE" && (
+                    <p>{tr("Титульный лист свидетельства из архива")}</p>
+                  )}
                   <p>
                     {form.approved
                       ? tr("Применимость подтверждена")
@@ -214,6 +251,14 @@ export function TemplateManager({
                     >
                       {tr("Исходный DOCX")}
                     </a>
+                    {form.contract.originalKazakhSource && (
+                      <a
+                        href={`/api/settings/templates/${form.id}/source?language=KZ`}
+                        download
+                      >
+                        {tr("Исходный DOCX на казахском")}
+                      </a>
+                    )}
                     <a
                       href={`/api/settings/templates/${form.id}/sample?format=DOCX`}
                       download
