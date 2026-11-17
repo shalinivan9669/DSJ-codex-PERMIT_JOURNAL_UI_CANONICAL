@@ -438,6 +438,7 @@ export function mapImportRow(
     }
     assignment = updateAssignment(assignment, { biotCategory: known });
   }
+  if (preview.archive) assignment = pendingArchiveAssessment(assignment);
   const result: Recipient = {
     id,
     importId: preview.importId,
@@ -528,8 +529,6 @@ export function mapImportRow(
       };
     }
   }
-  if (preview.archive && !mapping.includes("result"))
-    result.assignments = result.assignments.map(pendingArchiveAssessment);
   return result;
 }
 

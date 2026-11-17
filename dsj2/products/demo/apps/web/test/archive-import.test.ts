@@ -52,3 +52,20 @@ test("archive recipients and their protocols have the imported fields and a pend
     );
   }
 });
+
+test("a manually mapped arbitrary grade in an archive row cannot create a positive outcome", () => {
+  const row = { sourceRow: 2, values: ["Учебный А.", "3"] };
+  const preview = {
+    archive: {
+      course: "PS" as const,
+      fields: ["fullNameRu", "psQualificationRu"],
+    },
+    importId: "archive-grade",
+    columns: ["ФИО", "Поле"],
+    rows: [row],
+    total: 1,
+  };
+  const item = mapImportRow(preview, row, ["fullNameRu", "result"], "ps-card");
+  assert.equal(item.assignments[0].result, "3");
+  assert.equal(item.assignments[0].outcome?.status, "UNKNOWN");
+});
