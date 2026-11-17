@@ -36,11 +36,11 @@ USER root
 COPY --from=python /usr/local/ /usr/local/
 COPY scripts/render/requirements.txt /tmp/demo-render-requirements.txt
 COPY assets/fonts/ /usr/local/share/fonts/demo/
-ARG LO_VERSION=26.2.6
+ARG LO_VERSION=26.2.6.3
 ARG LO_SHA256=fd0e8f8f2408dd2e5b90286e60f3f97cf566ba441cd48cfc5bcc68067303e0bc
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl fontconfig libreadline8 liblz4-1 libzstd1 libpq5 \
         libxinerama1 libcairo2 libcups2 libdbus-1-3 libsm6 libx11-xcb1 libxrender1 libglu1-mesa libxrandr2 libnss3 libxslt1.1 libglib2.0-0 \
-    && curl --fail --location --retry 3 "https://download.documentfoundation.org/libreoffice/stable/${LO_VERSION}/deb/x86_64/LibreOffice_${LO_VERSION}_Linux_x86-64_deb.tar.gz" -o /tmp/libreoffice.tar.gz \
+    && curl --fail --location --retry 3 "https://downloadarchive.documentfoundation.org/libreoffice/old/${LO_VERSION}/deb/x86_64/LibreOffice_${LO_VERSION}_Linux_x86-64_deb.tar.gz" -o /tmp/libreoffice.tar.gz \
     && echo "${LO_SHA256}  /tmp/libreoffice.tar.gz" | sha256sum -c - \
     && mkdir /tmp/libreoffice && tar -xzf /tmp/libreoffice.tar.gz -C /tmp/libreoffice \
     && apt-get install -y --no-install-recommends /tmp/libreoffice/*/DEBS/*.deb \
