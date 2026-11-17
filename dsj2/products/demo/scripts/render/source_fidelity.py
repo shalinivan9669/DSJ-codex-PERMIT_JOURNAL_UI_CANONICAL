@@ -28,7 +28,7 @@ def child(parent, tag):
     return node
 
 
-def add_floating_mark(files,text):
+def add_floating_mark(files,text,*,encoding='utf8'):
     """Page overlay anchored in a footer, without reserving a new header band.
 
     Header distance in the source cards can exceed their zero top margin. A new
@@ -59,7 +59,7 @@ def add_floating_mark(files,text):
         E.SubElement(props,W+'spacing',{W+'before':'0',W+'after':'0',W+'line':'1',W+'lineRule':'exact'})
         paragraph_mark=E.SubElement(props,W+'rPr')
         for tag in ['sz','szCs']:E.SubElement(paragraph_mark,W+tag,{W+'val':'1'})
-        files[part]=E.tostring(footer,xml_declaration=True,encoding='utf8');parts=[part]
+        files[part]=E.tostring(footer,xml_declaration=True,encoding=encoding);parts=[part]
         E.SubElement(rels,PKG+'Relationship',Id='rIdDemoFooterV2',Type=R[1:-1]+'/footer',Target='demo-footer.xml')
         sections=list(document.iter(W+'sectPr'))
         for kind in ['default','first','even']:
@@ -69,14 +69,14 @@ def add_floating_mark(files,text):
             if margins is not None:margins.set(W+'footer','0')
         ct=E.fromstring(files['[Content_Types].xml'])
         E.SubElement(ct,'{http://schemas.openxmlformats.org/package/2006/content-types}Override',PartName='/word/demo-footer.xml',ContentType='application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml')
-        files['[Content_Types].xml']=E.tostring(ct,xml_declaration=True,encoding='utf8')
+        files['[Content_Types].xml']=E.tostring(ct,xml_declaration=True,encoding=encoding)
     for part in set(parts):
         if part not in files:continue
         footer=E.fromstring(files[part]);anchor=next(footer.iter(W+'p'),None)
         if anchor is None:anchor=E.SubElement(footer,W+'p')
-        anchor.append(deepcopy(run));files[part]=E.tostring(footer,xml_declaration=True,encoding='utf8')
-    files['word/document.xml']=E.tostring(document,xml_declaration=True,encoding='utf8')
-    files['word/_rels/document.xml.rels']=E.tostring(rels,xml_declaration=True,encoding='utf8')
+        anchor.append(deepcopy(run));files[part]=E.tostring(footer,xml_declaration=True,encoding=encoding)
+    files['word/document.xml']=E.tostring(document,xml_declaration=True,encoding=encoding)
+    files['word/_rels/document.xml.rels']=E.tostring(rels,xml_declaration=True,encoding=encoding)
 
 
 class Typography:

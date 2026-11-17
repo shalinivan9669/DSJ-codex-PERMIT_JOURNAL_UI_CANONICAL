@@ -36,6 +36,42 @@ import {
 } from "./core";
 
 const store = new ArtifactStore();
+const originalArchivePolicy = "ORIGINAL_ARCHIVE_20261117";
+const originalArchiveCards = new Map<string, [string, string]>([
+  ["biot-worker-card", ["Охрана труда", "Еңбек қорғау"]],
+  ["pb-card", ["Промбезопасность", "Өнеркәсіптік қауіпсіздік"]],
+  ["ptm-card", ["Пожарный минимум", "Өрт-техникалық минимум"]],
+  ["ps-card", ["Мастер", "Шебер"]],
+]);
+
+/** The Python registry decides which exact source is allowed for a card.
+ * Supply the candidate digest only in that card's bundled individual scope. */
+export function archiveCardCandidateChecksum(
+  base: Record<string, unknown>,
+  upload: Buffer,
+) {
+  if (
+    !originalArchiveCards.has(String(base.id)) ||
+    base.program ||
+    (base.ownerKind && base.ownerKind !== "INDIVIDUAL") ||
+    base.renderPolicy !== "USER_ARCHIVE_20261109_V1"
+  )
+    return undefined;
+  return createHash("sha256").update(upload).digest("hex");
+}
+
+const originalInspection = z.object({
+  validated: z.literal(true),
+  templateId: z.string(),
+  renderPolicy: z.literal(originalArchivePolicy),
+  originalSourceSha256: z.string().regex(/^[0-9a-f]{64}$/),
+  fields: z
+    .array(z.string().regex(/^[A-Z][A-Z0-9_]{0,63}$/))
+    .min(1)
+    .max(256),
+  photo: z.boolean(),
+  sections: z.array(z.record(z.string(), z.string())).min(1).max(100),
+});
 export const templateManagementRoutes = [
   ["POST", "/settings/templates/register-bundled"],
   ["POST", "/settings/templates/upload"],
@@ -61,7 +97,12 @@ export function sampleSnapshot(template: {
   contract: unknown;
 }) {
   const contract = template.contract as Record<string, unknown>;
-  const sample = "ОБРАЗЕЦ ФОРМЫ / НЫСАН ҮЛГІСІ";
+  const originalCard =
+    contract.renderPolicy === originalArchivePolicy
+      ? originalArchiveCards.get(template.templateId)
+      : undefined;
+  const sample = originalCard ? "ТОО «Үлгі»" : "ОБРАЗЕЦ ФОРМЫ / НЫСАН ҮЛГІСІ";
+  const sampleNumber = originalCard ? "001" : "ОБРАЗЕЦ";
   const assignment: Record<string, unknown> = {
     id: "sample-assignment",
     templateId: template.templateId,
@@ -88,6 +129,19 @@ export function sampleSnapshot(template: {
     biotKnowledgeResult: "Образец",
     biotProctoringResult: "Образец",
   };
+  if (originalCard) {
+    const [ru, kz] = originalCard;
+    Object.assign(assignment, {
+      trainingSubject: `${ru} / ${kz}`,
+      trainingSubjectRu: ru,
+      trainingSubjectKz: kz,
+      outcome: { status: "PASSED", source: "SYNTHETIC_FORM_PREVIEW_ONLY" },
+      result: "Сдал / Тапсырды",
+      resultRu: "Сдал",
+      resultKz: "Тапсырды",
+      externalBasisNumber: sampleNumber,
+    });
+  }
   if (contract.ownerKind === "GROUP") assignment.eventId = "sample-group";
   if (template.templateId.startsWith("lms-"))
     assignment.lms = {
@@ -122,7 +176,7 @@ export function sampleSnapshot(template: {
     templateChecksum: template.checksum,
     issuer: {
       nameRu: sample,
-      nameKz: "Нысан үлгісі",
+      nameKz: originalCard ? "«Үлгі» ЖШС" : "Нысан үлгісі",
       cityRu: "Астана",
       cityKz: "Астана",
       approvalBasis: "Образец для проверки формы",
@@ -137,21 +191,21 @@ export function sampleSnapshot(template: {
     items: [
       {
         id: "sample-recipient",
-        fullNameRu: "Образец имени получателя",
-        fullNameKz: "Алушы атының үлгісі",
-        positionRu: "Специалист",
+        fullNameRu: originalCard ? "Үлгі А. Б." : "Образец имени получателя",
+        fullNameKz: originalCard ? "Үлгі А. Б." : "Алушы атының үлгісі",
+        positionRu: originalCard ? "Мастер" : "Специалист",
         positionKz: "Маман",
-        workplaceRu: "Организация — образец",
-        workplaceKz: "Ұйым — үлгі",
+        workplaceRu: originalCard ? sample : "Организация — образец",
+        workplaceKz: originalCard ? "«Үлгі» ЖШС" : "Ұйым — үлгі",
         departmentRu: "Учебный участок",
         departmentKz: "Оқу учаскесі",
         employerBin: "000000000000",
         employerAddressRu: "Адрес — образец",
         employerAddressKz: "Мекенжай — үлгі",
-        number: "ОБРАЗЕЦ",
-        protocolNumber: "ОБРАЗЕЦ",
-        registrationNumber: "ОБРАЗЕЦ",
-        credentialNumber: "ОБРАЗЕЦ",
+        number: sampleNumber,
+        protocolNumber: sampleNumber,
+        registrationNumber: sampleNumber,
+        credentialNumber: sampleNumber,
         assignment,
       },
     ],
@@ -266,7 +320,9 @@ export async function uploadTemplate(
       "TEMPLATE_UNSUPPORTED",
       "Для этой исторической формы выберите актуальный образец",
     );
+  const originalSourceSha256 = archiveCardCandidateChecksum(base, file.buffer);
   let inspected: Awaited<ReturnType<typeof runRender>>;
+  let versionContract: Record<string, unknown> = base;
   try {
     inspected = await runRender(
       "template-validate",
@@ -274,9 +330,37 @@ export async function uploadTemplate(
         templateId: source.templateId,
         sourceFile: base.file,
         sourceChecksum: base.sha256,
+        ...(originalSourceSha256 ? { originalSourceSha256 } : {}),
       },
       { inputBytes: file.buffer, inputExtension: "docx" },
     );
+    if (inspected.metadata.renderPolicy === originalArchivePolicy) {
+      const result = originalInspection.parse(inspected.metadata);
+      if (
+        !originalSourceSha256 ||
+        result.originalSourceSha256 !== originalSourceSha256 ||
+        result.templateId !== source.templateId ||
+        !inspected.buffer.equals(file.buffer)
+      )
+        throw new Error("ARCHIVE_ORIGINAL_MISMATCH");
+      // Only normalized field names leave the renderer. The private source can
+      // contain example recipients and local mail-merge paths.
+      inspected.metadata = result;
+      versionContract = {
+        ...base,
+        file: `${source.templateId}-${data.version}.docx`,
+        formRevision: originalArchivePolicy,
+        renderPolicy: originalArchivePolicy,
+        sourceSha256: originalSourceSha256,
+        previousTemplateSha256: source.checksum,
+        fields: result.fields,
+        photo: result.photo,
+        sections: result.sections,
+        sourceIdentityPolicy:
+          "PRIVATE_ARCHIVE_SOURCE_WITH_FROZEN_RENDER_VALUES",
+        verificationStatus: "UPLOAD_VALIDATED_SAMPLE_RENDERED",
+      };
+    }
   } catch {
     fail(
       422,
@@ -291,12 +375,19 @@ export async function uploadTemplate(
     const rendered = await runRender(
       "docx",
       sampleSnapshot({
-        ...source,
-        ...asset,
+        templateId: source.templateId,
+        storageKey: asset.storageKey,
         checksum: asset.sha256,
         version: data.version,
+        contract: versionContract,
       }),
     );
+    if (
+      versionContract.renderPolicy === originalArchivePolicy &&
+      (rendered.metadata.renderPolicy !== originalArchivePolicy ||
+        rendered.buffer.equals(inspected.buffer))
+    )
+      throw new Error("ORIGINAL_SAMPLE_NOT_RENDERED");
     const converted = await runRender(
       "pdf",
       {},
@@ -341,7 +432,7 @@ export async function uploadTemplate(
         storageKey: asset.storageKey,
         approved: false,
         contract: json({
-          ...base,
+          ...versionContract,
           version: data.version,
           sha256: asset.sha256,
           sourceVersionId: source.id,

@@ -796,13 +796,15 @@ def _isolated_first_section(document):
     return document
 
 
-def combine_archive_parts(documents):
+def combine_archive_parts(documents, *, same_original_card=False):
     """Keep each source section, with independent filled headers and media."""
     _require(isinstance(documents, list) and documents, 'BATCH_EMPTY')
     # Isolate the first source too. A later source's explicit empty footer must
     # not be the only footer found when applying a preview/sample mark: all
     # first/default/even page roles of every source need their own story.
-    files = _isolated_first_section(documents[0]) if len(documents) > 1 else dict(documents[0])
+    files = dict(documents[0])
+    if len(documents) > 1 and not same_original_card:
+        files = _isolated_first_section(files)
     root = E.fromstring(files['word/document.xml'])
     body = root.find(W + 'body')
     rels = E.fromstring(files['word/_rels/document.xml.rels'])
@@ -813,7 +815,10 @@ def combine_archive_parts(documents):
         while any(name.startswith(f'word/archive-{serial}/') for name in files):
             serial += 1
         index = serial
-        document = _merge_formatting(files, _isolated_first_section(document), index)
+        # Raw originals in one card batch use the same style/numbering package and
+        # have no header/footer stories. Inventing either can move the printed forms.
+        if not same_original_card:
+            document = _merge_formatting(files, _isolated_first_section(document), index)
         source = E.fromstring(document['word/document.xml'])
         other = source.find(W + 'body')
         _unique_ids(source, index)
@@ -870,15 +875,25 @@ def combine_archive_parts(documents):
         section = body.find(W + 'sectPr')
         _require(section is not None, 'BATCH_SECTION_REQUIRED')
         body.remove(section)
-        kind = section.find(W + 'type')
+        # The section type governs the *start* of its content. On an original
+        # card, changing the previous final continuous section breaks its layout.
+        start_section = next(source.iter(W + 'sectPr')) if same_original_card else section
+        kind = start_section.find(W + 'type')
         if kind is None:
             kind = E.Element(W + 'type')
-            position = next((i for i, child in enumerate(section) if child.tag not in
-                            [W + 'headerReference', W + 'footerReference', W + 'footnotePr', W + 'endnotePr']), len(section))
-            section.insert(position, kind)
+            position = next((i for i, child in enumerate(start_section) if child.tag not in
+                            [W + 'headerReference', W + 'footerReference', W + 'footnotePr', W + 'endnotePr']), len(start_section))
+            start_section.insert(position, kind)
         kind.set(W + 'val', 'nextPage')
-        boundary = E.SubElement(body, W + 'p')
-        E.SubElement(boundary, W + 'pPr').append(section)
+        if same_original_card and len(body) and body[-1].tag == W + 'p' and body[-1].find(W + 'pPr/' + W + 'sectPr') is None:
+            # Keep the last source line; a new paragraph can spill onto a blank page.
+            properties = body[-1].find(W + 'pPr')
+            if properties is None:
+                properties = E.Element(W + 'pPr')
+                body[-1].insert(0, properties)
+        else:
+            properties = E.SubElement(E.SubElement(body, W + 'p'), W + 'pPr')
+        properties.append(section)
         for child in other:
             body.append(deepcopy(child))
     files['word/document.xml'] = _serialize(root)

@@ -33,7 +33,7 @@ W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 R='{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
 PKG='{http://schemas.openxmlformats.org/package/2006/relationships}'
 NS={'w':W[1:-1]}
-RENDERER_VERSION='demo-ooxml-15/libreoffice-26.2.6.3'
+RENDERER_VERSION='demo-ooxml-16/libreoffice-26.2.6.3'
 RU=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря']
 KZ=['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан']
 Image.MAX_IMAGE_PIXELS=20_000_000
@@ -338,6 +338,9 @@ def validated_fields(snapshot,item):
 
 
 def render_one(snapshot,item,template):
+    from original_archive import match_original, render_original_one
+    if match_original(template, snapshot['templateId']):
+        return render_original_one(snapshot, item, template)
     from archive_forms import identify_archive,render_archive_one
     if identify_archive(template,snapshot.get('templateId')):
         return render_archive_one(snapshot,item,template)
@@ -638,6 +641,11 @@ def render_docx(snapshot,out):
     from english_appendix import append_english_pages, validate_english
     validate_english(snapshot)
     template,path=resolve_template(snapshot)
+    from original_archive import match_original, render_original_document
+    if match_original(path, snapshot['templateId']):
+        render_original_document(snapshot, out, path)
+        return {'format':'DOCX','templateVersion':snapshot.get('templateVersion',template['version']),
+                'rendererVersion':RENDERER_VERSION,'renderPolicy':'ORIGINAL_ARCHIVE_20261117'}
     from archive_forms import identify_archive,render_archive_document,POLICY as ARCHIVE_POLICY
     if identify_archive(path,snapshot['templateId']):
         render_archive_document(snapshot,out,path)

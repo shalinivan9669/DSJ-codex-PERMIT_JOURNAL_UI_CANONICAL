@@ -349,7 +349,6 @@ def inspect_package(path):
 
 
 def validate_template(payload, out):
-    files = inspect_package(payload['inputPath'])
     source = ROOT / 'assets/templates' / payload['sourceFile']
     if source.parent.resolve() != (ROOT / 'assets/templates').resolve():
         raise ValueError('TEMPLATE_SOURCE_INVALID')
@@ -357,6 +356,21 @@ def validate_template(payload, out):
     if hashlib.sha256(source.read_bytes()).hexdigest() != payload['sourceChecksum']:
         raise ValueError('TEMPLATE_SOURCE_HASH')
     template_id = payload['templateId']
+    uploaded = Path(payload['inputPath'])
+    expected_original = payload.get('originalSourceSha256')
+    if expected_original and uploaded.stat().st_size <= 10 * 1024 * 1024:
+        from original_archive import match_original, original_fields, original_layout
+        content = uploaded.read_bytes()
+        if hashlib.sha256(content).hexdigest() == expected_original and match_original(uploaded, template_id):
+            fields = original_fields(uploaded, template_id)
+            photo, sections = original_layout(uploaded, template_id)
+            Path(out).write_bytes(content)
+            return {'validated': True, 'templateId': template_id, 'fields': fields,
+                    'photo': photo, 'sections': sections,
+                    'sourceChecksum': payload['sourceChecksum'],
+                    'originalSourceSha256': expected_original,
+                    'renderPolicy': 'ORIGINAL_ARCHIVE_20261117', 'version': 1}
+    files = inspect_package(uploaded)
     root = E.fromstring(files['word/document.xml'])
     source_root = E.fromstring(original['word/document.xml'])
     # Positional printing layouts require their cells/bookmarks and source slots.

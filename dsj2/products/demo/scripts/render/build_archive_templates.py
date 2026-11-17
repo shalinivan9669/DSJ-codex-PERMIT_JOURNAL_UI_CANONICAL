@@ -165,7 +165,11 @@ def prepare(source_root, blueprint):
     source = (source_root/blueprint['source']).resolve()
     if not source.is_relative_to(source_root):
         raise ValueError('ARCHIVE_SOURCE_PATH')
-    data = source.read_bytes()
+    return prepare_source(source.read_bytes(), blueprint)
+
+
+def prepare_source(data, blueprint, *, original_card_slots=None, attach_frame_photo=True):
+    """Project only the hash-pinned source. Raw recipient data never reaches Word."""
     if digest(data) != blueprint['sourceSha256']:
         raise ValueError('ARCHIVE_SOURCE_HASH:'+blueprint['id'])
     with ZipFile(BytesIO(data)) as archive:
@@ -179,13 +183,19 @@ def prepare(source_root, blueprint):
     for part in files:
         if re.fullmatch(r'word/(?:document|header\d*|footer\d*)\.xml', part):
             fill_merge_slots(tree(part), blueprint)
-    for patch in blueprint.get('textSlots', []):
+    slots = blueprint
+    if original_card_slots is not None:
+        if blueprint.get('rosters') or blueprint.get('roster'):
+            raise ValueError('ARCHIVE_CARD_ROSTER')
+        original_card_slots(blueprint['id'], trees, blueprint)
+        slots = {}
+    for patch in slots.get('textSlots', []):
         root = tree(patch['part'])
         nodes = root.xpath(patch['xpath'], namespaces=namespaces(root))
         if len(nodes) != 1 or nodes[0].tag != W+'t':
             raise ValueError('ARCHIVE_TEXT_SLOT_NOT_UNIQUE:'+patch['xpath'])
         nodes[0].text = patch['value']
-    for patch in blueprint.get('paragraphSlots', []):
+    for patch in slots.get('paragraphSlots', []):
         root = tree(patch['part'])
         nodes = root.xpath(patch['xpath'], namespaces=namespaces(root))
         if len(nodes) != 1 or nodes[0].tag != W+'p':
@@ -281,7 +291,7 @@ def prepare(source_root, blueprint):
         stream = BytesIO()
         blank.save(stream, fmt)
         files[part] = stream.getvalue()
-    for index, shape_slot in enumerate(blueprint.get('photoShapes', [])):
+    for index, shape_slot in enumerate(blueprint.get('photoShapes', []) if attach_frame_photo else []):
         part = shape_slot['part']
         root = tree(part)
         shapes = root.xpath('//*[local-name()="rect" or local-name()="shape"][@id=$shapeId]', shapeId=shape_slot['shapeId'])
@@ -323,11 +333,16 @@ def prepare(source_root, blueprint):
             for entry in list(root):
                 if entry.get('PartName','').lstrip('/') in removed:
                     root.remove(entry)
-            E.SubElement(root, CT+'Override', PartName='/'+MARKER, ContentType='application/json')
+            if original_card_slots is None:
+                E.SubElement(root, CT+'Override', PartName='/'+MARKER, ContentType='application/json')
         elif part.startswith('docProps/'):
-            for node in root.iter():
-                if len(node)==0 and node.text:
-                    node.text = ''
+            if original_card_slots is not None:
+                for node in list(root):
+                    root.remove(node)
+            else:
+                for node in root.iter():
+                    if len(node)==0 and node.text:
+                        node.text = ''
         elif part.startswith('word/'):
             for node in list(root.iter()):
                 if not isinstance(node.tag,str):
@@ -359,11 +374,15 @@ def prepare(source_root, blueprint):
             marker['rosters'] = entries
     if blueprint.get('fieldLayoutPolicy'):
         marker['fieldLayoutPolicy'] = blueprint['fieldLayoutPolicy']
-    files[MARKER] = json.dumps(marker, ensure_ascii=False, sort_keys=True).encode('utf8')
-    return files, {'id':blueprint['id'], 'source':blueprint['source'], 'sourceSha256':blueprint['sourceSha256'],
+    if original_card_slots is None:
+        files[MARKER] = json.dumps(marker, ensure_ascii=False, sort_keys=True).encode('utf8')
+    report = {'id':blueprint['id'], 'source':blueprint['source'], 'sourceSha256':blueprint['sourceSha256'],
                    'fields':fields, 'changedParts':sorted(k for k,v in files.items() if original.get(k)!=v),
                    'removedParts':sorted(removed),
                    'preservedParts':{k:digest(v) for k,v in files.items() if original.get(k)==v}}
+    if original_card_slots is not None:
+        report['dynamicMedia'] = marker['dynamicMedia']
+    return files, report
 
 
 def prepare_form(source_root, blueprint):
