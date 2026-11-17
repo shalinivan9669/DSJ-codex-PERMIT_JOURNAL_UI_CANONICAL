@@ -3261,6 +3261,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           )}
           {extraPanel === "output" && (
             <CustomerOutput
+              key={draft.id}
               embedded
               draft={draft}
               canManage={context.user.role !== "VIEWER"}
@@ -3268,6 +3269,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           )}
           {extraPanel === "operations" && (
             <RequestOperations
+              key={draft.id}
               embedded
               draft={draft}
               selected={selected}

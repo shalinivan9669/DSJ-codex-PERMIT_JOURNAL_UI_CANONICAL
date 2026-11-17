@@ -21,7 +21,7 @@ export function importEmployerConflict(
   ].some((value) => value?.trim());
   return (
     explicit &&
-    !canSupplementRecipientEmployer(row, { ...company, archived: false })
+    !canSupplementRecipientEmployer(row, company)
   );
 }
 

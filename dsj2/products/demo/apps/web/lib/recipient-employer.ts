@@ -1,6 +1,7 @@
 import {
   customerSchema,
   formatOrganizationNames,
+  workplaceNames,
   type OrganizationNames,
 } from "@demo/contracts";
 import type { Customer, Recipient } from "./types";
@@ -20,9 +21,6 @@ export function effectiveRecipientEmployer(
     | null
     | undefined,
 ) {
-  const localName = !!(
-    recipient.workplaceRu?.trim() || recipient.workplaceKz?.trim()
-  );
   const knownNames = [
     employerText(employer?.nameRu),
     employerText(employer?.nameKz),
@@ -49,12 +47,7 @@ export function effectiveRecipientEmployer(
   const inherited = matches ? employer : undefined;
   return {
     ...recipient,
-    workplaceRu: localName
-      ? recipient.workplaceRu || recipient.workplaceKz
-      : inherited?.nameRu || inherited?.nameKz || "",
-    workplaceKz: localName
-      ? recipient.workplaceKz || recipient.workplaceRu
-      : inherited?.nameKz || inherited?.nameRu || "",
+    ...workplaceNames(recipient, inherited),
     employerBin: recipient.employerBin || inherited?.bin || "",
     employerAddressRu:
       recipient.employerAddressRu ||
@@ -92,7 +85,7 @@ const employerText = (value?: string | null) =>
 /** A partial name is not permission to combine two different companies. */
 export function canSupplementRecipientEmployer(
   recipient: Recipient,
-  employer: Customer,
+  employer: { id?: string; nameRu: string; nameKz?: string | null; bin?: string | null },
 ): boolean {
   if (recipient.employerId && recipient.employerId !== employer.id)
     return false;
@@ -102,7 +95,7 @@ export function canSupplementRecipientEmployer(
     recipient.employerBin.trim() !== employer.bin.trim()
   )
     return false;
-  if (recipient.employerId === employer.id) return true;
+  if (recipient.employerId && recipient.employerId === employer.id) return true;
   const names = [
     employerText(employer.nameRu),
     employerText(employer.nameKz),
@@ -117,7 +110,8 @@ export function canSupplementRecipientEmployer(
     return recipient.employerBin.trim() === employer.bin?.trim();
   // An address alone cannot establish the identity of an organization.
   return (
-    !recipient.employerAddressRu?.trim() && !recipient.employerAddressKz?.trim()
+    !recipient.employerAddressRu?.trim() && !recipient.employerAddressKz?.trim() &&
+    !recipient.employerAddressEn?.trim() && !recipient.workplaceEn?.trim()
   );
 }
 

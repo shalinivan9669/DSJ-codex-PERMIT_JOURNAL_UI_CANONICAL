@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
 import type { Customer, Draft } from "@/lib/types";
+import { soleGroupEmployer } from "@/lib/request-customer-defaults";
 import { RecordPicker } from "./record-picker";
 
 type RequestRow = {
@@ -246,11 +247,20 @@ export function RequestOrderLink({
   const [orders, setOrders] = useState<OrderDetail[]>([]),
     [selected, setSelected] = useState<OrderDetail | null>(null),
     [customer, setCustomer] = useState<Customer | null>(null);
-  const [title, setTitle] = useState(draft.title || "Заказ по группе"),
+  const suggestedId = soleGroupEmployer(draft);
+  const customerId = customer?.id || suggestedId;
+  const label =
+    customer?.nameRu ||
+    draft.organizationSnapshots?.find((org) => org.id === customerId)?.nameRu ||
+    (customerId && customerId === draft.customerId ? draft.customerName : "") ||
+    draft.items.find((row) => row.employerId === customerId && row.workplaceRu)
+      ?.workplaceRu;
+  const [enteredTitle, setTitle] = useState<string>(),
     [reason, setReason] = useState(""),
     [confirmed, setConfirmed] = useState(false),
     [error, setError] = useState(""),
     [success, setSuccess] = useState("");
+  const title = enteredTitle ?? (draft.title || "Заказ по группе");
   useEffect(() => {
     if (!open) return;
     let alive = true;
@@ -284,11 +294,14 @@ export function RequestOrderLink({
     try {
       await flush();
       if (create) {
+        const saved = await api<Draft>(`/print-requests/${draft.id}`);
+        const employerId = customer?.id || soleGroupEmployer(saved);
+        if (!employerId) throw new Error("Выберите работодателя для заказа");
         await api("/orders", {
           method: "POST",
           body: json({
-            title,
-            customerId: customer!.id,
+            title: enteredTitle ?? (saved.title || "Заказ по группе"),
+            customerId: employerId,
             requestIds: [draft.id],
           }),
         });
@@ -403,12 +416,12 @@ export function RequestOrderLink({
             maxLength={255}
           />
         </label>
-        <p>{customer?.nameRu || "Работодатель не выбран"}</p>
+        <p>{customerId ? label || "Работодатель участников из заявки" : "Работодатель не выбран"}</p>
         <button disabled={busy} onClick={() => setPicker(true)}>
           Выбрать работодателя для заказа
         </button>
         <button
-          disabled={busy || !customer || !title.trim()}
+          disabled={busy || !customerId || !title.trim()}
           onClick={() => void run(true)}
         >
           Создать заказ работодателя

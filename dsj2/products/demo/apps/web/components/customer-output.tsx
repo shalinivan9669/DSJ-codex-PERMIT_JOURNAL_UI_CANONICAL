@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, copyRegistry, downloadExport, errorText, json } from "@/lib/api";
 import { templateLabels, type Customer, type Draft } from "@/lib/types";
+import { profileOwner, soleGroupEmployer, uniqueCustomerProfile } from "@/lib/request-customer-defaults";
 import { RecordPicker } from "./record-picker";
 type Column = {
   field: string;
@@ -93,6 +94,13 @@ const defaults: OutputProfile = {
     includeCoverText: true,
   },
 };
+function changedFields<T extends object>(before: T, after: T): Partial<T> {
+  const changes: Partial<T> = {};
+  for (const key of Object.keys(after) as (keyof T)[])
+    if (after[key] !== before[key]) changes[key] = after[key];
+  return changes;
+}
+
 export function CustomerOutput({
   draft,
   canManage,
@@ -103,20 +111,24 @@ export function CustomerOutput({
   embedded?: boolean;
 }) {
   const [open, setOpen] = useState(embedded);
-  const [customerId, setCustomerId] = useState(draft.customerId || "");
-  const customerChosen = useRef(false);
+  const [chosenCustomer, setChosenCustomer] = useState<string>();
+  const customerId =
+    chosenCustomer ?? (draft.customerId || soleGroupEmployer(draft) || "");
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [customerPicker, setCustomerPicker] = useState(false);
-  const [allowPartial, setAllowPartial] = useState(false);
-  const [profile, setProfile] = useState<OutputProfile>({
-    ...defaults,
-    customerId: draft.customerId,
-  });
+  const [partialCustomer, setPartialCustomer] = useState("");
+  const allowPartial = Boolean(customerId && partialCustomer === customerId);
+  const [edited, setEdited] = useState<{
+    customerId: string;
+    selectedId?: string;
+    fields?: Partial<Omit<OutputProfile, "files">>;
+    files?: Partial<OutputProfile["files"]>;
+  } | null>(null);
   const [saved, setSaved] = useState<Stored[]>([]);
+  const [profilesLoaded, setProfilesLoaded] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [profileId, setProfileId] = useState("");
   const relatedCustomerIds = [
     ...new Set(
       [draft.customerId, ...draft.items.map((item) => item.employerId)].filter(
@@ -125,12 +137,6 @@ export function CustomerOutput({
     ),
   ];
   const relatedCustomerKey = relatedCustomerIds.join("|");
-  useEffect(() => {
-    if (!customerChosen.current) {
-      setCustomerId(draft.customerId || "");
-      setProfile((old) => ({ ...old, customerId: draft.customerId }));
-    }
-  }, [draft.customerId]);
   useEffect(() => {
     if (!open) return;
     let active = true;
@@ -156,26 +162,54 @@ export function CustomerOutput({
     };
   }, [open, relatedCustomerKey]);
   useEffect(() => {
-    if (open)
-      void api<{ items: Stored[] }>("/customer-export-profiles")
-        .then((r) => setSaved(r.items))
-        .catch((c) => setError(errorText(c)));
+    if (!open) return;
+    let active = true;
+    setProfilesLoaded(false);
+    void api<{ items: Stored[] }>("/customer-export-profiles")
+      .then((result) => {
+        if (active) setSaved(result.items);
+      })
+      .catch((cause) => {
+        if (active) setError(errorText(cause));
+      })
+      .finally(() => {
+        if (active) setProfilesLoaded(true);
+      });
+    return () => {
+      active = false;
+    };
   }, [open]);
-  const applicableProfiles = saved.filter((p) => {
-    const owner = p.customerId || p.profile?.customerId || p.data?.customerId;
-    return !owner || owner === customerId;
-  });
-  const suggestion = applicableProfiles.find(
-    (p) =>
-      (p.customerId || p.profile?.customerId || p.data?.customerId) ===
-        customerId && customerId,
+  const applicableProfiles = saved.filter(
+    (p) => !profileOwner(p) || profileOwner(p) === customerId,
   );
+  const automatic = uniqueCustomerProfile(saved, customerId);
+  const manual = edited?.customerId === customerId ? edited : null;
+  const selected =
+    manual?.selectedId !== undefined
+      ? applicableProfiles.find((p) => p.id === manual.selectedId)
+      : automatic;
+  const base = selected?.profile || selected?.data || defaults;
+  const profile: OutputProfile = {
+    ...base,
+    ...manual?.fields,
+    files: { ...base.files, ...manual?.files },
+  };
+  const profileId = manual?.fields || manual?.files ? "" : selected?.id || "";
+  const awaitingProfile =
+    !!customerId && !profilesLoaded && manual?.selectedId === undefined;
+  function setProfile(value: OutputProfile) {
+    const { files, ...fields } = value;
+    setEdited({
+      ...manual,
+      customerId,
+      fields: { ...manual?.fields, ...changedFields(profile, fields) },
+      files: { ...manual?.files, ...changedFields(profile.files, files) },
+    });
+  }
   function chooseCustomer(id: string) {
-    customerChosen.current = true;
-    setCustomerId(id);
-    setProfile({ ...structuredClone(defaults), customerId: id || null });
-    setProfileId("");
-    setAllowPartial(false);
+    setChosenCustomer(id);
+    setEdited(null);
+    setPartialCustomer("");
     setSuccess("");
     setError("");
   }
@@ -259,52 +293,30 @@ export function CustomerOutput({
             </div>
           </div>
           {needsCustomer && (
-            <p>
-              Выберите организацию для её комплекта документов.
-            </p>
+            <p>Выберите организацию для её комплекта документов.</p>
           )}
           {customerId && (
             <label className="checkbox-label">
               <input
                 type="checkbox"
                 checked={allowPartial}
-                onChange={(e) => setAllowPartial(e.target.checked)}
+                onChange={(e) =>
+                  setPartialCustomer(e.target.checked ? customerId : "")
+                }
                 disabled={busy}
               />
               Разрешить частичный ZIP: исключить общие протоколы с участниками
               других организаций и указать непереданные файлы в описи
             </label>
           )}
-          {!profileId && suggestion && (
-            <Notice kind="success">
-              Для заказчика сохранён профиль «{suggestion.name}».{" "}
-              <button
-                onClick={() => {
-                  const value = suggestion.profile || suggestion.data;
-                  if (value) {
-                    setProfile(value);
-                    setProfileId(suggestion.id);
-                  }
-                }}
-              >
-                Применить сохранённые настройки
-              </button>
-            </Notice>
-          )}
           <div className="form-grid">
             <label>
               Сохранённый профиль
               <select
+                aria-label="Сохранённый профиль"
                 value={profileId}
                 onChange={(e) => {
-                  setProfileId(e.target.value);
-                  const value = applicableProfiles.find(
-                    (p) => p.id === e.target.value,
-                  );
-                  if (value) {
-                    const p = value.profile || value.data;
-                    if (p) setProfile(p);
-                  }
+                  setEdited({ customerId, selectedId: e.target.value });
                 }}
               >
                 <option value="">Текущие настройки</option>
@@ -328,6 +340,7 @@ export function CustomerOutput({
             <label>
               Язык сопроводительных сведений
               <select
+                aria-label="Язык сопроводительных сведений"
                 value={profile.language}
                 onChange={(e) =>
                   setProfile({ ...profile, language: e.target.value })
@@ -649,31 +662,43 @@ export function CustomerOutput({
             </label>
           </fieldset>
           <p className="fine-print">
-            В комплект входят реестр, опись и сопроводительный текст. Передачу заказчику отметьте отдельно.
+            В комплект входят реестр, опись и сопроводительный текст. Передачу
+            заказчику отметьте отдельно.
           </p>
           <div className="toolbar-actions">
             {canManage && (
               <button
-                disabled={busy || needsCustomer || !profile.name.trim()}
+                disabled={
+                  busy ||
+                  awaitingProfile ||
+                  needsCustomer ||
+                  !profile.name.trim()
+                }
                 onClick={() =>
-                  void run(
-                    () =>
-                      api("/customer-export-profiles", {
+                  void run(async () => {
+                    const entry = await api<Stored>(
+                      "/customer-export-profiles",
+                      {
                         method: "POST",
                         body: json({
                           ...profile,
                           customerId: customerId || null,
                         }),
-                      }),
-                    "Профиль сохранён для следующих заказов.",
-                  )
+                      },
+                    );
+                    setSaved((previous) => [
+                      ...previous.filter((row) => row.id !== entry.id),
+                      entry,
+                    ]);
+                    setEdited({ customerId, selectedId: entry.id });
+                  }, "Профиль сохранён для следующих заказов.")
                 }
               >
                 Сохранить профиль
               </button>
             )}
             <button
-              disabled={busy || needsCustomer}
+              disabled={busy || awaitingProfile || needsCustomer}
               onClick={() =>
                 void run(
                   () =>
@@ -688,7 +713,7 @@ export function CustomerOutput({
               Копировать таблицу
             </button>
             <button
-              disabled={busy || needsCustomer}
+              disabled={busy || awaitingProfile || needsCustomer}
               onClick={() =>
                 void run(
                   () =>
@@ -704,7 +729,12 @@ export function CustomerOutput({
               Реестр XLSX
             </button>
             <button
-              disabled={busy || needsCustomer || draft.status === "DRAFT"}
+              disabled={
+                busy ||
+                awaitingProfile ||
+                needsCustomer ||
+                draft.status === "DRAFT"
+              }
               onClick={() =>
                 void run(
                   () =>

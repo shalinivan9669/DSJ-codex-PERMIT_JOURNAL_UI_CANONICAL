@@ -291,12 +291,6 @@ test("V08/V12: three saved people retain source order/profile/original bytes, un
     original.issuances,
   );
   const output = await openFinalPanel(page, "output");
-  await page
-    .getByRole("button", {
-      name: "Применить сохранённые настройки",
-      exact: true,
-    })
-    .click();
   await expect(
     page.getByRole("combobox", { name: "Сохранённый профиль", exact: true }),
   ).toHaveValue(profile.id);

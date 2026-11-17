@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Icon } from "@demo/ui";
 import { isBlankText, type IssuerProfile } from "@demo/contracts";
 import { commissionMissingNames, type Commission } from "@/lib/commission";
@@ -8,6 +8,7 @@ import {
   COMMISSION_POSITIONS,
   commissionTemplateRows,
   fillCommissionPositions,
+  fillKnownCommissionNames,
   suggestedCommissionTemplate,
   commissionRoleAsPosition,
   type CommissionTemplate,
@@ -49,11 +50,37 @@ export function CommissionFields({
   const missing = showErrors
     ? commissionMissingNames(value, requiredCount)
     : [];
+  const suggestedPeople = useRef(new WeakSet<Commission[number]>());
+  const templatePreview = useRef<Commission | null>(null);
+  const canSwitchTemplate =
+    !started || hasEmptyPosition || templatePreview.current === value;
+  function applyKnownNames(
+    next: Commission,
+    eligible: (index: number) => boolean,
+  ) {
+    const filled = fillKnownCommissionNames(next, headName, people, eligible);
+    filled.forEach((row, index) => {
+      if (row !== next[index]) suggestedPeople.current.add(row);
+    });
+    onChange(filled);
+    return filled;
+  }
   function update(index: number, patch: Partial<Commission[number]>) {
-    onChange(
-      rows.map((person, row) =>
-        row === index ? { ...person, ...patch } : person,
-      ),
+    const positionChanged =
+      patch.position !== undefined && patch.position !== rows[index].position;
+    const next = rows.map((person, row) =>
+      row === index
+        ? {
+            ...person,
+            ...(positionChanged && suggestedPeople.current.has(person)
+              ? { name: "" }
+              : {}),
+            ...patch,
+          }
+        : person,
+    );
+    applyKnownNames(next, (row) =>
+      row === index ? positionChanged : !started,
     );
   }
   return (
@@ -63,13 +90,17 @@ export function CommissionFields({
           {tr("Шаблон состава")}
           <select
             id={`${idPrefix}-template`}
-            disabled={disabled || (started && !hasEmptyPosition)}
+            disabled={disabled || !canSwitchTemplate}
             value={template}
-            onChange={(event) =>
-              setTemplate(event.target.value as CommissionTemplate)
-            }
+            onChange={(event) => {
+              const next = event.target.value as CommissionTemplate;
+              setTemplate(next);
+              if (!started || templatePreview.current === value) {
+                templatePreview.current = applyKnownNames(commissionTemplateRows([], next), () => true);
+              }
+            }}
             aria-describedby={
-              started && !hasEmptyPosition
+              !canSwitchTemplate
                 ? `${idPrefix}-template-hint`
                 : undefined
             }
@@ -97,14 +128,14 @@ export function CommissionFields({
                     ),
                   ),
               );
-              onChange(next);
+              applyKnownNames(next, (index) => isBlankText(value[index]?.position));
             }}
           >
             {tr("Заполнить пустые должности")}
           </button>
         )}
       </div>
-      {started && !hasEmptyPosition && (
+      {!canSwitchTemplate && (
         <p className="fine-print" id={`${idPrefix}-template-hint`}>
           {tr("Должности можно изменить ниже.")}
         </p>

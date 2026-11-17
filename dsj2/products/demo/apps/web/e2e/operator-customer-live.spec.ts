@@ -419,17 +419,7 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   expect(companyReloaded.events).toEqual(companyBefore.events);
   expect(companyReloaded.documents).toEqual(companyBefore.documents);
   await panel(page, "Комплект для заказчика");
-  await expect(
-    page.getByText(`Для заказчика сохранён профиль «${profileName}».`, {
-      exact: false,
-    }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", {
-      name: "Применить сохранённые настройки",
-      exact: true,
-    })
-    .click();
+  await expect(page.getByRole("combobox", { name: "Сохранённый профиль", exact: true }).locator("option:checked")).toHaveText(profileName);
   await expect(
     page.getByLabel("Контакт получателя комплекта", { exact: true }),
   ).toHaveValue("Синтетический контакт только компании A");

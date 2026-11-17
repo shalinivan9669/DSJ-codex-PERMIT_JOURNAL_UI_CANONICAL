@@ -7,6 +7,8 @@ import {
   commissionTemplatePositions,
   commissionTemplateRows,
   fillCommissionPositions,
+  fillKnownCommissionNames,
+  staffFromCommission,
   suggestedCommissionTemplate,
 } from "../lib/commission-template";
 
@@ -153,4 +155,65 @@ test("commission-role guidance recognizes only complete slot labels, never compa
     "",
   ])
     assert.equal(commissionRoleAsPosition(value), false, value);
+});
+
+test("a chosen commission template fills only a unique exact job or known director", () => {
+  const rows = commissionTemplateRows([], "director-chair");
+  const staff = [
+    { name: "Первая", position: "Начальник УМО", role: "SIGNER" as const },
+    { name: "Вторая", position: "начальник УМО ", role: "SIGNER" as const },
+    { name: "Третья", position: "Инженер", role: "TEACHER" as const },
+    {
+      name: "Четвёртая",
+      position: " ПРЕПОДАВАТЕЛЬ ",
+      role: "TEACHER" as const,
+    },
+  ];
+  assert.deepEqual(
+    fillKnownCommissionNames(rows, "Директор А.", staff).map((p) => p.name),
+    ["Директор А.", "", "Четвёртая"],
+  );
+  assert.deepEqual(
+    rows.map((p) => p.name),
+    ["", "", ""],
+  );
+  assert.equal(
+    fillKnownCommissionNames(rows, "Директор А.", [
+      { name: "Другая", position: "Директор", role: "SIGNER" },
+    ])[0].name,
+    "",
+  );
+  const partial = [
+    { name: "Ручное имя", position: "Директор" },
+    { name: "", position: "Преподаватель", nameEn: "Existing" },
+    { name: "", position: "Преподаватель" },
+    { name: "", position: "Преподаватель" },
+  ];
+  const completed = fillKnownCommissionNames(
+    partial,
+    "Руководитель",
+    staff,
+    (index) => index !== 3,
+  );
+  assert.deepEqual(
+    completed.map((p) => p.name),
+    ["Ручное имя", "", "Четвёртая", ""],
+  );
+  assert.equal(
+    fillKnownCommissionNames(completed, undefined, staff)[3].name,
+    "",
+  );
+});
+
+test("selecting a commission member reuses both fields while preserving an entered job and chosen role", () => {
+  const member = { name: "Учебный А.", position: "Начальник УМО" };
+  const signer = { name: "", position: "", role: "SIGNER" as const };
+  assert.deepEqual(staffFromCommission(signer, member), {
+    ...member,
+    role: "SIGNER",
+  });
+  assert.deepEqual(
+    staffFromCommission({ ...signer, position: "Инженер" }, member),
+    { name: member.name, position: "Инженер", role: "SIGNER" },
+  );
 });

@@ -6,6 +6,15 @@
   max-width: 480px;
   margin-bottom: 20px;
 }
+.person-directory-matches {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  margin-block: 12px;
+}
+.person-directory-matches button {
+  text-align: start;
+}
 .person-step-list {
   display: flex;
   flex-wrap: wrap;

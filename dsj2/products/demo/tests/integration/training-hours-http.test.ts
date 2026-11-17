@@ -128,6 +128,7 @@ test("director HTTP flow persists distinct group member, PTM programme and pinne
             id: "worker",
             fullNameRu: "Тест А.",
             positionRu: "Слесарь",
+            workplaceRu: "ТОО Тест",
             employeeCategory: "WORKER",
             assignments: [
               form("worker-pb", pb, "pb-card", "GROUP"),
@@ -157,6 +158,7 @@ test("director HTTP flow persists distinct group member, PTM programme and pinne
     };
     const { draft } = await lmsJson(await http(path + "/resolved"));
     const resolved = draftSchema.parse(draft);
+    assert.equal(resolved.items.find(item => item.id === "worker")?.workplaceKz, "Тест ЖШС");
     for (const item of resolved.items)
       for (const a of item.assignments) {
         const key =
@@ -189,9 +191,10 @@ test("director HTTP flow persists distinct group member, PTM programme and pinne
     for (const snapshot of snapshots) {
       const input = snapshot.input as {
         templateId: string;
-        items: { id: string; assignment: { hours?: string } }[];
+        items: { id: string; workplaceKz: string; assignment: { hours?: string } }[];
       };
       for (const item of input.items) {
+        if (item.id === "worker") assert.equal(item.workplaceKz, "Тест ЖШС");
         assert.ok(item.assignment.hours);
         printed[`${item.id}:${input.templateId}`] = item.assignment.hours;
       }

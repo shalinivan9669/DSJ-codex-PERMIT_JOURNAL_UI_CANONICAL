@@ -18,6 +18,7 @@ import {
   z,
   stableValidationIssue,
   isBlankText,
+  workplaceNames,
   selectAssignmentScope,
   approvalScopeValue,
   assignmentIdentityKey,
@@ -191,12 +192,7 @@ export function employerFields(
   // An unrelated manual employer must never receive the customer's BIN/address.
   const employer = matchingBin && matchingNames ? candidate : undefined;
   return {
-    workplaceRu: localEmployer
-      ? localRu || localKz
-      : employer?.nameRu || employer?.nameKz || "",
-    workplaceKz: localEmployer
-      ? localKz || localRu
-      : employer?.nameKz || employer?.nameRu || "",
+    ...workplaceNames(item, employer),
     employerBin: isBlankText(item.employerBin)
       ? employer?.bin || ""
       : item.employerBin || "",
@@ -1058,19 +1054,23 @@ async function validation(
     orderBy: { version: "desc" },
   });
   const parsedProfile = profile ? profileSchema.parse(profile.profile) : null;
-  resolved = resolveDraft(savedDraft, parsedProfile?.commonFields);
-  const rules = await pinnedServiceRules(c, resolved.draft, tx);
-  const programmeHours = applicableProgrammeHours(resolved.draft, rules);
-  if (programmeHours.size)
-    resolved = resolveDraft(
-      savedDraft,
-      parsedProfile?.commonFields,
-      programmeHours,
-    );
-  draft = resolved.draft;
   const organizations = await organizationMap(tx, c, draft);
   const employerId = companyEmployerId(draft);
   const customer = employerId ? organizations.get(employerId) || null : null;
+  // Resolve official names before the one-language fallback copies RU into KZ.
+  const input = savedDraft.frozenResolution ? savedDraft : {
+    ...savedDraft,
+    items: savedDraft.items.map((item) => ({
+      ...item,
+      ...employerFields(item, customer, organizations),
+    })),
+  };
+  resolved = resolveDraft(input, parsedProfile?.commonFields);
+  const rules = await pinnedServiceRules(c, resolved.draft, tx);
+  const programmeHours = applicableProgrammeHours(resolved.draft, rules);
+  if (programmeHours.size)
+    resolved = resolveDraft(input, parsedProfile?.commonFields, programmeHours);
+  draft = resolved.draft;
   // Validate exactly the fallback values that will be frozen into render inputs,
   // without rewriting the operator's saved draft or a previous issuance snapshot.
   const issues = validateDraft(

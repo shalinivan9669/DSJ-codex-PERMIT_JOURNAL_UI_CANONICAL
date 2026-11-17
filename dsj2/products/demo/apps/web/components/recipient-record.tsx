@@ -549,7 +549,7 @@ export function RecipientRecord({
       {createEmployer && (
         <CustomerDialog
           customer={
-            inlineEmployer
+            !recipient.employerId
               ? {
                   ...recipientOrganizationDraft(recipient),
                   bin: recipient.employerBin || "",

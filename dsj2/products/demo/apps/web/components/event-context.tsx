@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Notice } from "@demo/ui";
 import {
   BIOT_CATEGORIES,
@@ -51,6 +51,11 @@ import {
 import { biotCategoryDescription } from "@/lib/validity-display";
 import { validCalendarCandidate } from "@/lib/calendar-preparation";
 import { eventCourseDefaults, updateCommonBiotCategory } from "@/lib/assignment-presets";
+import {
+  completeTrainingTopic,
+  topicWouldReplaceInput,
+  type TrainingTopic,
+} from "@/lib/training-topic-autofill";
 import { TrainingHoursFields } from "./training-hours-fields";
 
 const directions = [
@@ -279,12 +284,14 @@ export function EventContext({
     return () => cancelAnimationFrame(frame);
   }, [focusPreparation, activeEventId]);
   const eventIndex = events.findIndex((row) => row.id === activeEventId);
-  const [topics, setTopics] = useState<
-    (Pick<CommonFields, (typeof courseProgramKeys)[number]> & {
-      id: string;
-      origin: "COURSE" | "SAVED";
-    })[]
-  >([]);
+  const topicListId = useId();
+  const scope = event ? event.id + ":" + event.protocolTemplateId : "";
+  const [catalogue, setCatalogue] = useState<{
+    scope: string;
+    topics: TrainingTopic[];
+  }>({ scope: "", topics: [] });
+  const topics = catalogue.scope === scope ? catalogue.topics : [];
+  const pendingTitle = useRef<{ scope: string; title: string } | null>(null);
   const [topicStatus, setTopicStatus] = useState<"loading" | "ready" | "error">(
     "loading",
   );
@@ -306,14 +313,14 @@ export function EventContext({
     )
       .then((result) => {
         if (active) {
-          setTopics(result.items);
+          setCatalogue({ scope, topics: result.items });
           setTopicStatus("ready");
           setTopicError("");
         }
       })
       .catch((error) => {
         if (active) {
-          setTopics([]);
+          setCatalogue({ scope: "", topics: [] });
           setTopicStatus("error");
           setTopicError(errorText(error));
         }
@@ -563,6 +570,26 @@ export function EventContext({
         };
     updateEvent({ commonFields: next });
   }
+  const inheritedTopics = [requestCommon, draft.presetFields, centerCommon];
+  function changeTopic(title: string, candidates: TrainingTopic[]) {
+    if (!event) return;
+    updateEvent({
+      commonFields: completeTrainingTopic(
+        event.commonFields, event.protocolTemplateId, title, candidates, inheritedTopics,
+      ),
+    });
+  }
+  // A fast typist can leave the input before the catalogue request completes.
+  // Only an edit made in this instance may trigger a delayed completion.
+  useEffect(() => {
+    const pending = pendingTitle.current;
+    if (!pending || catalogue.scope !== scope || !event || disabled) return;
+    pendingTitle.current = null;
+    if (
+      pending.scope === scope &&
+      event.commonFields.trainingSubject === pending.title
+    ) changeTopic(pending.title, catalogue.topics);
+  }, [catalogue, scope, disabled]);
   const selectedTopic = topics.find((topic) => topic.id === topicChoice);
   const topicSettings = event && (
     <details className="training-topic-settings">
@@ -588,8 +615,23 @@ export function EventContext({
             disabled={disabled}
             value={topicChoice}
             onChange={(change) => {
-              setTopicChoice(change.target.value);
+              const selected = topics.find(
+                (topic) => topic.id === change.target.value,
+              );
+              pendingTitle.current = null;
               setTopicReviewed(false);
+              if (
+                selected &&
+                !topicWouldReplaceInput(selected, event.protocolTemplateId, [
+                  event.commonFields,
+                  ...inheritedTopics,
+                ])
+              ) {
+                changeTopic(selected.trainingSubject || "", [selected]);
+                setTopicChoice("");
+              } else {
+                setTopicChoice(change.target.value);
+              }
             }}
           >
             <option value="">Текущее или собственное значение</option>
@@ -662,11 +704,28 @@ export function EventContext({
           disabled={disabled}
           aria-invalid={lengthError || !!hint || undefined}
           aria-describedby={feedbackId}
-          value={value}
-          onChange={(change) =>
-            changeEventCommon({ [field]: change.target.value })
+          list={
+            field === "trainingSubject" && topics.length ? topicListId : undefined
           }
+          value={value}
+          onChange={(change) => {
+            if (field === "trainingSubject") {
+              const title = change.target.value;
+              pendingTitle.current =
+                catalogue.scope === scope ? null : { scope, title };
+              changeTopic(title, topics);
+            } else {
+              changeEventCommon({ [field]: change.target.value });
+            }
+          }}
         />
+        {field === "trainingSubject" && topics.length > 0 && (
+          <datalist id={topicListId}>
+            {[...new Set(topics.map(topic => topic.trainingSubject))].map(
+              title => title && <option key={title} value={title} />,
+            )}
+          </datalist>
+        )}
         {lengthError ? (
           <small className="field-error" id={feedbackId}>
             Не больше {limit} символов; сейчас {value.length}. Сократите текст

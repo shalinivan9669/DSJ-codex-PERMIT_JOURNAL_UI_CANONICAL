@@ -157,7 +157,7 @@ test.afterAll(async () => {
   await db.$disconnect();
 });
 
-test("empty UMO template keeps commission roles distinct from jobs and reuses the director only explicitly", async ({
+test("empty UMO template keeps commission roles distinct from jobs and fills the director when the composition is first edited", async ({
   page,
 }) => {
   const seeded = await fixture();
@@ -179,12 +179,6 @@ test("empty UMO template keeps commission roles distinct from jobs and reuses th
     page.getByLabel("ФИО руководителя учебного центра", { exact: true }),
   ).toHaveValue(headName);
   await name(page, 0).fill("Синтетический Начальник УМО");
-  await page
-    .getByRole("button", {
-      name: "Подставить руководителя центра",
-      exact: true,
-    })
-    .click();
   await expect(name(page, 1)).toHaveValue(headName);
   await expect(
     page.getByRole("combobox", { name: "Шаблон состава", exact: true }),
@@ -236,12 +230,6 @@ test("director-chair template on mobile validates names and preserves the draft 
     .getByRole("combobox", { name: "Шаблон состава", exact: true })
     .selectOption("director-chair");
   await jobs(page, ["Директор", "Начальник УМО", "Преподаватель"]);
-  await page
-    .getByRole("button", {
-      name: "Подставить руководителя центра",
-      exact: true,
-    })
-    .click();
   await expect(name(page, 0)).toHaveValue(headName);
   const versionsBefore = await db.issuerProfileVersion.count({
     where: { tenantId: seeded.context.tenantId },
@@ -445,12 +433,6 @@ test("directory reuse copies only names and a custom organization job survives s
     .selectOption("0");
   await expect(name(page, 0)).toHaveValue(people[0].name);
   await expect(job(page, 0)).toHaveValue("Начальник УМО");
-  await page
-    .getByRole("button", {
-      name: "Подставить руководителя центра",
-      exact: true,
-    })
-    .click();
   await page
     .getByRole("combobox", {
       name: "Член комиссии 2 — Выбрать сотрудника центра",

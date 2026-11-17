@@ -28,6 +28,7 @@ import { OwnPasswordForm } from "./own-password-form";
 import { RegistrationPolicy } from "./registration-policy";
 import { LearningReadiness } from "./learning-readiness";
 import { TemplateManager } from "./template-manager";
+import { staffFromCommission } from "@/lib/commission-template";
 import { CommissionFields } from "./commission-fields";
 import {
   commissionMissingNames,
@@ -478,6 +479,44 @@ export function ProfileForm({
           </p>
           {(value.people || []).map((person, index) => (
             <div className="form-grid" key={index}>
+              {!person.name.trim() &&
+                value.commission.some((member) => member.name.trim()) && (
+                  <label>
+                    {t(
+                      "Выбрать из состава комиссии",
+                      "Комиссия құрамынан таңдау",
+                    )}
+                    <select
+                      value=""
+                      onChange={(event) => {
+                        if (!event.target.value) return;
+                        const member =
+                          value.commission[Number(event.target.value)];
+                        if (member)
+                          change({
+                            people: value.people!.map((row, i) =>
+                              i === index
+                                ? staffFromCommission(row, member)
+                                : row,
+                            ),
+                          });
+                      }}
+                    >
+                      <option value="">
+                        {t("Выберите сотрудника", "Қызметкерді таңдаңыз")}
+                      </option>
+                      {value.commission.map(
+                        (member, i) =>
+                          member.name.trim() && (
+                            <option key={i} value={i}>
+                              {member.name}
+                              {member.position ? ` · ${member.position}` : ""}
+                            </option>
+                          ),
+                      )}
+                    </select>
+                  </label>
+                )}
               <label>
                 {tr("ФИО сотрудника")}
                 <input

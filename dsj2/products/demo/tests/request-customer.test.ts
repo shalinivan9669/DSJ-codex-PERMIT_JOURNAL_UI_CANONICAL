@@ -350,3 +350,21 @@ test("a missing organization cannot supply names even when an explicit identity 
   assert.equal(result.employerBin, item.employerBin);
   assert.equal(result.employerAddressRu, "");
 });
+
+test("a missing employer language uses the matched directory wording and preserves branch names and explicit bilingual values", () => {
+  const row = draft("COMPANY").items[0];
+  const organizations = new Map([[company.id, company]]);
+  for (const [input, expectedRu, expectedKz] of [
+    [{ ...row, workplaceRu: company.nameRu }, company.nameRu, company.nameKz],
+    [{ ...row, workplaceKz: company.nameKz }, company.nameRu, company.nameKz],
+    [{ ...row, workplaceRu: company.nameRu, workplaceKz: company.nameRu }, company.nameRu, company.nameRu],
+    [{ ...row, employerId: company.id, workplaceRu: "Филиал" }, "Филиал", "Филиал"],
+    [{ ...row, employerId: "другая", workplaceRu: company.nameRu }, company.nameRu, company.nameRu],
+    [{ ...row, employerBin: "000000000002", workplaceRu: company.nameRu }, company.nameRu, company.nameRu],
+  ] as const) {
+    for (const fields of [employerFields(input, company, organizations), effectiveRecipientEmployer(input, company)]) {
+      assert.equal(fields.workplaceRu, expectedRu);
+      assert.equal(fields.workplaceKz, expectedKz);
+    }
+  }
+});

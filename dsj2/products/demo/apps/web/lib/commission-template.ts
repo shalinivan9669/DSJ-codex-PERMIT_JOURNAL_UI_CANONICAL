@@ -1,4 +1,4 @@
-import { isBlankText } from "@demo/contracts";
+import { isBlankText, type IssuerProfile } from "@demo/contracts";
 import type { Commission } from "./commission";
 
 export type CommissionTemplate = "umo-chair" | "director-chair";
@@ -66,4 +66,52 @@ export function commissionRoleAsPosition(value: string): boolean {
   return /^(?:Председатель(?:\s+комиссии)?|Член\s+комиссии(?:\s+[1-9]\d*)?)$/iu.test(
     value.trim(),
   );
+}
+
+function normalized(value: string) {
+  return value.trim().replace(/\s+/g, " ").toLocaleLowerCase("ru");
+}
+
+/** Only an exact, unique job match can supply a name without choosing a person. */
+export function fillKnownCommissionNames(
+  rows: Commission,
+  headName: string | undefined,
+  people: IssuerProfile["people"] = [],
+  eligible: (index: number) => boolean = () => true,
+): Commission {
+  const used = new Set(rows.map((row) => normalized(row.name)).filter(Boolean));
+  return rows.map((row, index) => {
+    const position = normalized(row.position);
+    if (
+      !eligible(index) ||
+      !position ||
+      !isBlankText(row.name) ||
+      !isBlankText(row.nameEn)
+    )
+      return row;
+    const names = people
+      .filter((entry) => normalized(entry.position) === position)
+      .map((entry) => entry.name.trim())
+      .filter(Boolean);
+    if (position === "директор" && headName?.trim())
+      names.unshift(headName.trim());
+    const candidate = names[0];
+    if (!candidate) return row;
+    const key = normalized(candidate);
+    if (used.has(key) || names.some((name) => normalized(name) !== key))
+      return row;
+    used.add(key);
+    return { ...row, name: candidate };
+  });
+}
+
+export function staffFromCommission(
+  person: NonNullable<IssuerProfile["people"]>[number],
+  member: Commission[number],
+) {
+  return {
+    ...person,
+    name: member.name.trim(),
+    position: person.position.trim() ? person.position : member.position.trim(),
+  };
 }

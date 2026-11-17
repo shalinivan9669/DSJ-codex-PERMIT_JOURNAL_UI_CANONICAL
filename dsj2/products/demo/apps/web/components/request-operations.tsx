@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
 import { templateLabels, type Draft, type Recipient } from "@/lib/types";
+import { soleGroupEmployer } from "@/lib/request-customer-defaults";
 import { RequestOrderLink } from "./order-links";
 export function RequestOperations({
   draft,
@@ -167,7 +168,7 @@ export function RequestOperations({
                     method: "POST",
                     body: json({
                       title: saved.title || "Заказ по заявке",
-                      customerId: saved.customerId,
+                      customerId: saved.customerId || soleGroupEmployer(saved),
                       requestIds: [saved.id],
                     }),
                   });

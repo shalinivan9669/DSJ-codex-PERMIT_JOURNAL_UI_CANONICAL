@@ -28,8 +28,10 @@ import { RecipientDetails } from "./recipient-details";
 import { TrainingHoursFields } from "./training-hours-fields";
 import { TrainingPeriodFields } from "./training-period-fields";
 import { RecipientRecord } from "./recipient-record";
+import { RecipientNameMatches } from "./recipient-name-matches";
+import { fillFromStoredRecipient, undoStoredRecipient } from "@/lib/stored-recipient";
 import { TextQualityHint } from "./text-quality-hint";
-import { useCabinetText } from "./cabinet-language";
+import { useCabinetLanguage, useCabinetText } from "./cabinet-language";
 import "./person-editor.css";
 
 const directions = [
@@ -94,6 +96,7 @@ function PersonFlow({
   ...props
 }: PersonEditorProps & { person: Recipient }) {
   const tr = useCabinetText();
+  const t = useCabinetLanguage();
   const {
     draft,
     context,
@@ -114,6 +117,14 @@ function PersonFlow({
   const [localErrors, setLocalErrors] = useState<Record<string, string>>({});
   const [openAssignment, setOpenAssignment] = useState<string | null>(null);
   const root = useRef<HTMLDivElement>(null);
+  const [nameQuery, setNameQuery] = useState(() =>
+    !person.recipientId && isBlankText(person.positionRu || person.positionKz)
+      ? (person.fullNameRu || person.fullNameKz).trim() : "",
+  );
+  const useStoredCategory = useRef(!person.employeeCategory || (
+    !person.fullNameRu && !person.fullNameKz && !person.positionRu && !person.positionKz && !person.assignments.length
+  ));
+  const [directoryFill, setDirectoryFill] = useState<{ before: Recipient; filled: Recipient; hasCategory: boolean }>();
   const latest = useRef(person);
   latest.current = person;
   const fieldErrors = { ...props.fieldErrors, ...localErrors };
@@ -268,7 +279,7 @@ function PersonFlow({
       returnToCard
         ? "summary"
         : stage === "identity"
-          ? "category"
+          ? directoryFill?.hasCategory && person.employeeCategory ? "courses" : "category"
           : stage === "category"
             ? "courses"
             : "summary",
@@ -444,9 +455,10 @@ function PersonFlow({
                       aria-label={label}
                       value={person[key] || person[fallback]}
                       disabled={disabled || readonly}
-                      onChange={(event) =>
-                        change({ [key]: event.target.value })
-                      }
+                      onChange={(event) => {
+                        change({ [key]: event.target.value });
+                        if (key === "fullNameRu") setNameQuery(event.target.value.trim());
+                      }}
                       onKeyDown={(event) => {
                         if (
                           event.key === "Enter" &&
@@ -462,6 +474,32 @@ function PersonFlow({
                   </label>
                 ))}
               </div>
+              {!readonly && !disabled && !issuedIds.length && !person.recipientId && nameQuery && (
+                <RecipientNameMatches
+                  query={nameQuery}
+                  onChoose={(record) => {
+                    const next = fillFromStoredRecipient(latest.current, record, useStoredCategory.current);
+                    if (next === latest.current) {
+                      setLocalErrors({ [prefix + "fullNameRu"]: t("Идентификаторы в заявке и карточке различаются. Проверьте выбранного слушателя.", "Өтінім мен карточкадағы сәйкестендіргіштер сәйкес келмейді. Таңдалған тыңдаушыны тексеріңіз.") });
+                      return;
+                    }
+                    setNameQuery("");
+                    setLocalErrors({});
+                    setDirectoryFill({ before: latest.current, filled: next, hasCategory: !!record.data.employeeCategory && next.employeeCategory === record.data.employeeCategory });
+                    onChangeRecipient(next);
+                  }}
+                />
+              )}
+              {directoryFill && directoryFill.filled.recipientId === person.recipientId && !issuedIds.length && (
+                <button type="button" className="text-button" disabled={disabled || readonly} onClick={() => {
+                  const restored = undoStoredRecipient(latest.current, directoryFill.before, directoryFill.filled);
+                  onChangeRecipient(restored);
+                  setDirectoryFill(undefined);
+                  setNameQuery((restored.fullNameRu || restored.fullNameKz).trim());
+                }}>
+                  {t("Отменить заполнение из карточки", "Карточкадан толтыруды болдырмау")}
+                </button>
+              )}
               <details className="person-additional">
                 <summary>
                   Дополнительные персональные данные
@@ -521,7 +559,7 @@ function PersonFlow({
                   type="button"
                   disabled={disabled || readonly}
                   aria-pressed={person.employeeCategory === value}
-                  onClick={() => change({ employeeCategory: value })}
+                  onClick={() => { useStoredCategory.current = false; change({ employeeCategory: value }); }}
                 >
                   {label}
                 </button>

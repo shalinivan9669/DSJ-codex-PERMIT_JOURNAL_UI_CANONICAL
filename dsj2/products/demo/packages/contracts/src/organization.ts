@@ -1,3 +1,4 @@
+import { isBlankText } from "./blank-text";
 import { z } from "zod";
 
 // Formatting follows the original DSJ biot-card-generator legalFormOptions:
@@ -33,6 +34,37 @@ export type OrganizationNames = {
   nameRu: string;
   nameKz: string;
 };
+
+/** Complete a missing language only from the matching employer's saved wording. */
+export function workplaceNames(
+  row: { workplaceRu: string; workplaceKz: string },
+  employer?: { nameRu: string; nameKz?: string | null } | null,
+) {
+  const ru = isBlankText(row.workplaceRu) ? "" : row.workplaceRu;
+  const kz = isBlankText(row.workplaceKz) ? "" : row.workplaceKz;
+  const directoryRu = isBlankText(employer?.nameRu)
+    ? ""
+    : employer?.nameRu || "";
+  const directoryKz = isBlankText(employer?.nameKz)
+    ? ""
+    : employer?.nameKz || "";
+  function missingName(
+    localOther: string,
+    savedOther: string,
+    savedName: string,
+  ) {
+    const normalize = (text: string) =>
+      text.trim().replace(/\s+/g, " ").toLocaleLowerCase("ru");
+    // A custom branch name stays local even if the parent company's ID is linked.
+    if (localOther && normalize(localOther) !== normalize(savedOther))
+      return localOther;
+    return savedName || localOther || savedOther;
+  }
+  return {
+    workplaceRu: ru || missingName(kz, directoryKz, directoryRu),
+    workplaceKz: kz || missingName(ru, directoryRu, directoryKz),
+  };
+}
 
 const formToken = "ТОО|ЖШС|ИП|ЖК|АО|АҚ";
 const prefixPattern = new RegExp(`^(${formToken})\\s+`, "iu");
