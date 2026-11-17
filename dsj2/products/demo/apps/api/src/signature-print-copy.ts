@@ -211,10 +211,8 @@ async function signaturePrintData(c: Context, source: Artifact) {
     signers.push({
       role: roleLabels[frozenSigner.kind] || frozenSigner.kind,
       displayName:
-        identity?.displayName ||
-        (isMock
-          ? "Имя владельца сертификата не определено"
-          : frozenSigner.displayName),
+        identity?.displayName || "Имя владельца сертификата не определено",
+      signerKey: identity?.certificateFingerprint || signature.bindingId,
       receivedAt: receiptTime(signature.createdAt),
       receivedAtIso: signature.createdAt.toISOString(),
       identityNote: identity
@@ -223,7 +221,7 @@ async function signaturePrintData(c: Context, source: Artifact) {
           : "Имя из сертификата"
         : isMock
           ? "Тестовая роль в центре"
-          : "Имя из назначения подписанта",
+          : "Имя владельца сертификата не определено",
     });
   }
   const pendingRoles = required
@@ -294,10 +292,12 @@ export async function signaturePrintInfo(c: Context, id: string) {
     localTest: data.payload.localTest,
     testMode: data.payload.testMode,
     mockMode: data.payload.mockMode,
-    signers: data.payload.signers.map(({ receivedAtIso, ...signer }) => ({
-      ...signer,
-      receivedAt: receivedAtIso,
-    })),
+    signers: data.payload.signers.map(
+      ({ receivedAtIso, signerKey: _signerKey, ...signer }) => ({
+        ...signer,
+        receivedAt: receivedAtIso,
+      }),
+    ),
     pendingRoles: data.payload.pendingRoles,
     signatureSetHash: data.evidence.signatureSetHash,
     originalDownloadUrl: `/artifacts/${data.evidence.sourcePdfArtifactId}`,

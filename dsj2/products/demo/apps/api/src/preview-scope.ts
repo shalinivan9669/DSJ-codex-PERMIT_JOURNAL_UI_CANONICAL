@@ -9,7 +9,11 @@ import {
 import { fail } from "./core";
 
 /** Select identities only from the authorized source, retaining course dependencies. */
-export function previewScope(source: Draft, target: PreviewTarget): Draft {
+export function previewScope(
+  source: Draft,
+  target: PreviewTarget,
+  groupingSource: Draft = source,
+): Draft {
   let items: Draft["items"];
   if (target.kind === "ASSIGNMENT") {
     const item = source.items.find((row) => row.id === target.rowId);
@@ -34,9 +38,15 @@ export function previewScope(source: Draft, target: PreviewTarget): Draft {
       },
     ];
   } else {
-    const group = documentPlan(source).groups.find(
-      (entry) => entry.event.id === target.eventId,
+    const candidates = documentPlan(groupingSource).groups.filter(
+      (entry) =>
+        entry.event.id === target.eventId &&
+        (!target.memberRowId ||
+          entry.members.some(({ item }) => item.id === target.memberRowId)),
     );
+    if (candidates.length > 1)
+      fail(422, "PREVIEW_GROUP_REQUIRED", "Выберите состав протокола");
+    const group = candidates[0];
     if (!group)
       fail(
         404,

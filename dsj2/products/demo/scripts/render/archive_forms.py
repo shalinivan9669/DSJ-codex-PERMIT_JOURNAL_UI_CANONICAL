@@ -164,6 +164,22 @@ def archive_fields(snapshot, item, ordinal=1):
         values['PS_AWARDED_QUALIFICATION_' + language] = values['POSITION_' + language] if status == 'PASSED' else ''
     if snapshot['templateId'] == 'ps-protocol':
         values['CREDENTIAL_NUMBER'] = str(item.get('credentialNumber') or '') if status == 'PASSED' else ''
+        for key, name in [('PS_THEORY_RESULT', 'psTheoryResult'),
+                          ('PS_PRACTICAL_KNOWLEDGE_RESULT', 'psPracticalKnowledgeResult'),
+                          ('PS_PRACTICAL_SKILLS_RESULT', 'psPracticalSkillsResult')]:
+            value = assignment.get(name)
+            value = str(value).strip() if value is not None else ''
+            # The archived forms explicitly pair these standard labels. A
+            # custom assessment can also provide both sides separated by a
+            # spaced slash; numeric fractions such as 85/100 stay intact.
+            if value.casefold() in ('хорошо', 'жақсы', 'жаксы'):
+                ru, kz = 'Хорошо', 'Жақсы'
+            elif ' / ' in value and not (re.fullmatch(r'[\d\s/.,%+-]+', value) and re.search(r'\d', value)):
+                ru, kz = (part.strip() for part in value.split(' / ', 1))
+            else:
+                ru = kz = value
+            values[key + '_RU'] = ru
+            values[key + '_KZ'] = kz
     return {key: str(value) if value is not None else '' for key, value in values.items()}
 
 

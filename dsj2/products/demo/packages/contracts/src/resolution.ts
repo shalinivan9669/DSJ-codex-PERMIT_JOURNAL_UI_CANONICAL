@@ -87,6 +87,15 @@ const individualCommonFields = new Set<string>([
   "psQualificationRu",
   "psQualificationKz",
 ]);
+// Industrial safety protocols describe one actual programme and duration.
+// These fields may legitimately differ between participants in one event.
+const pbProtocolFields = [
+  "hours",
+  "hoursProgram",
+  "trainingSubject",
+  "trainingSubjectKz",
+  "trainingSubjectEn",
+] as const;
 const assessmentCommonFields = new Set<string>([
   "biotKnowledgeResult",
   "biotKnowledgeResultEn",
@@ -482,6 +491,10 @@ export function resolveDraft(
             source === "AUTO"
           ) &&
           !individualCommonFields.has(key) &&
+          !(
+            event.protocolTemplateId === "pb-protocol" &&
+            (pbProtocolFields as readonly string[]).includes(key)
+          ) &&
           context.fields[key] !== undefined &&
           manual &&
           (explicit === "CLEARED" ? "" : own) !== context.fields[key]
@@ -799,20 +812,30 @@ export function documentPlan(draft: Draft) {
       )
       .map((assignment) => ({ item, assignment })),
   );
-  const groups = (draft.events || [])
-    .map((event) => ({
-      event,
-      members: draft.items.flatMap((item) =>
-        item.assignments
-          .filter((a) => a.protocolMode === "GROUP" && a.eventId === event.id)
-          .filter(
-            (_, index) =>
-              draft.businessRuleVersion !== "LIVE_V1" || index === 0,
-          )
-          .map((assignment) => ({ item, assignment })),
-      ),
-    }))
-    .filter((g) => g.members.length);
+  const groups = (draft.events || []).flatMap((event) => {
+    const members = draft.items.flatMap((item) =>
+      item.assignments
+        .filter((a) => a.protocolMode === "GROUP" && a.eventId === event.id)
+        .filter(
+          (_, index) => draft.businessRuleVersion !== "LIVE_V1" || index === 0,
+        )
+        .map((assignment) => ({ item, assignment })),
+    );
+    if (event.protocolTemplateId !== "pb-protocol")
+      return members.length ? [{ event, members }] : [];
+    const partitions = new Map<string, typeof members>();
+    for (const member of members) {
+      const key = JSON.stringify(
+        pbProtocolFields.map((field) => member.assignment[field] ?? ""),
+      );
+      const partition = partitions.get(key) || [];
+      partition.push(member);
+      partitions.set(key, partition);
+    }
+    return [...partitions.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([, members]) => ({ event, members }));
+  });
   return {
     individuals,
     groups,
@@ -838,6 +861,8 @@ export function eventProtocolAssignment(
   // These are individual columns in the shared protocol, not its header.
   // The member has already resolved shared defaults and factual exceptions.
   for (const key of individualCommonFields) delete fields[key];
+  if (event.protocolTemplateId === "pb-protocol")
+    for (const key of pbProtocolFields) delete fields[key];
   return {
     ...member,
     ...fields,

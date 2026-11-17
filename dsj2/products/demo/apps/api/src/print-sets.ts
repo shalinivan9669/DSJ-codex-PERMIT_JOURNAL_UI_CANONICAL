@@ -103,6 +103,12 @@ async function selectedFiles(c: Context, id: string, input: unknown) {
     },
     orderBy: [{ createdAt: "asc" }, { id: "asc" }],
   });
+  const groupMembers = await db.groupDocumentMember.findMany({
+    where: {
+      tenantId: c.tenantId,
+      documentId: { in: documents.map((document) => document.id) },
+    },
+  });
   const order = new Map(
     documents.map((document, index) => [document.id, index]),
   );
@@ -212,6 +218,7 @@ async function selectedFiles(c: Context, id: string, input: unknown) {
     issuances,
     files,
     documents,
+    groupMembers,
   };
 }
 
@@ -235,12 +242,17 @@ export async function printSetPlan(c: Context, id: string, input: unknown) {
         data.issuances.find((issuance) => issuance.id === file.issuanceId)
           ?.snapshot as unknown as { draft?: Draft }
       )?.draft;
+      const groupRows = data.groupMembers.filter(
+        (member) => member.documentId === document?.id,
+      );
       const members = document?.rowId
         ? frozen?.items.filter((row) => row.id === document.rowId)
         : frozen?.items.filter((row) =>
-            row.assignments.some(
-              (assignment) => assignment.eventId === document?.groupEventId,
-            ),
+            groupRows.length
+              ? groupRows.some((member) => member.rowId === row.id)
+              : row.assignments.some(
+                  (assignment) => assignment.eventId === document?.groupEventId,
+                ),
           );
       return {
         id: file.id,

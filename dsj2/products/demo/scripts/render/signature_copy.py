@@ -5,6 +5,7 @@ Only the caller supplies accepted evidence. This module does no verification and
 must not infer signatures from names already printed in an original template.
 """
 from io import BytesIO
+from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
@@ -25,6 +26,7 @@ CT = '{http://schemas.openxmlformats.org/package/2006/content-types}'
 WP = '{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}'
 A = '{http://schemas.openxmlformats.org/drawingml/2006/main}'
 PIC = '{http://schemas.openxmlformats.org/drawingml/2006/picture}'
+V = '{urn:schemas-microsoft-com:vml}'
 MARKER = 'demo/signature-copy.json'
 ROLE_LABELS = {'DIRECTOR': 'Директор', 'CHAIR': 'Председатель комиссии',
                'TEACHER': 'Преподаватель', 'MEMBER': 'Член комиссии'}
@@ -62,6 +64,9 @@ def _payload(payload):
                          for s in signers if isinstance(s, dict)]
     if len(result['signers']) != len(signers):
         raise ValueError('SIGNATURE_COPY_INPUT_INVALID')
+    for output, source in zip(result['signers'], signers):
+        if source.get('signerKey') is not None:
+            output['signerKey'] = _value(source['signerKey'], 100)
     pending = result.get('pendingRoles', [])
     if not isinstance(pending, list) or len(pending) > 30:
         raise ValueError('SIGNATURE_COPY_INPUT_INVALID')
@@ -105,15 +110,23 @@ def paragraph(value, size=10, bold=False, color='183B4E', after=4, keep=False):
     return p
 
 
+def _signer_groups(signers):
+    groups = {}
+    for signer in signers:
+        key = signer.get('signerKey', signer['displayName'])
+        groups.setdefault(key, []).append(signer)
+    return list(groups.values())
+
+
 def _compact_lines(payload):
-    names = list(dict.fromkeys(initials(s['displayName']) for s in payload['signers']))
+    names = [initials(group[0]['displayName']) for group in _signer_groups(payload['signers'])]
     prefix = 'ТЕСТ ЭЦП. ' if payload['localTest'] else ''
     if payload['pendingRoles']:
         prefix += 'Частично. '
     return [prefix + 'Подписано ЭЦП: ' + '; '.join(names)]
 
 
-def _compact_box(box, lines, typography):
+def _compact_box(box, lines, typography, mark_left=0):
     """Keep all original nonblank text and run sizes; reclaim only spacer padding."""
     width, height = dimensions(box)
     for p in list(box.findall(W + 'p')):
@@ -121,6 +134,8 @@ def _compact_box(box, lines, typography):
             box.remove(p)
     original = list(box.findall(W + 'p'))
     marks = [paragraph(line, 7, bold=index == 0, after=0) for index, line in enumerate(lines)]
+    for mark in marks:
+        mark.find(W + 'pPr/' + W + 'ind').set(W + 'left', str(mark_left * 20))
     total = lambda: sum(measure(p, width, typography)[0] for p in original + marks)
     if total() > height - 6:
         for p in original:
@@ -137,13 +152,68 @@ def _compact_box(box, lines, typography):
     box.extend(marks)
 
 
+def _certificate_mark(document, payload, typography):
+    """Place the archive overprint mark beside the director, without reflowing it."""
+    body = document.find(W + 'body')
+    host = body.find(W + 'p')
+    page = next(document.iter(W + 'pgSz'), None)
+    # This is the source archive's overprint sheet geometry. Unknown custom
+    # certificates fail closed instead of receiving a mark at guessed offsets.
+    if (host is None or page is None or page.get(W + 'w') != '11906'
+            or page.get(W + 'h') != '8391' or body.find(W + 'tbl') is None
+            or len(body.findall(W + 'p')) < 16):
+        raise ValueError('SIGNATURE_COPY_ACTIVE_PANEL_NOT_FOUND')
+    run = E.SubElement(host, W + 'r')
+    pict = E.SubElement(run, W + 'pict')
+    shape = E.SubElement(pict, V + 'shape', id='SignatureCopyCertificateMark',
+                         stroked='f', filled='f',
+                         style='position:absolute;margin-left:210pt;margin-top:310pt;width:270pt;height:50pt;'
+                               'z-index:251659264;mso-position-horizontal-relative:page;'
+                               'mso-position-vertical-relative:page')
+    box = E.SubElement(E.SubElement(shape, V + 'textbox', inset='0,0,0,0'), W + 'txbxContent')
+    _fit_mark(box, payload, typography)
+
+
+def _fit_mark(box, payload, typography, mark_left=0):
+    # The evidence sheet always preserves every full name and role. If an
+    # unusually long set cannot fit on the card, disclose that the compact
+    # name is shortened and point to that sheet instead of rejecting the copy.
+    names = [initials(group[0]['displayName']) for group in _signer_groups(payload['signers'])]
+    prefix = ('ТЕСТ ЭЦП. ' if payload['localTest'] else '') + ('Частично. ' if payload['pendingRoles'] else '')
+    short = names[0]
+    if len(short) > 18:
+        short = short[:17] + '…'
+    if len(names) > 1:
+        short += ' и др.'
+    variants = [_compact_lines(payload), [prefix + 'Подписано ЭЦП: ' + short + ' (см. лист)']]
+    for lines in variants:
+        candidate = deepcopy(box)
+        try:
+            _compact_box(candidate, lines, typography, mark_left=mark_left)
+        except ValueError as error:
+            if str(error) != 'SIGNATURE_COPY_MARK_DOES_NOT_FIT':
+                raise
+        else:
+            box[:] = list(candidate)
+            return
+    raise ValueError('SIGNATURE_COPY_MARK_DOES_NOT_FIT')
+
+
 def _add_compact_marks(document, payload, typography):
     template = payload['templateId']
     boxes = list(document.iter(W + 'txbxContent'))
     selected = []
+    # The current archive BIOT card has a crowded signature panel but free
+    # space on its numbered front panel. Keep the original commission lines
+    # untouched and mark both printed copies (including Word's alternatives).
+    fronts = [box for box in boxes if template == 'biot-worker-card'
+              and re.search(r'УДОСТОВЕРЕНИЕ|КУ[ƏӘ]Л', text(box), re.I)
+              and POPULATED_NUMBER.search(text(box))]
     for box in boxes:
         label = text(box)
-        if template in CARD_IDS:
+        if fronts:
+            candidate = box in fronts
+        elif template in CARD_IDS:
             candidate = bool(SIGNATURE_LABEL.search(label) and POPULATED_NUMBER.search(label))
         elif template == 'biot-itr-certificate':
             candidate = bool(SIGNATURE_LABEL.search(label))
@@ -153,8 +223,14 @@ def _add_compact_marks(document, payload, typography):
             selected.append(box)
     lines = _compact_lines(payload)
     for box in selected:
-        _compact_box(box, lines, typography)
+        if fronts:
+            _fit_mark(box, payload, typography, mark_left=24)
+        else:
+            _compact_box(box, lines, typography)
     if not selected:
+        if template == 'biot-itr-certificate' and not boxes:
+            _certificate_mark(document, payload, typography)
+            return 1
         if template in CARD_IDS or template == 'biot-itr-certificate':
             raise ValueError('SIGNATURE_COPY_ACTIVE_PANEL_NOT_FOUND')
         body = document.find(W + 'body')
@@ -226,11 +302,13 @@ def _evidence_sheet(files, document, payload):
     body.append(paragraph('Документ: ' + payload['documentNumber'], 10, after=8))
     if payload['localTest']:
         body.append(paragraph('Тестовый режим. Действительность сертификата, цепочка доверия и статус отзыва в НУЦ не проверены. Отметки не подтверждают юридическую действительность подписи.', 10, color='9C2020', after=8))
-    for signer in payload['signers']:
-        role = ROLE_LABELS.get(signer['role'], signer['role'])
-        body.append(paragraph(role + ': ' + signer['displayName'], 11, bold=True, after=3, keep=True))
-        body.append(paragraph('Подпись получена сервером: ' + signer['receivedAt'], 9, after=3, keep=True))
-        body.append(paragraph(signer['identityNote'], 9, after=8))
+    for group in _signer_groups(payload['signers']):
+        body.append(paragraph('Подписант: ' + group[0]['displayName'], 11, bold=True, after=3, keep=True))
+        for signer in group:
+            role = ROLE_LABELS.get(signer['role'], signer['role'])
+            body.append(paragraph(role + ' — подпись получена сервером: ' + signer['receivedAt'], 9, after=3, keep=True))
+        for note in dict.fromkeys(signer['identityNote'] for signer in group):
+            body.append(paragraph(note, 9, after=4))
     if payload['pendingRoles']:
         body.append(paragraph('ПОДПИСАНО ЧАСТИЧНО. Ожидаются: ' + ', '.join(ROLE_LABELS.get(r, r) for r in payload['pendingRoles']) + '.', 10, bold=True, color='9C2020', after=8))
     body.append(paragraph('Это производная печатная копия. Отделённые подписи CMS относятся к исходному PDF, а не к файлу с этими отметками. Исходный документ и подписи сохраняются отдельно.', 9, after=8))

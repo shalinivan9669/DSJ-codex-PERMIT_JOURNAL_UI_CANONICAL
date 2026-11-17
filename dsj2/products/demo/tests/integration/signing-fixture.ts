@@ -18,6 +18,7 @@ export async function signingFixture(
     demoOnly?: boolean;
     demoMode?: boolean;
     docxBytes?: Buffer;
+    pdfBytes?: Buffer;
     templateId?: string;
   } = {},
 ) {
@@ -186,7 +187,9 @@ export async function signingFixture(
         },
       });
       // Byte preservation matters here; no renderer or PDF parser is involved.
-      const bytes = Buffer.from(`%PDF-1.7\nSYNTHETIC ${document.id}\n%%EOF`);
+      const bytes =
+        options.pdfBytes ||
+        Buffer.from(`%PDF-1.7\nSYNTHETIC ${document.id}\n%%EOF`);
       const stored = await store.put(bytes, "pdf");
       const artifact = await db.artifact.create({
         data: {

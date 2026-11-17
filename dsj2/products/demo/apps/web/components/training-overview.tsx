@@ -1,6 +1,7 @@
 "use client";
 
 import { setTrainingProtocolMode } from "@/lib/request-bundles";
+import { documentPlan, type Draft as ContractDraft } from "@demo/contracts";
 import { trainingDisplayTitle } from "@/lib/training-display";
 import type { Draft } from "@/lib/types";
 
@@ -9,6 +10,7 @@ export function TrainingOverview({
   disabled,
   onChange,
   resolvedEvents,
+  resolvedDraft,
   selectedIds = [],
   onRemove,
 }: {
@@ -16,6 +18,7 @@ export function TrainingOverview({
   disabled: boolean;
   onChange: (patch: Partial<Draft>) => void;
   resolvedEvents?: Draft["events"];
+  resolvedDraft?: ContractDraft;
   selectedIds?: string[];
   onRemove?: (eventId: string, recipientIds: string[], all: boolean) => void;
 }) {
@@ -32,6 +35,9 @@ export function TrainingOverview({
         const displayedEvent =
           resolvedEvents?.find((row) => row.id === event.id) || event;
         const displayTitle = trainingDisplayTitle(event.title);
+        const protocolGroups = documentPlan(
+          resolvedDraft || draft,
+        ).groups.filter((group) => group.event.id === event.id);
         const members = draft.items.filter((item) =>
           item.assignments.some(
             (assignment) => assignment.eventId === event.id,
@@ -53,6 +59,22 @@ export function TrainingOverview({
             <div>
               <strong>{displayTitle}</strong>
               <small>Сотрудников: {members.length}</small>
+              {protocolGroups.length > 1 && (
+                <ul aria-label={`Состав протоколов: ${displayTitle}`}>
+                  {protocolGroups.map((group) => (
+                    <li key={group.members[0].item.id}>
+                      {group.members[0].assignment.hours || "—"} ч ·{" "}
+                      {group.members[0].assignment.trainingSubject || "—"}:{" "}
+                      {group.members
+                        .map(
+                          ({ item }) =>
+                            item.fullNameRu || item.fullNameKz || "Без ФИО",
+                        )
+                        .join(", ")}
+                    </li>
+                  ))}
+                </ul>
+              )}
               {!disabled && (
                 <button
                   className="text-button danger-text"

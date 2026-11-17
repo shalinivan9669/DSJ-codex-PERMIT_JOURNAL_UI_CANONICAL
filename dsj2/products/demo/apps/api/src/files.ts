@@ -1200,7 +1200,7 @@ export async function collectRegistryRows(
     orderBy: { createdAt: "asc" },
   });
   const ids = records.map((r) => r.id);
-  const [documents, issuances, workflows] = await Promise.all([
+  const [documents, issuances, workflows, groupMembers] = await Promise.all([
     db.issuedDocument.findMany({
       where: { tenantId: c.tenantId, requestId: { in: ids } },
     }),
@@ -1211,6 +1211,9 @@ export async function collectRegistryRows(
     db.issuanceWorkflow.findMany({
       where: { tenantId: c.tenantId, requestId: { in: ids } },
       select: { issuanceId: true, status: true },
+    }),
+    db.groupDocumentMember.findMany({
+      where: { tenantId: c.tenantId, requestId: { in: ids } },
     }),
   ]);
   const eligible = issuances.filter((issuance) => {
@@ -1248,6 +1251,26 @@ export async function collectRegistryRows(
           ? document.issuanceId === issuance.id
           : document.requestId === record.id,
       );
+      const groupDocuments = new Map(
+        stageDocuments
+          .filter((document) => document.groupEventId)
+          .map((document) => [document.id, document]),
+      );
+      const eventHasMemberRecords = new Set<string>();
+      const memberProtocols = new Map<string, string[]>();
+      for (const member of groupMembers) {
+        const eventId = groupDocuments.get(member.documentId)?.groupEventId;
+        if (!eventId) continue;
+        eventHasMemberRecords.add(eventId);
+        const key = JSON.stringify([
+          eventId,
+          member.rowId,
+          member.assignmentId,
+        ]);
+        const matches = memberProtocols.get(key) || [];
+        matches.push(member.documentId);
+        memberProtocols.set(key, matches);
+      }
       const renderedItems = aggregates.flatMap((snapshot) => {
         if (snapshot.issuanceId !== issuance?.id) return [];
         const input = snapshot.input as {
@@ -1332,13 +1355,20 @@ export async function collectRegistryRows(
           const frozenProtocolId = renderedItems.find(
             (entry) => entry.documentId === document?.id,
           )?.linkedProtocolDocumentId;
+          const memberProtocolIds =
+            memberProtocols.get(
+              JSON.stringify([assignment.eventId, item.id, assignment.id]),
+            ) || [];
+          const memberProtocolId =
+            memberProtocolIds.length === 1 ? memberProtocolIds[0] : undefined;
           const protocolCandidates = stageDocuments.filter(
             (entry) =>
               entry.templateId === protocolTemplateFor(assignment.templateId) &&
-              (frozenProtocolId
-                ? entry.id === frozenProtocolId
+              (frozenProtocolId || memberProtocolId
+                ? entry.id === (frozenProtocolId || memberProtocolId)
                 : assignment.protocolMode === "GROUP"
-                  ? entry.groupEventId === assignment.eventId
+                  ? !eventHasMemberRecords.has(assignment.eventId || "") &&
+                    entry.groupEventId === assignment.eventId
                   : entry.rowId === item.id &&
                     item.assignments.some(
                       (protocol) =>

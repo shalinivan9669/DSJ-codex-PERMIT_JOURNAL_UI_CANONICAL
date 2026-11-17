@@ -619,9 +619,9 @@
       "rowValues": [
         "{{ROW_NUMBER}}",
         "{{FULL_NAME_RU}}",
-        "{{RESULT_RU}}",
-        "{{RESULT_RU}}",
-        "{{RESULT_RU}}",
+        "{{PS_THEORY_RESULT_RU}}",
+        "{{PS_PRACTICAL_KNOWLEDGE_RESULT_RU}}",
+        "{{PS_PRACTICAL_SKILLS_RESULT_RU}}",
         "{{PS_AWARDED_QUALIFICATION_RU}}",
         "{{CREDENTIAL_NUMBER}}"
       ]
@@ -770,9 +770,9 @@
           "rowValues": [
             "{{ROW_NUMBER}}",
             "{{FULL_NAME_KZ}}",
-            "{{RESULT_KZ}}",
-            "{{RESULT_KZ}}",
-            "{{RESULT_KZ}}",
+            "{{PS_THEORY_RESULT_KZ}}",
+            "{{PS_PRACTICAL_KNOWLEDGE_RESULT_KZ}}",
+            "{{PS_PRACTICAL_SKILLS_RESULT_KZ}}",
             "{{PS_AWARDED_QUALIFICATION_KZ}}",
             "{{CREDENTIAL_NUMBER}}"
           ]

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Notice } from "@demo/ui";
-import type { PreviewTarget } from "@demo/contracts";
+import { documentPlan, type PreviewTarget } from "@demo/contracts";
 import { api, ApiError, artifactUrl, errorText, json } from "@/lib/api";
 import {
   documentTitle,
@@ -47,25 +47,27 @@ export function DocumentPreview({
       })),
     )
     .concat(
-      (draft.events || [])
-        .filter((event) =>
-          draft.items.some((row) =>
-            row.assignments.some(
-              (assignment) =>
-                assignment.eventId === event.id &&
-                assignment.protocolMode === "GROUP",
-            ),
-          ),
-        )
-        .map((event) => ({
-          value: identity({ kind: "GROUP_PROTOCOL", eventId: event.id }),
-          label: `Общий протокол · ${event.title || documentTitle(event.protocolTemplateId)}`,
-        })),
+      documentPlan(draft as Draft).groups.map(({ event, members }) => ({
+        value: identity({
+          kind: "GROUP_PROTOCOL",
+          eventId: event.id,
+          memberRowId: members[0].item.id,
+        }),
+        label: `Общий протокол · ${event.title || documentTitle(event.protocolTemplateId)}${event.protocolTemplateId === "pb-protocol" ? ` · ${members[0].assignment.hours || "—"} ч · ${members.map(({ item }) => item.fullNameRu || item.fullNameKz || "Без ФИО").join(", ")}` : ""}`,
+      })),
     );
+  const initialSelection =
+    initialTarget?.kind === "GROUP_PROTOCOL" && !initialTarget.memberRowId
+      ? choices.find((choice) => {
+          const target = JSON.parse(choice.value) as PreviewTarget;
+          return (
+            target.kind === "GROUP_PROTOCOL" &&
+            target.eventId === initialTarget.eventId
+          );
+        })?.value || identity(initialTarget)
+      : identity(initialTarget);
   const [selection, setSelection] = useState(
-    identity(initialTarget) === "null"
-      ? choices[0]?.value || ""
-      : identity(initialTarget),
+    initialSelection === "null" ? choices[0]?.value || "" : initialSelection,
   );
   const [jobs, setJobs] = useState<Job[]>([]);
   const [jobIds, setJobIds] = useState<string[]>([]);
@@ -92,8 +94,8 @@ export function DocumentPreview({
     };
   }, [sourceKey, selection]);
   useEffect(() => {
-    if (initialTarget) setSelection(identity(initialTarget));
-  }, [initialTarget]);
+    if (initialTarget) setSelection(initialSelection);
+  }, [initialTarget, initialSelection]);
   useEffect(() => {
     if (!jobIds.length) return;
     const serial = operation.current;

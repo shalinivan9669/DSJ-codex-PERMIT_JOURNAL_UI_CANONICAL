@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "rendererVersion": "demo-ooxml-16/libreoffice-26.2.6.3",
+  "rendererVersion": "demo-ooxml-17/libreoffice-26.2.6.3",
   "templates": [
     {
       "id": "biot-worker-card",

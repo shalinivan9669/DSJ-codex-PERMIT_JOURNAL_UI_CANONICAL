@@ -65,6 +65,17 @@ class SignatureCopyTests(unittest.TestCase):
         with ZipFile(self.output) as archive:
             return {name: archive.read(name) for name in archive.namelist()}
 
+    def archive_certificate_package(self):
+        files = self.package(flow=True)
+        root = E.fromstring(files['word/document.xml'])
+        body = root.find(W + 'body')
+        section = body.find(W + 'sectPr')
+        size = section.find(W + 'pgSz')
+        size.set(W + 'w', '11906'); size.set(W + 'h', '8391')
+        for _ in range(15): body.insert(0, paragraph('', 9))
+        body.insert(0, E.Element(W + 'tbl'))
+        files['word/document.xml'] = E.tostring(root); deterministic_zip(self.source, files)
+
     def test_both_printed_cards_marked_but_blank_renewal_and_source_names_unchanged(self):
         files = self.package(); before = self.source.read_bytes()
         result = signature_copy(self.payload, self.output, None); copied = self.read()
@@ -88,6 +99,41 @@ class SignatureCopyTests(unittest.TestCase):
         for alternate in root.iter(MC + 'AlternateContent'):
             choice, fallback = list(alternate)
             self.assertEqual(list(choice.itertext()), list(fallback.itertext()))
+
+    def test_biot_archive_marks_populated_front_panels_without_overflowing_signature_panels(self):
+        files = self.package(height=10)
+        root = E.fromstring(files['word/document.xml'])
+        for box in root.iter(W + 'txbxContent'):
+            shape = next(box.iterancestors(V + 'shape'))
+            shape.set('style', 'position:absolute;width:260pt;height:150pt')
+            box.insert(0, paragraph('УДОСТОВЕРЕНИЕ № BIOT-CARD-00011', 10))
+            box.insert(1, paragraph('Выдано Получатель', 10))
+            for old in list(box)[2:]: box.remove(old)
+        files['word/document.xml'] = E.tostring(root); deterministic_zip(self.source, files)
+        result = signature_copy(self.payload, self.output, None)
+        self.assertEqual(result['markedPanels'], 3)
+        boxes = list(E.fromstring(self.read()['word/document.xml']).iter(W + 'txbxContent'))
+        self.assertTrue(all('Подписано ЭЦП' in ''.join(box.itertext()) for box in boxes))
+
+    def test_archive_itr_without_text_frame_receives_visible_mark_on_certificate(self):
+        self.archive_certificate_package()
+        self.payload['templateId'] = 'biot-itr-certificate'
+        result = signature_copy(self.payload, self.output, None)
+        root = E.fromstring(self.read()['word/document.xml'])
+        self.assertEqual(result['markedPanels'], 1)
+        shapes = root.xpath('.//v:shape[@id="SignatureCopyCertificateMark"]', namespaces={'v': V[1:-1]})
+        self.assertEqual(len(shapes), 1)
+        self.assertIn('Иванов И. И.', ''.join(shapes[0].itertext()))
+
+    def test_unusually_long_certificate_name_points_to_full_evidence(self):
+        self.archive_certificate_package()
+        self.payload['templateId'] = 'biot-itr-certificate'
+        self.payload['signers'][0]['displayName'] = 'Ә' * 100 + ' Асан'
+        signature_copy(self.payload, self.output, None)
+        root = E.fromstring(self.read()['word/document.xml'])
+        shape = root.xpath('.//v:shape[@id="SignatureCopyCertificateMark"]', namespaces={'v': V[1:-1]})[0]
+        self.assertIn('… (см. лист)', ''.join(shape.itertext()))
+        self.assertIn(self.payload['signers'][0]['displayName'], ' '.join(root.itertext()))
 
     def test_ps_marks_signature_panel_not_exam_panel_with_independent_floating_table(self):
         files = self.package(); root = E.fromstring(files['word/document.xml'])
@@ -117,6 +163,35 @@ class SignatureCopyTests(unittest.TestCase):
             self.assertIn(value, visible)
         self.assertTrue(files['word/media/signature-copy-qr.png'].startswith(b'\x89PNG\r\n\x1a\n'))
         self.assertNotIn('Сидоров', files[MARKER].decode('utf8'))
+
+    def test_same_person_is_compact_on_form_and_every_accepted_role_is_listed(self):
+        self.package()
+        first = self.payload['signers'][0]
+        first['displayName'] = 'Әлиев Әсет Бақытұлы'
+        self.payload['signers'] = [{**first, 'role': role} for role in ['DIRECTOR', 'CHAIR', 'TEACHER']]
+        self.payload['pendingRoles'] = []
+        signature_copy(self.payload, self.output, None)
+        root = E.fromstring(self.read()['word/document.xml'])
+        boxes = list(root.iter(W + 'txbxContent'))
+        self.assertEqual(''.join(boxes[0].itertext()).count('Әлиев Ә. Б.'), 1)
+        visible = ' '.join(root.itertext())
+        self.assertEqual(visible.count('Подписант: Әлиев Әсет Бақытұлы'), 1)
+        for role in ['Директор', 'Председатель комиссии', 'Преподаватель']:
+            self.assertIn(role + ' — подпись получена сервером', visible)
+
+    def test_different_signers_are_not_lost_from_form_or_evidence(self):
+        self.package()
+        self.payload['signers'] = [
+            {**self.payload['signers'][0], 'role': 'DIRECTOR', 'displayName': 'Сейдахметқалиқызы Айсұлу Қуанышбекқызы'},
+            {**self.payload['signers'][0], 'role': 'CHAIR', 'displayName': 'Қожамұхамедова Мөлдір Әбдірахманқызы'},
+        ]
+        signature_copy(self.payload, self.output, None)
+        root = E.fromstring(self.read()['word/document.xml'])
+        box = next(root.iter(W + 'txbxContent'))
+        for name in ['Сейдахметқалиқызы А. Қ.', 'Қожамұхамедова М. Ә.']:
+            self.assertIn(name, ''.join(box.itertext()))
+        for signer in self.payload['signers']:
+            self.assertIn(signer['displayName'], ' '.join(root.itertext()))
 
     def test_no_signature_does_not_infer_evidence_from_original_commission_names(self):
         self.package(); self.payload['signers'] = []; self.payload.pop('verificationUrl')
@@ -185,7 +260,17 @@ class SignatureCopyTests(unittest.TestCase):
         visible = ' '.join(E.fromstring(self.read()['word/document.xml']).itertext())
         self.assertIn('Подписано ЭЦП: имя владельца не определено', visible)
         self.assertNotIn('Имя в. с. н. о.', visible)
-        self.assertEqual(visible.count('Директор: Имя владельца сертификата не определено'), 30)
+        self.assertEqual(visible.count('Директор — подпись получена сервером'), 30)
+
+    def test_people_with_same_name_and_different_certificates_remain_distinct(self):
+        self.package()
+        signer = self.payload['signers'][0]
+        self.payload['signers'] = [{**signer, 'signerKey': 'certificate-one'},
+                                   {**signer, 'role': 'CHAIR', 'signerKey': 'certificate-two'}]
+        signature_copy(self.payload, self.output, None)
+        root = E.fromstring(self.read()['word/document.xml'])
+        visible = ' '.join(root.itertext())
+        self.assertEqual(visible.count('Подписант: Иванов Иван Иванович'), 2)
 
     def test_output_can_never_overwrite_original(self):
         self.package(); before = self.source.read_bytes()

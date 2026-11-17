@@ -1,8 +1,89 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { applyBusinessRules, documentPlan } from "@demo/contracts";
+import {
+  applyBusinessRules,
+  documentPlan,
+  draftSchema,
+  eventProtocolAssignment,
+  resolveDraft,
+} from "@demo/contracts";
 import { editTrainingAssignment } from "../lib/training-assignment-edit";
 import { newAssignment, newRecipient } from "../lib/types";
+
+test("one entry per person reaches the PS group snapshot and leaves a legacy total separate", () => {
+  const people = ["91", "67"].map((theory, index) => {
+    const person = {
+      ...newRecipient(),
+      id: `person-${index}`,
+      assignments: [
+        {
+          ...newAssignment("ps-card"),
+          id: `card-${index}`,
+          eventId: "ps",
+          protocolMode: "GROUP" as const,
+          result: "85",
+        },
+      ],
+    };
+    return editTrainingAssignment(
+      person,
+      `card-${index}`,
+      {
+        result: "85",
+        psTheoryResult: theory,
+        psPracticalKnowledgeResult: index ? "72" : "0",
+        psPracticalSkillsResult: index ? "88" : "78",
+      },
+      true,
+    );
+  });
+  for (const items of [people, [...people].reverse()]) {
+    const input = draftSchema.parse({
+      title: "",
+      kind: "COMPANY",
+      customerId: null,
+      demoMode: true,
+      businessRuleVersion: "LIVE_V1",
+      items,
+      events: [
+        {
+          id: "ps",
+          title: "Профессия",
+          protocolTemplateId: "ps-protocol",
+          protocolMode: "GROUP",
+          commonFields: {},
+        },
+      ],
+    });
+    const draft = resolveDraft(applyBusinessRules(input)).draft;
+    const group = documentPlan(draft).groups[0];
+    assert.equal(group.members.length, 2);
+    for (const { item, assignment } of group.members) {
+      const actual = eventProtocolAssignment(group.event, assignment, true);
+      assert.deepEqual(
+        [
+          actual.psTheoryResult,
+          actual.psPracticalKnowledgeResult,
+          actual.psPracticalSkillsResult,
+        ],
+        item.id === "person-0" ? ["91", "0", "78"] : ["67", "72", "88"],
+      );
+      assert.equal(actual.result, "85");
+    }
+  }
+  const legacy = draftSchema.parse({
+    title: "",
+    kind: "PERSON",
+    demoMode: true,
+    items: [
+      {
+        ...newRecipient(),
+        assignments: [{ ...newAssignment("ps-card"), result: "85" }],
+      },
+    ],
+  });
+  assert.equal(legacy.items[0].assignments[0].psTheoryResult, undefined);
+});
 
 test("editing a companion keeps common values after normalization and leaves other trainings intact", () => {
   const person = {

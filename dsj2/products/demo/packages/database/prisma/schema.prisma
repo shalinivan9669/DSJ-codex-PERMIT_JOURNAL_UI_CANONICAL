@@ -1156,7 +1156,7 @@ model IssuedDocument {
   createdAt DateTime @default(now())
   @@unique([tenantId,id])
   @@unique([issuanceId,rowId,assignmentId])
-  @@unique([issuanceId,groupEventId])
+  @@index([issuanceId,groupEventId])
 }
 model TrainingEvent {
   id String @id

@@ -2436,6 +2436,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 <>
                   <TrainingOverview
                     draft={draft}
+                    resolvedDraft={resolved.draft}
                     resolvedEvents={resolved.draft.events}
                     disabled={readonly || operationBusy}
                     onChange={edit}
@@ -3572,7 +3573,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         >
           <DocumentPreview
             requestId={id}
-            draft={draft}
+            draft={resolved.draft}
             source={{ revision: targetPreview.revision }}
             initialTarget={targetPreview.target}
             onIssue={(issue) => {

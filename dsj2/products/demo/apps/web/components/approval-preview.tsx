@@ -1,5 +1,6 @@
 "use client";
 import type { Draft } from "@/lib/types";
+import { resolveDraft } from "@demo/contracts";
 import { DocumentPreview } from "./document-preview";
 export function ApprovalPreview({
   requestId,
@@ -12,13 +13,13 @@ export function ApprovalPreview({
   proposalId: string;
   proposalHash: string;
   revision: number;
-  draft: Pick<Draft, "items" | "events">;
+  draft: Draft;
 }) {
   return (
     <section aria-label="PDF переданной редакции">
       <DocumentPreview
         requestId={requestId}
-        draft={draft}
+        draft={resolveDraft(draft).draft}
         source={{ revision, proposalId, expectedProposalHash: proposalHash }}
         samples
       />

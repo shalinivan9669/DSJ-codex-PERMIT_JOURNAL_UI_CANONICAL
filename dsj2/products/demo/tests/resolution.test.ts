@@ -154,14 +154,15 @@ test("common fields resolve with provenance; individual outcomes and raw saved d
 test("group common override is blocked; explicit clear does not silently inherit; same text preserves manual origin", () => {
   const draft = fixture();
   const a = draft.items[0].assignments[0];
-  a.trainingSubject = "Иная программа";
-  a.fieldOrigins = { trainingSubject: "MANUAL", documentDate: "CLEARED" };
+  draft.events![0].commonFields.trainingStart = "2026-09-01";
+  a.trainingStart = "2026-09-02";
+  a.fieldOrigins = { trainingStart: "MANUAL", documentDate: "CLEARED" };
   const value = resolveDraft(draft);
   assert.equal(value.draft.items[0].assignments[0].documentDate, "");
   assert.equal(value.issues[0].code, "GROUP_COMMON_OVERRIDE");
-  a.trainingSubject = "Программа события";
+  a.trainingStart = "2026-09-01";
   assert.equal(
-    resolveDraft(draft).provenance["row:card"].trainingSubject,
+    resolveDraft(draft).provenance["row:card"].trainingStart,
     "MANUAL",
   );
 });

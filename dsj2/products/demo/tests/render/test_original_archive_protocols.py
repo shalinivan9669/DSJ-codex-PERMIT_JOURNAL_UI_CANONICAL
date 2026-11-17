@@ -44,6 +44,23 @@ class PrintedProtocolTests(unittest.TestCase):
         self.enterContext(patch.dict(os.environ, DEMO_ARTIFACT_ROOT=str(self.root)))
         self.out = Path(self.enterContext(TemporaryDirectory())) / 'printed.docx'
 
+    def test_pb_roster_and_signatures_follow_document_flow(self):
+        plan = next(p for (tid, _), (p, lang) in protocols.registry().items() if tid == 'pb-protocol' and not lang)
+        for count in (1, 2, 3, 25):
+            with self.subTest(count=count):
+                s = snapshot('pb-protocol', count)
+                s['groupEvent'] = {'contractVersion': 1}
+                render_original_document(s, self.out, self.root / plan['source'])
+                document = E.fromstring(inspect_package(self.out)['word/document.xml'])
+                body = document.find(W + 'body')
+                tables = body.findall(W + 'tbl')
+                self.assertEqual(len(tables), 2)
+                for table in tables:
+                    self.assertIsNone(table.find(W + 'tblPr/' + W + 'tblpPr'))
+                # Word merges adjacent in-flow tables; retain a separating paragraph.
+                self.assertEqual(tables[0].getnext().tag, W + 'p')
+                self.assertEqual(len(tables[0].findall(W + 'tr')), count + 1)
+
     def test_frozen_participants_raw_geometry_and_both_language_pages(self):
         for (tid, digest), (plan, lang) in protocols.registry().items():
             origin = self.root / plan['source']
@@ -70,7 +87,8 @@ class PrintedProtocolTests(unittest.TestCase):
                     self.assertNotIn('QNP', visible)
                     self.assertNotIn('2025 г.', visible)
                     self.assertIn('08.11.2026', visible)
-                    self.assertIn('Не сдал', visible)
+                    if tid != 'ps-protocol':
+                        self.assertIn('Не сдал', visible)
                     for item in s['items']:
                         self.assertIn(item['fullNameRu'], visible)
                         self.assertIn(item['fullNameKz'], visible)
@@ -110,6 +128,56 @@ class PrintedProtocolTests(unittest.TestCase):
                     render_original_document(s, self.out, origin)
         with self.assertRaisesRegex(ValueError, 'PRIMARY_HASH'):
             render_original_document(s, self.out, self.root / secondary['source'])
+
+    def test_ps_assessment_columns_are_independent_in_both_languages(self):
+        plan = next(p for (tid, _), (p, lang) in protocols.registry().items() if tid == 'ps-protocol' and not lang)
+        extra = plan['appendSources'][0]
+        s = snapshot('ps-protocol', 2)
+        s['groupEvent'] = {'contractVersion': 1}
+        s['originalKazakhSource'] = {'storageKey': extra['source'], 'sha256': extra['sourceSha256']}
+        s['items'][0]['assignment'].update(result='85', psTheoryResult='91', psPracticalKnowledgeResult='0', psPracticalSkillsResult='78')
+        s['items'][1]['assignment'].update(result='85', psTheoryResult='67', psPracticalKnowledgeResult='72', psPracticalSkillsResult='88')
+        for expected in ([['91', '0', '78'], ['67', '72', '88']], [['67', '72', '88'], ['91', '0', '78']]):
+            render_original_document(s, self.out, self.root / plan['source'])
+            with ZipFile(self.out) as doc:
+                tree = E.fromstring(doc.read('word/document.xml'))
+            tables = [table for table in tree.iter(W + 'tbl') if any('Получатель 1' in ''.join(row.itertext()) or 'Тыңдаушы 1' in ''.join(row.itertext()) for row in table.findall(W + 'tr'))]
+            self.assertEqual(len(tables), 2)
+            for table in tables:
+                rows = table.findall(W + 'tr')[1:]
+                cells = [[''.join(cell.itertext()).strip() for cell in row.findall(W + 'tc')] for row in rows]
+                self.assertEqual([row[2:5] for row in cells], expected)
+            s['items'].reverse()
+        s['items'][1]['assignment'].update(psTheoryResult='', psPracticalKnowledgeResult='64', psPracticalSkillsResult='')
+        render_original_document(s, self.out, self.root / plan['source'])
+        with ZipFile(self.out) as doc:
+            tree = E.fromstring(doc.read('word/document.xml'))
+        for table in [t for t in tree.iter(W + 'tbl') if any('Получатель 1' in ''.join(r.itertext()) or 'Тыңдаушы 1' in ''.join(r.itertext()) for r in t.findall(W + 'tr'))]:
+            self.assertEqual([''.join(c.itertext()).strip() for c in table.findall(W + 'tr')[2].findall(W + 'tc')[2:5]], ['', '64', ''])
+        # A legacy total is not evidence for any of the three columns.
+        for item in s['items']:
+            for key in ('psTheoryResult', 'psPracticalKnowledgeResult', 'psPracticalSkillsResult'):
+                item['assignment'].pop(key, None)
+        render_original_document(s, self.out, self.root / plan['source'])
+        with ZipFile(self.out) as doc:
+            tree = E.fromstring(doc.read('word/document.xml'))
+        for table in [t for t in tree.iter(W + 'tbl') if any('Получатель 1' in ''.join(r.itertext()) or 'Тыңдаушы 1' in ''.join(r.itertext()) for r in t.findall(W + 'tr'))]:
+            for row in table.findall(W + 'tr')[1:]:
+                self.assertEqual([''.join(c.itertext()).strip() for c in row.findall(W + 'tc')[2:5]], ['', '', ''])
+
+    def test_ps_standard_and_explicit_bilingual_results(self):
+        plan = next(p for (tid, _), (p, lang) in protocols.registry().items() if tid == 'ps-protocol' and not lang)
+        extra = plan['appendSources'][0]
+        s = snapshot('ps-protocol')
+        s['originalKazakhSource'] = {'storageKey': extra['source'], 'sha256': extra['sourceSha256']}
+        s['items'][0]['assignment'].update(psTheoryResult='хорошо', psPracticalKnowledgeResult='Зачтено / Есептелді', psPracticalSkillsResult='85 / 100')
+        render_original_document(s, self.out, self.root / plan['source'])
+        with ZipFile(self.out) as doc:
+            tree = E.fromstring(doc.read('word/document.xml'))
+        tables = [table for table in tree.iter(W + 'tbl') if any('Получатель 1' in ''.join(row.itertext()) or 'Тыңдаушы 1' in ''.join(row.itertext()) for row in table.findall(W + 'tr'))]
+        self.assertEqual(len(tables), 2)
+        cells = [[ ''.join(cell.itertext()).strip() for cell in table.findall(W + 'tr')[1].findall(W + 'tc')][2:5] for table in tables]
+        self.assertEqual(cells, [['Хорошо', 'Зачтено', '85 / 100'], ['Жақсы', 'Есептелді', '85 / 100']])
 
 
 if __name__ == '__main__':

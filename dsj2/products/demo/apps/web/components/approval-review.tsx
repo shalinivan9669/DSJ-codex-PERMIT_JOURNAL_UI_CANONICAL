@@ -7,7 +7,7 @@ import {
   type ApprovalReview,
 } from "@/lib/approval-review";
 import { documentTitle } from "@/lib/types";
-import type { Draft } from "@demo/contracts";
+import { documentPlan, type Draft } from "@demo/contracts";
 import { trainingDisplayTitle } from "@/lib/training-display";
 
 const values = (entries: Set<string>) => [...entries].join(", ");
@@ -24,6 +24,13 @@ export function ApprovalReviewPanel({
     [review, submitted],
   );
   const [showPeople, setShowPeople] = useState(false);
+  const protocolGroups = documentPlan(review.draft).groups;
+  const splitProtocols = protocolGroups.filter(
+    (group) =>
+      group.event.protocolTemplateId === "pb-protocol" &&
+      protocolGroups.filter((entry) => entry.event.id === group.event.id)
+        .length > 1,
+  );
   return (
     <section
       className="approval-effective-review"
@@ -92,6 +99,21 @@ export function ApprovalReviewPanel({
           </tbody>
         </table>
       </div>
+      {splitProtocols.length > 0 && (
+        <ul aria-label="Состав протоколов ПБ">
+          {splitProtocols.map((group) => (
+            <li key={`${group.event.id}:${group.members[0].item.id}`}>
+              {group.members[0].assignment.hours || "—"} ч ·{" "}
+              {group.members[0].assignment.trainingSubject || "—"}:{" "}
+              {group.members
+                .map(
+                  ({ item }) => item.fullNameRu || item.fullNameKz || "Без ФИО",
+                )
+                .join(", ")}
+            </li>
+          ))}
+        </ul>
+      )}
       <details onToggle={(event) => setShowPeople(event.currentTarget.open)}>
         <summary>
           Предпросмотр данных всех людей и документов ({summary.people})

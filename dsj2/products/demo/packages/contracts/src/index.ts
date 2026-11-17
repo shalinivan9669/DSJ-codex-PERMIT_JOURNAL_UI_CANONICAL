@@ -282,6 +282,9 @@ export const assignmentSchema = z
     psSpecialSubjectKz: optionalText,
     trainingSubjectEn: optionalText,
     result: text,
+    psTheoryResult: optionalText,
+    psPracticalKnowledgeResult: optionalText,
+    psPracticalSkillsResult: optionalText,
     professionRu: optionalText,
     professionKz: optionalText,
     psQualificationRu: optionalText,
@@ -547,6 +550,7 @@ export const previewTargetSchema = z.discriminatedUnion("kind", [
     .object({
       kind: z.literal("GROUP_PROTOCOL"),
       eventId: z.string().min(1).max(80),
+      memberRowId: z.string().min(1).max(80).optional(),
     })
     .strict(),
 ]);
@@ -886,6 +890,9 @@ export function validateDraft(
         "psQualificationRu",
         "psQualificationKz",
         "result",
+        "psTheoryResult",
+        "psPracticalKnowledgeResult",
+        "psPracticalSkillsResult",
         "reason",
         "education",
         "externalBasisNumber",

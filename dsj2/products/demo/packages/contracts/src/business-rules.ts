@@ -394,6 +394,13 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
               : cloneForTemplate(primary, templateId);
         if (templateId !== primary.templateId) {
           for (const key of [
+            "psTheoryResult",
+            "psPracticalKnowledgeResult",
+            "psPracticalSkillsResult",
+          ] as const) {
+            if (primary[key] !== undefined) assignment[key] = primary[key];
+          }
+          for (const key of [
             ...courseProgramKeys,
             "professionRu",
             "professionKz",

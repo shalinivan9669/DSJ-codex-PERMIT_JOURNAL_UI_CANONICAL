@@ -1041,8 +1041,37 @@ async function validation(
           }
         : await selectBatch(tx, c, id, workingDraft, assignments);
   const sourceDraft = selectedScope.draft;
+  // Resolve the entire event before choosing a protocol: filtering first could
+  // change category-dependent hours and select the wrong participants.
+  let groupingSource = sourceDraft;
+  if (previewTarget?.kind === "GROUP_PROTOCOL") {
+    const groupingProfile = await tx.issuerProfileVersion.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        ...(sourceDraft.profileVersionId
+          ? { id: sourceDraft.profileVersionId }
+          : {}),
+      },
+      orderBy: { version: "desc" },
+    });
+    const profileFields = groupingProfile
+      ? profileSchema.parse(groupingProfile.profile).commonFields
+      : undefined;
+    groupingSource = resolveDraft(sourceDraft, profileFields).draft;
+    const groupingRules = await pinnedServiceRules(c, groupingSource, tx);
+    const groupingHours = applicableProgrammeHours(
+      groupingSource,
+      groupingRules,
+    );
+    if (groupingHours.size)
+      groupingSource = resolveDraft(
+        sourceDraft,
+        profileFields,
+        groupingHours,
+      ).draft;
+  }
   const savedDraft = previewTarget
-    ? previewScope(sourceDraft, previewTarget)
+    ? previewScope(sourceDraft, previewTarget, groupingSource)
     : sourceDraft;
   let resolved = resolveDraft(savedDraft);
   let draft = resolved.draft;
@@ -1059,13 +1088,15 @@ async function validation(
   const employerId = companyEmployerId(draft);
   const customer = employerId ? organizations.get(employerId) || null : null;
   // Resolve official names before the one-language fallback copies RU into KZ.
-  const input = savedDraft.frozenResolution ? savedDraft : {
-    ...savedDraft,
-    items: savedDraft.items.map((item) => ({
-      ...item,
-      ...employerFields(item, customer, organizations),
-    })),
-  };
+  const input = savedDraft.frozenResolution
+    ? savedDraft
+    : {
+        ...savedDraft,
+        items: savedDraft.items.map((item) => ({
+          ...item,
+          ...employerFields(item, customer, organizations),
+        })),
+      };
   resolved = resolveDraft(input, parsedProfile?.commonFields);
   const rules = await pinnedServiceRules(c, resolved.draft, tx);
   const programmeHours = applicableProgrammeHours(resolved.draft, rules);
@@ -1154,7 +1185,11 @@ async function validation(
       .filter(
         (t) => (t.contract as Record<string, unknown>).ownerKind !== "GROUP",
       )
-      .sort((a, b) => Number(a.approved) - Number(b.approved) || a.createdAt.getTime() - b.createdAt.getTime())
+      .sort(
+        (a, b) =>
+          Number(a.approved) - Number(b.approved) ||
+          a.createdAt.getTime() - b.createdAt.getTime(),
+      )
       .map((t) => [registeredTemplateKey(t), t]),
   );
   for (const item of draft.items)
@@ -1179,7 +1214,11 @@ async function validation(
       .filter(
         (t) => (t.contract as Record<string, unknown>).ownerKind === "GROUP",
       )
-      .sort((a, b) => Number(a.approved) - Number(b.approved) || a.createdAt.getTime() - b.createdAt.getTime())
+      .sort(
+        (a, b) =>
+          Number(a.approved) - Number(b.approved) ||
+          a.createdAt.getTime() - b.createdAt.getTime(),
+      )
       .map((t) => [registeredTemplateKey(t), t]),
   );
   const eventProfiles = new Map<
@@ -1228,9 +1267,9 @@ async function validation(
     const members =
       previewTarget?.kind === "ASSIGNMENT"
         ? []
-        : documentPlan(draft).groups.find(
-            (group) => group.event.id === event.id,
-          )?.members || [];
+        : documentPlan(draft)
+            .groups.filter((group) => group.event.id === event.id)
+            .flatMap((group) => group.members);
     if (!members.length) continue;
     const template = groupSelected.get(
       assignmentTemplateKey(members[0].assignment, event.protocolTemplateId),
@@ -2183,7 +2222,15 @@ export async function finalize(
       } = plannedItem;
       const linkedProtocol =
         assignment.protocolMode === "GROUP"
-          ? groupPlans.find((g) => g.event.id === assignment.eventId)
+          ? groupPlans.find(
+              (g) =>
+                g.event.id === assignment.eventId &&
+                g.members.some(
+                  (member) =>
+                    member.item.id === item.id &&
+                    member.assignment.id === assignment.id,
+                ),
+            )
           : assignment.protocolMode === "EXTERNAL_REFERENCE"
             ? undefined
             : planned.find(
@@ -2641,10 +2688,16 @@ export async function preview(c: Context, id: string, input: unknown) {
           );
       }
     for (const { event, members } of documentPlan(v.draft).groups) {
+      const previewMemberRowId =
+        data.target?.kind === "GROUP_PROTOCOL"
+          ? data.target.memberRowId
+          : undefined;
       if (
         data.target &&
         (data.target.kind !== "GROUP_PROTOCOL" ||
-          data.target.eventId !== event.id)
+          data.target.eventId !== event.id ||
+          (previewMemberRowId &&
+            !members.some(({ item }) => item.id === previewMemberRowId)))
       )
         continue;
       const template = v.groupSelected.get(

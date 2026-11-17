@@ -150,18 +150,56 @@ def _form(data, template_id, snapshot, items, header, fields):
             props.remove(repeat)
         if props.find(W + 'cantSplit') is None:
             props.insert(0, E.Element(W + 'cantSplit'))
-    if template_id == 'pb-protocol' and len(items) >= 3:
-        # This form puts two empty spacers between the roster and signature
-        # table. Reclaim that space for extra people, keeping the row labels
-        # beside their signature lines without moving columns or shrinking type.
-        spacer = table.getnext()
-        while (spacer is not None and spacer.tag == W + 'p'
-               and not ''.join(spacer.itertext()).strip()
-               and all(node.tag not in {W + 'pict', W + 'drawing', W + 'sectPr', W + 'br'}
-                       for node in spacer.iter())):
-            sibling = spacer.getnext()
-            table.getparent().remove(spacer)
-            spacer = sibling
+    if template_id == 'pb-protocol':
+        # Both source tables are floating relative to text, so their anchors do
+        # not move by the height of a growing roster in LibreOffice. Put them
+        # in normal flow and retain the source separator paragraphs: adjacent
+        # in-flow tables can otherwise be merged by Word. Preserve the source
+        # roster's centred horizontal anchor and all original columns/type.
+        signature = table.getnext()
+        while signature is not None and signature.tag == W + 'p':
+            signature = signature.getnext()
+        if signature is None or signature.tag != W + 'tbl':
+            raise ValueError('ORIGINAL_PB_SIGNATURE_TABLE')
+        # A single long participant can also reach the page boundary.
+        row_props = prototype.find(W + 'trPr')
+        if row_props is None:
+            row_props = E.Element(W + 'trPr')
+            prototype.insert(0, row_props)
+        if row_props.find(W + 'cantSplit') is None:
+            row_props.insert(0, E.Element(W + 'cantSplit'))
+        for flowing in (table, signature):
+            props = flowing.find(W + 'tblPr')
+            for anchor in props.findall(W + 'tblpPr'):
+                props.remove(anchor)
+        props = table.find(W + 'tblPr')
+        alignment = props.find(W + 'jc')
+        if alignment is None:
+            alignment = E.Element(W + 'jc')
+            width = props.find(W + 'tblW')
+            props.insert(props.index(width) + 1 if width is not None else 0, alignment)
+        alignment.set(W + 'val', 'center')
+        signature_rows = signature.findall(W + 'tr')
+        for row in signature_rows:
+            props = row.find(W + 'trPr')
+            if props is None:
+                props = E.Element(W + 'trPr')
+                row.insert(0, props)
+            if props.find(W + 'cantSplit') is None:
+                E.SubElement(props, W + 'cantSplit')
+            # Keep the rows as one readable commission block when it fits on
+            # a page; if it does not fit after the roster, move it as a unit.
+            for paragraph in row.iter(W + 'p'):
+                props = paragraph.find(W + 'pPr')
+                if props is None:
+                    props = E.Element(W + 'pPr')
+                    paragraph.insert(0, props)
+                # The original's final signature captions are a separate body
+                # paragraph after the table, so the last row must keep that
+                # paragraph too. Otherwise two-person forms can orphan it.
+                if props.find(W + 'keepNext') is None:
+                    style = props.find(W + 'pStyle')
+                    props.insert(props.index(style) + 1 if style is not None else 0, E.Element(W + 'keepNext'))
     for tree in trees.values():
         _fill(tree, _fields(fields))
     for i, item in enumerate(items):

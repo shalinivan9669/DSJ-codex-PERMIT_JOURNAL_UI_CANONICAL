@@ -54,6 +54,9 @@ function sectionForField(key: string): DocumentSection {
       "psSpecialSubjectRu",
       "psSpecialSubjectKz",
       "resultKz",
+      "psTheoryResult",
+      "psPracticalKnowledgeResult",
+      "psPracticalSkillsResult",
       "professionRu",
       "professionKz",
       "psQualificationRu",
@@ -265,6 +268,9 @@ export function RecipientDetails({
       psSpecialSubjectRu: "Специальный курс · RU",
       psSpecialSubjectKz: "Специальный курс · KZ",
       resultKz: "Текст результата / оценка · KZ",
+      psTheoryResult: "Оценка теоретических знаний",
+      psPracticalKnowledgeResult: "Оценка практических знаний",
+      psPracticalSkillsResult: "Оценка практических навыков",
       professionRu: "Профессия для ПС · RU",
       professionKz: "Профессия для ПС · KZ",
       psQualificationRu: "Присвоенная квалификация ПС · RU",
@@ -1036,17 +1042,28 @@ export function RecipientDetails({
                     <TrainingHoursFields
                       templateId={assignment.templateId}
                       category={employeeCategoryFor(recipient)}
-                      effective={resolvedRecipient?.assignments[index] || assignment}
+                      effective={
+                        resolvedRecipient?.assignments[index] || assignment
+                      }
                       original={assignment}
                       origins={provenance?.[`${recipient.id}:${assignment.id}`]}
                       label="Объём обучения, часов"
                       disabled={documentDisabled}
                       attributes={(key) => field(index, key)}
                       feedback={(key) => fieldError(index, key)}
-                      onChange={(patch) => changeAssignment(assignment.id, patch)}
-                      onRestore={(key) => onChange(restoreTrainingAssignmentField(
-                        recipient, assignment.id, key, liveRules,
-                      ))}
+                      onChange={(patch) =>
+                        changeAssignment(assignment.id, patch)
+                      }
+                      onRestore={(key) =>
+                        onChange(
+                          restoreTrainingAssignmentField(
+                            recipient,
+                            assignment.id,
+                            key,
+                            liveRules,
+                          ),
+                        )
+                      }
                     />
                   </div>
                 </div>
@@ -1160,7 +1177,8 @@ export function RecipientDetails({
                             {fieldError(index, key)}
                             {key === "biotUniqueNumber" && (
                               <small>
-                                Для сертификата из этого комплекта номер заполнится автоматически.
+                                Для сертификата из этого комплекта номер
+                                заполнится автоматически.
                               </small>
                             )}
                           </label>
@@ -1218,9 +1236,7 @@ export function RecipientDetails({
                       }
                     />
                     {fieldError(index, "trainingSubjectKz")}
-                    <small>
-                      KZ — если отличается от RU.
-                    </small>
+                    <small>KZ — если отличается от RU.</small>
                   </label>
                   {assignment.templateId.startsWith("ps-") && (
                     <div className="form-grid assignment-field-wide">
@@ -1327,6 +1343,38 @@ export function RecipientDetails({
                           ))}
                         </div>
                       </details>
+                    </div>
+                  )}
+                  {assignment.templateId.startsWith("ps-") && (
+                    <div className="form-grid assignment-field-wide">
+                      {(
+                        [
+                          ["psTheoryResult", "Оценка теоретических знаний"],
+                          [
+                            "psPracticalKnowledgeResult",
+                            "Оценка практических знаний",
+                          ],
+                          [
+                            "psPracticalSkillsResult",
+                            "Оценка практических навыков",
+                          ],
+                        ] as const
+                      ).map(([key, label]) => (
+                        <label key={key}>
+                          {label}
+                          <input
+                            {...field(index, key)}
+                            disabled={documentDisabled}
+                            value={assignment[key] ?? ""}
+                            onChange={(event) =>
+                              changeAssignment(assignment.id, {
+                                [key]: event.target.value,
+                              })
+                            }
+                          />
+                          {fieldError(index, key)}
+                        </label>
+                      ))}
                     </div>
                   )}
                   <label>
@@ -1446,7 +1494,6 @@ export function RecipientDetails({
                       />
                       {fieldError(index, "reason")}
                       <small id={`hint-${recipient.id}-${index}-reason`}>
-
                         {assignment.protocolMode === "GROUP" &&
                           " Для общего протокола причина должна совпадать у всех участников."}
                       </small>
@@ -1658,7 +1705,6 @@ export function RecipientDetails({
                     />
                     {fieldError(index, "externalBasisNumber")}
                   </label>
-
                 </div>
                 {!documentDisabled && !liveRules && (
                   <button
