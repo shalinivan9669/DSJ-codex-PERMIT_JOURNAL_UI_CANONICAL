@@ -79,6 +79,7 @@ const labels: Record<string, string> = {
   reason: "Основание",
   validityMode: "Срок действия",
   biotCategory: "Категория БиОТ",
+  hoursProgram: "Программа расчёта часов",
   profileVersionId: "Версия реквизитов центра",
   photoAssetId: "Фотография",
   outcome: "Результат обучения",

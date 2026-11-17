@@ -44,6 +44,7 @@ type Entry = {
   verificationNote?: string;
   definition?: {
     programVersion: string;
+    hours?: number;
     category: string;
     compatibleTemplateIds: string[];
     requirements: {
@@ -160,6 +161,7 @@ export function ValueLibrary({ context }: { context: AppContext }) {
         effectiveTo: form.effectiveTo || null,
         definition: {
           programVersion: form.version,
+          ...(form.hours ? { hours: Number(form.hours) } : {}),
           category: form.category || "",
           compatibleTemplateIds: [
             ...new Set([form.templateId, ...extraTemplates].filter(Boolean)),
@@ -196,6 +198,7 @@ export function ValueLibrary({ context }: { context: AppContext }) {
       status: "DRAFT",
       checkedOn: "",
       version: entry.definition.programVersion,
+      hours: entry.definition.hours?.toString() || "",
       category: entry.definition.category,
       templateId: entry.definition.compatibleTemplateIds[0] || "",
       effectiveFrom: entry.effectiveFrom || "",
@@ -274,7 +277,7 @@ export function ValueLibrary({ context }: { context: AppContext }) {
                         Код: {entry.serviceKey}. Версия программы:{" "}
                         {entry.definition.programVersion || "Не указана"}.
                         Категория:{" "}
-                        {BIOT_CATEGORIES[
+                        {entry.definition.category === "ITR" ? "ИТР — все категории" : BIOT_CATEGORIES[
                           entry.definition.category as BiotCategory
                         ]?.label ||
                           entry.definition.category ||
@@ -303,6 +306,9 @@ export function ValueLibrary({ context }: { context: AppContext }) {
                         ids={entry.definition.compatibleTemplateIds}
                         templates={context.templates}
                       />
+                      {entry.definition.hours !== undefined && (
+                        <p>Учебные часы по программе: {entry.definition.hours}</p>
+                      )}
                       {entry.definition.requirements.length ? (
                         <ul>
                           {entry.definition.requirements.map((requirement) => (
@@ -586,6 +592,18 @@ export function ValueLibrary({ context }: { context: AppContext }) {
                 </label>
                 {field("serviceKey", "Постоянный код услуги")}
                 <label>
+                  Учебные часы по программе (для рабочих по БиОТ — теория)
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    value={form.hours || ""}
+                    onChange={(event) =>
+                      setForm({ ...form, hours: event.target.value })
+                    }
+                  />
+                </label>
+                <label>
                   Категория применимости
                   <select
                     value={form.category || ""}
@@ -596,12 +614,13 @@ export function ValueLibrary({ context }: { context: AppContext }) {
                     <option value="">
                       Без ограничения категории получателя
                     </option>
+                    <option value="ITR">ИТР — все категории</option>
                     {Object.entries(BIOT_CATEGORIES).map(([key, value]) => (
                       <option key={key} value={key}>
                         {value.label}
                       </option>
                     ))}
-                    {form.category && !(form.category in BIOT_CATEGORIES) && (
+                    {form.category && form.category !== "ITR" && !(form.category in BIOT_CATEGORIES) && (
                       <option value={form.category}>
                         Сохранённая категория: {form.category}
                       </option>
@@ -609,7 +628,7 @@ export function ValueLibrary({ context }: { context: AppContext }) {
                   </select>
                 </label>
                 <p className="fine-print">
-                  Для БиОТ выберите категорию получателей. Для форм без категории оставьте без ограничения.
+                  Можно выбрать рабочих или ИТР для любого курса, а для БиОТ — конкретную категорию. Если программа общая для всех, оставьте без ограничения.
                 </p>
                 {field("effectiveFrom", "Применяется с", "date", false)}
                 {field("effectiveTo", "Применяется до", "date", false)}

@@ -12,6 +12,8 @@ import {
   resolveDraft,
   documentPlan,
   eventProtocolAssignment,
+  applicableProgrammeHours,
+  programmeApplicability,
   today,
   z,
   stableValidationIssue,
@@ -61,10 +63,7 @@ import {
   needsPreparation,
 } from "./approvals";
 import { prepareSigningPolicy, signingState } from "./signing";
-import {
-  validatePinnedServiceRule,
-  ruleApplicabilityIssues,
-} from "./service-rule-applicability";
+import { pinnedServiceRules } from "./service-rule-applicability";
 import { resetRetakeAttempt, resetRetakeEvent } from "./retake-attempt";
 import { approvalPreviewSamples } from "./approval-preview";
 import { previewScope, previewIssueApplies } from "./preview-scope";
@@ -1060,6 +1059,14 @@ async function validation(
   });
   const parsedProfile = profile ? profileSchema.parse(profile.profile) : null;
   resolved = resolveDraft(savedDraft, parsedProfile?.commonFields);
+  const rules = await pinnedServiceRules(c, resolved.draft, tx);
+  const programmeHours = applicableProgrammeHours(resolved.draft, rules);
+  if (programmeHours.size)
+    resolved = resolveDraft(
+      savedDraft,
+      parsedProfile?.commonFields,
+      programmeHours,
+    );
   draft = resolved.draft;
   const organizations = await organizationMap(tx, c, draft);
   const employerId = companyEmployerId(draft);
@@ -1178,11 +1185,14 @@ async function validation(
     string,
     { id: string; profile: ReturnType<typeof profileSchema.parse> }
   >();
-  const eventRules = new Map<
-    string,
-    NonNullable<Awaited<ReturnType<typeof validatePinnedServiceRule>>["rule"]>
-  >();
+  const rulesById = new Map(rules.map((rule) => [rule.id, rule]));
+  issues.push(...programmeApplicability(draft, rules).issues);
+  const eventRules = new Map<string, (typeof rules)[number]>();
   for (const event of draft.events || []) {
+    if (event.serviceRuleVersionId) {
+      const pinned = rulesById.get(event.serviceRuleVersionId);
+      if (pinned) eventRules.set(event.id, pinned);
+    }
     const row = event.profileVersionId
       ? await tx.issuerProfileVersion.findFirst({
           where: { tenantId: c.tenantId, id: event.profileVersionId },
@@ -1230,23 +1240,6 @@ async function validation(
         path: "events",
         message: `Подтвердите форму ${event.protocolTemplateId}`,
       });
-    if (event.serviceRuleVersionId) {
-      const binding = await validatePinnedServiceRule(
-        c,
-        event.serviceRuleVersionId,
-        {
-          templateIds: [event.protocolTemplateId],
-          category: members[0]?.assignment.biotCategory,
-          basisDate:
-            members[0]?.assignment.protocolDate ||
-            members[0]?.assignment.trainingEnd ||
-            "",
-        },
-        tx,
-      );
-      if (binding.rule) eventRules.set(event.id, binding.rule);
-      else issues.push(...binding.issues);
-    }
     for (const member of members) {
       const protocol = eventProtocolAssignment(
         event,
@@ -1293,23 +1286,6 @@ async function validation(
           };
         }),
       );
-      const pinnedRule = eventRules.get(event.id);
-      if (pinnedRule) {
-        issues.push(
-          ...ruleApplicabilityIssues(pinnedRule, {
-            templateIds: [
-              member.assignment.templateId,
-              event.protocolTemplateId,
-            ],
-            category: member.assignment.biotCategory,
-            basisDate: protocol.protocolDate || protocol.trainingEnd,
-          }).map((issue) => ({
-            ...issue,
-            path: `events.${event.id}.serviceRuleVersionId`,
-            rowId: member.item.id,
-          })),
-        );
-      }
     }
   }
   if (fullWorkingDraft) {

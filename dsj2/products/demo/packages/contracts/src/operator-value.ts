@@ -146,6 +146,7 @@ export const ruleVersionSchema = z
     definition: z
       .object({
         programVersion: z.string().max(100),
+        hours: z.number().positive().optional(),
         category: z.string().max(100),
         compatibleTemplateIds: z.array(id).max(30),
         requirements: z

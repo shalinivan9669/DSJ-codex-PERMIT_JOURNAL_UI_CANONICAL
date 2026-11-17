@@ -15,6 +15,7 @@ export const reviewSourceLabels: Record<string, string> = {
   COURSE: "Стандарт курса",
   CENTER: "Профиль центра",
   PRESET: "Настройка",
+  SERVICE_RULE: "Из паспорта услуги",
   REQUEST: "Общие данные заявки",
   EVENT: "Общие данные обучения",
   MANUAL: "Введено вручную",

@@ -8,6 +8,7 @@ import {
   positiveAssignmentDefaults,
   protocolTemplateFor,
   resolveDraft,
+  applicableProgrammeHours,
   validateDraft,
   profileSchema,
   TEMPLATE_LABELS,
@@ -43,6 +44,7 @@ import {
   evidenceState,
 } from "../../../packages/contracts/src/operator-value";
 import { Prisma } from "@demo/database";
+import { pinnedServiceRules } from "./service-rule-applicability";
 import { ArtifactStore, buildZip } from "@demo/printing";
 import {
   validatePdfAttachment,
@@ -414,14 +416,26 @@ async function orderDetail(c: Context, id: string) {
     fullNameRu: "ФИО",
     externalBasisNumber: "Внешнее основание",
   };
-  for (const request of requests) {
-    const saved = draftSchema.parse(request.draft);
+  const savedDrafts = requests.map((request) =>
+    draftSchema.parse(request.draft),
+  );
+  const rules = await pinnedServiceRules(
+    c,
+    { events: savedDrafts.flatMap((draft) => draft.events || []) },
+    db,
+  );
+  for (const [index, request] of requests.entries()) {
+    const saved = savedDrafts[index];
     const profileRecord = saved.profileVersionId
       ? profiles.find((profile) => profile.id === saved.profileVersionId)
       : profiles[0];
     const parsedProfile = profileSchema.safeParse(profileRecord?.profile);
     const profile = parsedProfile.success ? parsedProfile.data : null;
-    const draft = resolveDraft(saved, profile?.commonFields).draft;
+    const base = resolveDraft(saved, profile?.commonFields).draft;
+    const programmeHours = applicableProgrammeHours(base, rules);
+    const draft = programmeHours.size
+      ? resolveDraft(saved, profile?.commonFields, programmeHours).draft
+      : base;
     const scopedRows = orderRows(draft, orderEmployer(value));
     if (draft.items.length && !scopedRows.length)
       dataActions.set(`scope:${request.id}`, {

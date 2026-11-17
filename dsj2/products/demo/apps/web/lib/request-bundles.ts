@@ -15,6 +15,7 @@ import {
   type Draft,
   type Recipient,
 } from "./types";
+import { eventCourseDefaults } from "./assignment-presets";
 
 export const requestBundles = {
   WORKER: {
@@ -54,7 +55,6 @@ export function bundleAssignment(event: TrainingEventInput) {
 /** One event owns the protocol; selecting a bundle never registers documents. */
 export function newRequestBundle(category: RequestBundle) {
   const choice = requestBundles[category];
-  const defaults = newAssignment(choice.card);
   const event: TrainingEventInput = {
     id: crypto.randomUUID(),
     title: choice.label,
@@ -62,14 +62,7 @@ export function newRequestBundle(category: RequestBundle) {
     revision: 0,
     protocolMode: "INDIVIDUAL",
     protocolModeSource: "AUTO",
-    commonFields: {
-      biotCategory: defaults.biotCategory,
-      biotCheckType: "PERIODIC",
-      hours: defaults.hours,
-      ...(defaults.productionHours
-        ? { productionHours: defaults.productionHours }
-        : {}),
-    },
+    commonFields: eventCourseDefaults(choice.card),
   };
   const person = newRecipient();
   person.employeeCategory = category;
@@ -210,7 +203,6 @@ export function assignTrainingBundle<T extends Draft>(
           )
         : undefined;
     if (!event) {
-      const defaults = newAssignment(templates[0]);
       event = {
         id: crypto.randomUUID(),
         title: `${direction}${direction === "BIOT" ? (category === "ITR" ? " — ИТР" : " — Рабочие") : ""}`,
@@ -219,18 +211,7 @@ export function assignTrainingBundle<T extends Draft>(
           protocolMode || (recipients.length >= 2 ? "GROUP" : "INDIVIDUAL"),
         protocolModeSource: protocolMode ? "MANUAL" : "AUTO",
         revision: 0,
-        commonFields: {
-          ...(defaults.biotCategory
-            ? {
-                biotCategory: defaults.biotCategory,
-                biotCheckType: "PERIODIC" as const,
-              }
-            : {}),
-          ...(defaults.hours ? { hours: defaults.hours } : {}),
-          ...(defaults.productionHours
-            ? { productionHours: defaults.productionHours }
-            : {}),
-        },
+        commonFields: eventCourseDefaults(templates[0]),
       };
       draft.events.push(event);
     } else if (protocolMode) {

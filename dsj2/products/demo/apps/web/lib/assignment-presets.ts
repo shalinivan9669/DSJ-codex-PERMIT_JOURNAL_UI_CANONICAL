@@ -2,13 +2,30 @@ import {
   BIOT_CATEGORIES,
   biotValidUntil,
   commonFieldKeys,
+  hasProtectedValidity,
   isProtectedField,
+  trainingDirection,
+  trainingHoursPrograms,
   withCourseProgram,
   type Assignment,
   type BiotCategory,
   type CalculatedDateKey,
   type CommonFields,
 } from "@demo/contracts";
+
+function canRefreshHours(
+  value: string | undefined,
+  origin: string | undefined,
+  previousHours: number | undefined,
+): boolean {
+  return (
+    !isProtectedField(origin) &&
+    (!value?.trim() ||
+      (!!origin &&
+        previousHours !== undefined &&
+        value === String(previousHours)))
+  );
+}
 
 /** An explicit course selection refreshes only unprotected preset hours. */
 export function updateCommonBiotCategory(
@@ -32,8 +49,9 @@ export function updateCommonBiotCategory(
       preset.defaultProductionHours,
     ],
   ] as const) {
-    if (isProtectedField(fields.fieldOrigins?.[key])) continue;
-    if (!fields[key]?.trim() || fields[key] === String(previousValue)) {
+    if (
+      canRefreshHours(fields[key], fields.fieldOrigins?.[key], previousValue)
+    ) {
       next[key] = nextValue ? String(nextValue) : "";
       next.fieldOrigins![key] = "AUTO";
     }
@@ -110,7 +128,24 @@ export function biotAssignmentDefaults(
     : {};
 }
 
-/** Change only empty or recognisable previous preset values, never other input. */
+/** Use the same category and origins in the event editor and quick course selection. */
+export function eventCourseDefaults(
+  templateId: Assignment["templateId"],
+): CommonFields {
+  const defaults = biotAssignmentDefaults(templateId);
+  if (!defaults.biotCategory) return {};
+  return {
+    biotCategory: defaults.biotCategory,
+    biotCheckType: "PERIODIC",
+    hours: defaults.hours,
+    ...(defaults.productionHours
+      ? { productionHours: defaults.productionHours }
+      : {}),
+    fieldOrigins: defaults.fieldOrigins,
+  };
+}
+
+/** Refresh empty or sourced preset fields and retain saved operator input. */
 export function updateAssignment(
   assignment: Assignment,
   patch: Partial<Assignment>,
@@ -131,7 +166,10 @@ export function updateAssignment(
     if (Object.hasOwn(patch, field))
       next.fieldOrigins = {
         ...next.fieldOrigins,
-        [field]: patch[field] === "" ? "CLEARED" : "MANUAL",
+        [field]:
+          patch[field] === "" || (field === "hoursProgram" && !patch[field])
+            ? "CLEARED"
+            : "MANUAL",
       };
   }
   const manuallyEdited = new Set(next.biotManualFields || []);
@@ -140,6 +178,31 @@ export function updateAssignment(
   }
   if (manuallyEdited.size) next.biotManualFields = [...manuallyEdited];
   if (patch.templateId && patch.templateId !== assignment.templateId) {
+    const directionChanged =
+      trainingDirection(assignment.templateId) !==
+      trainingDirection(patch.templateId);
+    if (directionChanged && !assignment.templateId.startsWith("biot-")) {
+      for (const key of ["hours", "productionHours"] as const) {
+        if (
+          !manuallyEdited.has(key) &&
+          ["AUTO", "COURSE", "INHERITED"].includes(
+            assignment.fieldOrigins?.[key] || "",
+          )
+        ) {
+          next[key] = "";
+        }
+      }
+    }
+    if (
+      next.hoursProgram &&
+      !trainingHoursPrograms(patch.templateId).some(
+        (program) => program.id === next.hoursProgram,
+      )
+    ) {
+      delete next.hoursProgram;
+      next.fieldOrigins = { ...next.fieldOrigins };
+      delete next.fieldOrigins.hoursProgram;
+    }
     const allowed = biotCategoriesForTemplate(patch.templateId);
     next.biotCategory =
       assignment.biotCategory && allowed.includes(assignment.biotCategory)
@@ -162,33 +225,35 @@ export function updateAssignment(
   if (
     categoryChanged &&
     !Object.hasOwn(patch, "hours") &&
-    !isProtectedField(assignment.fieldOrigins?.hours) &&
     !manuallyEdited.has("hours") &&
-    (!assignment.hours ||
-      (previousPreset &&
-        assignment.hours === String(previousPreset.defaultHours)))
+    canRefreshHours(
+      assignment.hours,
+      assignment.fieldOrigins?.hours,
+      previousPreset?.defaultHours,
+    )
   ) {
     next.hours = preset ? String(preset.defaultHours) : "";
+    next.fieldOrigins = { ...next.fieldOrigins, hours: "AUTO" };
   }
   if (
     categoryChanged &&
     !Object.hasOwn(patch, "productionHours") &&
-    !isProtectedField(assignment.fieldOrigins?.productionHours) &&
     !manuallyEdited.has("productionHours") &&
-    (!assignment.productionHours ||
-      (previousPreset?.defaultProductionHours &&
-        assignment.productionHours ===
-          String(previousPreset.defaultProductionHours)))
+    canRefreshHours(
+      assignment.productionHours,
+      assignment.fieldOrigins?.productionHours,
+      previousPreset?.defaultProductionHours,
+    )
   ) {
     next.productionHours = preset?.defaultProductionHours
       ? String(preset.defaultProductionHours)
       : "";
+    next.fieldOrigins = { ...next.fieldOrigins, productionHours: "AUTO" };
   }
   if (
     (categoryChanged || Object.hasOwn(patch, "documentDate")) &&
     !Object.hasOwn(patch, "validUntil") &&
-    !isProtectedField(assignment.fieldOrigins?.validUntil) &&
-    !manuallyEdited.has("validUntil")
+    !hasProtectedValidity(assignment)
   ) {
     const previousUntil = assignment.biotCategory
       ? biotValidUntil(assignment.documentDate, assignment.biotCategory)

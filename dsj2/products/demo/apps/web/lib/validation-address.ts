@@ -31,11 +31,12 @@ export function addressIssue(
       if (assignment < 0) return { ...value, path: "" };
       path = path.replace(/\.assignments\.\d+/, `.assignments.${assignment}`);
     }
-  } else if (value.eventId && /^events\./.test(path)) {
+  }
+  if (value.eventId && /^events\./.test(path)) {
     const event = events.findIndex(
       (candidate) => candidate.id === value.eventId,
     );
-    path = event < 0 ? "" : path.replace(/^events\.\d+/, `events.${event}`);
+    path = event < 0 ? "" : path.replace(/^events\.[^.]+/, `events.${event}`);
   }
   return { ...value, path };
 }

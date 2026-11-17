@@ -2,7 +2,7 @@
 import "./operator-form.css";
 import { BulkDialog } from "./bulk-dialog";
 import { RecordPicker } from "./record-picker";
-import { EventContext } from "./event-context";
+import { EventContext, type EditorServiceRule } from "./event-context";
 import { CustomerOutput } from "./customer-output";
 import { CustomerReview } from "./customer-review";
 import { RequestOperations } from "./request-operations";
@@ -49,6 +49,7 @@ import {
   LIMITS,
   isBlankText,
   resolveDraft,
+  programmeApplicability,
   resolveRecipientText,
   documentPlan,
   type CommonFields,
@@ -304,6 +305,23 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [rowScope, setRowScope] = useState("");
   const [error, setError] = useState("");
   const [referenceRetry, setReferenceRetry] = useState(0);
+  const [serviceRules, setServiceRules] = useState<EditorServiceRule[]>([]);
+  const [serviceRulesError, setServiceRulesError] = useState("");
+  useEffect(() => {
+    let active = true;
+    setServiceRules([]);
+    setServiceRulesError("");
+    void api<{ items: EditorServiceRule[] }>("/service-rules")
+      .then((value) => {
+        if (active) setServiceRules(value.items);
+      })
+      .catch((error) => {
+        if (active) setServiceRulesError(errorText(error));
+      });
+    return () => {
+      active = false;
+    };
+  }, [context.tenant.id, referenceRetry]);
   const [profileLoadError, setProfileLoadError] = useState("");
   const [organizationLoadError, setOrganizationLoadError] = useState("");
   const [pinnedCenter, setPinnedCenter] = useState<{
@@ -1551,18 +1569,23 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         ? pinnedCenter.commonFields
         : {}
       : context.profile?.commonFields || {};
-  const localResolved = resolveDraft(
-    {
-      ...draft,
-      items: draft.items.map((item) => {
-        const employer = item.employerId
-          ? employerRecords.get(item.employerId)
-          : requestEmployer;
-        return resolveRecipientText(effectiveRecipientEmployer(item, employer));
-      }),
-    },
-    centerCommon,
+  const localDraft = {
+    ...draft,
+    items: draft.items.map((item) => {
+      const employer = item.employerId
+        ? employerRecords.get(item.employerId)
+        : requestEmployer;
+      return resolveRecipientText(effectiveRecipientEmployer(item, employer));
+    }),
+  };
+  const baseResolution = resolveDraft(localDraft, centerCommon);
+  const { hours: programmeHours, issues: programmeIssues } = programmeApplicability(
+    baseResolution.draft,
+    serviceRules,
   );
+  const localResolved = programmeHours.size
+    ? resolveDraft(localDraft, centerCommon, programmeHours)
+    : baseResolution;
   const resolved =
     serverResolution?.revision === draft.revision && !lane.current?.dirty
       ? serverResolution.value
@@ -1677,7 +1700,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   }
   const nextIssues = [
     ...new Map(
-      readiness.issues.map((issue) => {
+      [...readiness.issues, ...programmeIssues].map((issue) => {
         const mapped = operatorIssue(issue);
         const path =
           typeof mapped === "string" ? "" : String(mapped.path || "");
@@ -2068,6 +2091,18 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </button>
         </Notice>
       )}
+      {serviceRulesError && !!draft.events?.length && (
+        <Notice>
+          Не удалось загрузить паспорта услуг. {serviceRulesError}
+          <button
+            type="button"
+            disabled={operationBusy}
+            onClick={() => setReferenceRetry((n) => n + 1)}
+          >
+            Повторить загрузку паспортов
+          </button>
+        </Notice>
+      )}
       {draft.kind === "COMPANY" && (
         <section
           className="panel operator-customer-panel"
@@ -2282,6 +2317,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               </label>
               {extraPanel !== "dates" && (
                 <EventContext
+                  programmeHours={programmeHours}
+                  serviceRules={serviceRules}
+                  resolvedDraft={resolved.draft}
                   primary
                   embedded
                   existingOnly
@@ -2417,6 +2455,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                   />
                   {extraPanel !== "dates" && (
                     <EventContext
+                      programmeHours={programmeHours}
+                      serviceRules={serviceRules}
+                      resolvedDraft={resolved.draft}
                       preparationOwner={{
                         tenantId: context.tenant.id,
                         userId: context.user.id,
@@ -3191,6 +3232,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           )}
           {extraPanel === "dates" && (
             <EventContext
+              programmeHours={programmeHours}
+              serviceRules={serviceRules}
+              resolvedDraft={resolved.draft}
               focusPreparation={preparationTarget || undefined}
               preparationOwner={{
                 tenantId: context.tenant.id,

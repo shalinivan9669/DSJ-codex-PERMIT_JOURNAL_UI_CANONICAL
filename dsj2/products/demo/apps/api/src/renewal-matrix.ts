@@ -2,6 +2,7 @@ import {
   draftSchema,
   today,
   canManageCenter,
+  serviceRuleCategories,
   type Draft,
 } from "@demo/contracts";
 import {
@@ -145,7 +146,7 @@ export async function scanRenewals(c: Context, input: unknown) {
         if (
           ruleApplicabilityIssues(rule, {
             templateIds: [assignment.templateId],
-            category: assignment.biotCategory,
+            ...serviceRuleCategories(assignment, row),
             basisDate,
           }).length
         ) {

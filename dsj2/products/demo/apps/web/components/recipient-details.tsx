@@ -3,6 +3,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { Icon, Notice } from "@demo/ui";
 import {
   BIOT_CATEGORIES,
+  employeeCategoryFor,
   isSpecialBiotCategory,
   calculatedDateKeys,
   commonFieldKeys,
@@ -14,6 +15,7 @@ import { TextQualityHint } from "./text-quality-hint";
 import { RecipientRecord } from "./recipient-record";
 import { DateCalculationStatus } from "./date-calculation-status";
 import { TrainingDateSettings } from "./training-date-settings";
+import { TrainingHoursFields } from "./training-hours-fields";
 import { TrainingPeriodFields } from "./training-period-fields";
 import {
   liveValidityDescription,
@@ -277,6 +279,7 @@ export function RecipientDetails({
           : "Причина / основание",
       education: "Образование",
       biotCategory: "Категория обучения БиОТ",
+      hoursProgram: "Программа расчёта часов",
       hours: category
         ? BIOT_CATEGORIES[category].hoursLabel
         : "Объём обучения, часов",
@@ -298,9 +301,6 @@ export function RecipientDetails({
           fieldErrors[path] ? `error-${recipient.id}-${index}-${key}` : "",
           !fieldErrors[path] && fieldHints[path]
             ? `feedback-${recipient.id}-${index}-${key}`
-            : "",
-          (category && key === "hours") || key === "productionHours"
-            ? `hint-${recipient.id}-${index}-${key}`
             : "",
           key === "reason" ? `hint-${recipient.id}-${index}-reason` : "",
         ]
@@ -1033,71 +1033,21 @@ export function RecipientDetails({
                     </details>
                   </details>
                   <div className="form-grid compact">
-                    <label>
-                      {assignment.biotCategory
-                        ? BIOT_CATEGORIES[assignment.biotCategory].hoursLabel
-                        : "Объём обучения, часов"}
-                      <input
-                        {...field(index, "hours")}
-                        inputMode="decimal"
-                        disabled={documentDisabled}
-                        value={
-                          (resolvedRecipient?.assignments[index] || assignment)
-                            .hours
-                        }
-                        onChange={(event) =>
-                          changeAssignment(assignment.id, {
-                            hours: event.target.value,
-                          })
-                        }
-                      />
-                      {fieldError(index, "hours")}
-                      {assignment.biotCategory && (
-                        <small id={`hint-${recipient.id}-${index}-hours`}>
-                          {BIOT_CATEGORIES[assignment.biotCategory].hoursLabel}:
-                          не менее{" "}
-                          {
-                            BIOT_CATEGORIES[assignment.biotCategory]
-                              .minimumHours
-                          }{" "}
-                          ч.
-                        </small>
-                      )}
-                    </label>
-                    {((assignment.biotCategory &&
-                      BIOT_CATEGORIES[assignment.biotCategory]
-                        .minimumProductionHours) ||
-                      assignment.productionHours) && (
-                      <label>
-                        Производственное обучение, часов
-                        <input
-                          {...field(index, "productionHours")}
-                          inputMode="decimal"
-                          disabled={documentDisabled}
-                          value={
-                            (
-                              resolvedRecipient?.assignments[index] ||
-                              assignment
-                            ).productionHours || ""
-                          }
-                          onChange={(event) =>
-                            changeAssignment(assignment.id, {
-                              productionHours: event.target.value,
-                            })
-                          }
-                        />
-                        {fieldError(index, "productionHours")}
-                        <small
-                          id={`hint-${recipient.id}-${index}-productionHours`}
-                        >
-                          {assignment.biotCategory &&
-                          BIOT_CATEGORIES[assignment.biotCategory]
-                            .minimumProductionHours
-                            ? `Не менее ${BIOT_CATEGORIES[assignment.biotCategory].minimumProductionHours} ч. практики.`
-                            : "Часы практики, без теории."}
-                        </small>
-                      </label>
-                    )}
+                    <TrainingHoursFields
+                      templateId={assignment.templateId}
+                      category={employeeCategoryFor(recipient)}
+                      effective={resolvedRecipient?.assignments[index] || assignment}
+                      original={assignment}
+                      origins={provenance?.[`${recipient.id}:${assignment.id}`]}
+                      label="Объём обучения, часов"
+                      disabled={documentDisabled}
+                      attributes={(key) => field(index, key)}
+                      feedback={(key) => fieldError(index, key)}
+                      onChange={(patch) => changeAssignment(assignment.id, patch)}
+                      onRestore={(key) => onChange(restoreTrainingAssignmentField(
+                        recipient, assignment.id, key, liveRules,
+                      ))}
+                    />
                   </div>
                 </div>
                 <div
@@ -1606,6 +1556,7 @@ export function RecipientDetails({
                                     externalBasisNumber:
                                       "Внешний номер основания",
                                     biotCategory: "Категория",
+                                    hoursProgram: "Программа расчёта часов",
                                     productionHours: "Производственные часы",
                                     biotCheckType: "Вид проверки",
                                   } as Record<string, string>
@@ -1617,6 +1568,7 @@ export function RecipientDetails({
                                     EVENT: "Из события",
                                     REQUEST: "Из заявки",
                                     PRESET: "Из набора",
+                                    SERVICE_RULE: "Из паспорта услуги",
                                     COURSE: "Программа курса",
                                     CENTER: "Из настроек центра",
                                     MANUAL: "Введено вручную",

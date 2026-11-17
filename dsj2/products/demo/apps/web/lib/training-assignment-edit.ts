@@ -24,6 +24,7 @@ const sharedTrainingFields = new Set([
   "psSpecialSubjectKz",
   "hours",
   "productionHours",
+  "hoursProgram",
   "reason",
   "reasonEn",
   "education",
@@ -126,6 +127,8 @@ export function restoreTrainingAssignmentField(
       if (
         dates.has(field) ||
         [
+          "hours",
+          "productionHours",
           "professionRu",
           "professionKz",
           "psQualificationRu",
@@ -133,6 +136,7 @@ export function restoreTrainingAssignmentField(
         ].includes(field)
       )
         (next as unknown as Record<string, unknown>)[field] = "";
+      if (field === "hoursProgram") delete next.hoursProgram;
       next.biotManualFields = entry.biotManualFields?.filter(
         (manual) => manual !== field,
       );

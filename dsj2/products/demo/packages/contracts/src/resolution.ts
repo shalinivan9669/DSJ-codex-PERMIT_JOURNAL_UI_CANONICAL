@@ -20,6 +20,7 @@ import {
   factualAssessmentText,
 } from "./course-defaults";
 import { applyBusinessValidity, employeeCategoryFor } from "./business-rules";
+import { trainingHoursPrograms, trainingHoursRule } from "./training-hours";
 import {
   calculateDates,
   calculatedDateKeys,
@@ -47,6 +48,7 @@ export const commonFieldKeys = [
   "externalBasisNumber",
   "hours",
   "productionHours",
+  "hoursProgram",
   "biotCategory",
   "biotCheckType",
   "biotIndustryRu",
@@ -65,6 +67,7 @@ export type FieldSource =
   | "COURSE"
   | "CENTER"
   | "PRESET"
+  | "SERVICE_RULE"
   | "REQUEST"
   | "EVENT"
   | "MANUAL"
@@ -93,6 +96,7 @@ const assessmentCommonFields = new Set<string>([
 
 function commonContext(
   layers: readonly (readonly [CommonFields | undefined, FieldSource])[],
+  templateId?: string,
 ) {
   const fields: CommonFields = {};
   const origins: Record<string, FieldSource> = {};
@@ -102,6 +106,31 @@ function commonContext(
       fields.trainingDateRule = layer.trainingDateRule;
     for (const key of commonFieldKeys) {
       const declaredOrigin = layer.fieldOrigins?.[key];
+      if (
+        templateId &&
+        source === "EVENT" &&
+        declaredOrigin === "INHERITED" &&
+        (key === "hours" || key === "productionHours" || key === "hoursProgram")
+      )
+        continue;
+      if (
+        key === "hoursProgram" &&
+        templateId &&
+        layer.hoursProgram &&
+        !trainingHoursPrograms(templateId).some(
+          (option) => option.id === layer.hoursProgram,
+        )
+      )
+        continue;
+      // A cached estimate on the group must not displace configured program hours.
+      if (
+        templateId &&
+        (key === "hours" || key === "productionHours") &&
+        declaredOrigin === "AUTO" &&
+        origins[key] &&
+        origins[key] !== "AUTO"
+      )
+        continue;
       const dateOrigin =
         layer.dateOrigins?.[
           key as keyof NonNullable<CommonFields["dateOrigins"]>
@@ -128,7 +157,9 @@ function commonContext(
         continue;
       (fields as Record<string, unknown>)[key] =
         declaredOrigin === "CLEARED" || dateOrigin === "CLEARED"
-          ? ""
+          ? key === "hoursProgram"
+            ? undefined
+            : ""
           : layer[key];
       origins[key] =
         layer.dateOrigins?.[
@@ -147,6 +178,57 @@ function commonContext(
   if (Object.keys(preservedOrigins).length)
     fields.fieldOrigins = preservedOrigins;
   return { fields, origins };
+}
+
+function resolveTrainingHours(
+  fields: CommonFields,
+  origins: Record<string, FieldSource>,
+  templateId: string,
+  category: "WORKER" | "ITR" | undefined,
+) {
+  const rule = trainingHoursRule(templateId, category, fields);
+  for (const key of ["hours", "productionHours"] as const) {
+    if (origins[key] && origins[key] !== "AUTO" && origins[key] !== "COURSE")
+      continue;
+    if (rule[key] !== undefined) {
+      fields[key] = rule[key];
+      origins[key] = "AUTO";
+    } else if (origins[key] === "AUTO" || origins[key] === "COURSE") {
+      delete fields[key];
+      delete origins[key];
+    }
+  }
+}
+
+function inheritCompanionHours(item: RequestItemInput) {
+  const courseKey = (a: Assignment) =>
+    a.eventId || protocolTemplateFor(a.templateId);
+  const primaries = new Map(
+    item.assignments
+      .filter(
+        (a) =>
+          !a.templateId.startsWith("lms-") &&
+          !a.templateId.endsWith("-protocol") &&
+          a.templateId !== "ps-witness",
+      )
+      .map((a) => [courseKey(a), a]),
+  );
+  for (const a of item.assignments) {
+    const primary = primaries.get(courseKey(a));
+    if (a.templateId.startsWith("lms-") || !primary || a === primary) continue;
+    for (const key of ["hours", "productionHours", "hoursProgram"] as const) {
+      if (a.fieldOrigins?.[key] !== "INHERITED") continue;
+      const origin = primary.fieldOrigins?.[key];
+      const manualFlag =
+        key !== "hoursProgram" && primary.biotManualFields?.includes(key);
+      if (isProtectedField(origin) || manualFlag || (!origin && primary[key])) {
+        Object.assign(a, { [key]: primary[key] });
+        (a.fieldOrigins ??= {})[key] = isProtectedField(origin)
+          ? origin!
+          : "MANUAL";
+      }
+    }
+  }
 }
 
 export function resolveCommonDates(
@@ -211,7 +293,11 @@ export function resolveRecipientText<T extends RequestItemInput>(item: T): T {
 }
 
 /** Resolves once on the server. Result/number can never be inherited. */
-export function resolveDraft(input: Draft, center: CommonFields = {}) {
+export function resolveDraft(
+  input: Draft,
+  center: CommonFields = {},
+  programmeHours: ReadonlyMap<string, string> = new Map(),
+) {
   if (input.frozenResolution)
     return {
       draft: structuredClone(input.frozenResolution.draft),
@@ -222,15 +308,73 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
   draft.items = draft.items.map(resolveRecipientText);
   const provenance: Record<string, Record<string, FieldSource>> = {};
   const issues: ValidationIssue[] = [];
+  const liveHours = draft.businessRuleVersion === "LIVE_V1";
+  const eventCategories = new Map<string, Set<"WORKER" | "ITR">>();
+  const eventMembers = new Map<string, Assignment[]>();
+  for (const item of draft.items) {
+    if (liveHours) inheritCompanionHours(item);
+    for (const a of item.assignments) {
+      const { eventId } = a;
+      if (!eventId || a.templateId.startsWith("lms-")) continue;
+      const categories =
+        eventCategories.get(eventId) || new Set<"WORKER" | "ITR">();
+      categories.add(employeeCategoryFor(item));
+      eventCategories.set(eventId, categories);
+      if (
+        !a.templateId.endsWith("-protocol") &&
+        a.templateId !== "ps-witness"
+      ) {
+        const members = eventMembers.get(eventId) || [];
+        members.push(a);
+        eventMembers.set(eventId, members);
+      }
+    }
+  }
   const eventContexts = new Map(
     (draft.events || []).map((event) => {
-      const context = commonContext([
-        [courseProgramDefaults(event.protocolTemplateId), "COURSE"],
-        [center, "CENTER"],
-        [draft.presetFields, "PRESET"],
-        [draft.commonFields, "REQUEST"],
-        [event.commonFields, "EVENT"],
-      ]);
+      const courseHours =
+        liveHours && !event.protocolTemplateId.startsWith("lms-");
+      const selectedHours =
+        courseHours && event.serviceRuleVersionId
+          ? programmeHours.get(event.id)
+          : undefined;
+      const context = commonContext(
+        [
+          [courseProgramDefaults(event.protocolTemplateId), "COURSE"],
+          [center, "CENTER"],
+          [draft.presetFields, "PRESET"],
+          [draft.commonFields, "REQUEST"],
+          [
+            selectedHours ? { hours: selectedHours } : undefined,
+            "SERVICE_RULE",
+          ],
+          [event.commonFields, "EVENT"],
+        ],
+        courseHours ? event.protocolTemplateId : undefined,
+      );
+      if (courseHours) {
+        const categories = eventCategories.get(event.id);
+        const category =
+          categories?.size === 1 ? [...categories][0] : undefined;
+        resolveTrainingHours(
+          context.fields,
+          context.origins,
+          event.protocolTemplateId,
+          category,
+        );
+        for (const key of ["hours", "productionHours"] as const) {
+          if (context.origins[key] === "AUTO")
+            (context.fields.fieldOrigins ??= {})[key] = "AUTO";
+          else if (
+            selectedHours &&
+            key === "hours" &&
+            context.origins[key] === "SERVICE_RULE"
+          )
+            (context.fields.fieldOrigins ??= {})[key] = "INHERITED";
+          else if (!context.origins[key])
+            delete context.fields.fieldOrigins?.[key];
+        }
+      }
       if (draft.schemaVersion === 2)
         applyDateCalculation(
           context.fields,
@@ -261,14 +405,19 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
   for (const [row, item] of draft.items.entries())
     for (const [column, assignment] of item.assignments.entries()) {
       const path = `items.${row}.assignments.${column}`;
+      const courseHours =
+        liveHours && !assignment.templateId.startsWith("lms-");
       const context =
         eventContexts.get(assignment.eventId || "") ||
-        commonContext([
-          [courseProgramDefaults(assignment.templateId), "COURSE"],
-          [center, "CENTER"],
-          [draft.presetFields, "PRESET"],
-          [draft.commonFields, "REQUEST"],
-        ]);
+        commonContext(
+          [
+            [courseProgramDefaults(assignment.templateId), "COURSE"],
+            [center, "CENTER"],
+            [draft.presetFields, "PRESET"],
+            [draft.commonFields, "REQUEST"],
+          ],
+          courseHours ? assignment.templateId : undefined,
+        );
       const origins: Record<string, FieldSource> = { ...context.origins };
       provenance[`${item.id}:${assignment.id}`] = origins;
       const event = draft.events?.find((e) => e.id === assignment.eventId);
@@ -325,6 +474,13 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
           assignment.protocolMode === "GROUP" &&
           key !== "documentDate" &&
           key !== "validUntil" &&
+          !(
+            courseHours &&
+            (key === "hours" ||
+              key === "productionHours" ||
+              key === "hoursProgram") &&
+            source === "AUTO"
+          ) &&
           !individualCommonFields.has(key) &&
           context.fields[key] !== undefined &&
           manual &&
@@ -337,7 +493,12 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
             message: "Общее поле протокола отличается: выделите другое событие",
           });
         if (manual) {
-          value = explicit === "CLEARED" ? "" : own;
+          value =
+            explicit === "CLEARED"
+              ? key === "hoursProgram"
+                ? undefined
+                : ""
+              : own;
           source =
             explicit === "IMPORTED"
               ? "IMPORTED"
@@ -353,7 +514,17 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
           )
         ) {
           source = "AUTO";
-        } else if (value === undefined && own) {
+        } else if (
+          value === undefined &&
+          own &&
+          !(
+            courseHours &&
+            (key === "hours" || key === "productionHours") &&
+            (explicit === "AUTO" ||
+              explicit === "INHERITED" ||
+              explicit === "COURSE")
+          )
+        ) {
           value = own;
           source =
             explicit === "COURSE"
@@ -377,7 +548,44 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
         }
         if (value !== undefined)
           (assignment as unknown as Record<string, unknown>)[key] = value;
+        else if (
+          courseHours &&
+          (key === "hours" ||
+            key === "productionHours" ||
+            key === "hoursProgram")
+        ) {
+          if (key === "hours") assignment.hours = "";
+          else delete assignment[key];
+        }
         if (source) origins[key] = source;
+      }
+      if (courseHours) {
+        resolveTrainingHours(
+          assignment,
+          origins,
+          assignment.templateId,
+          employeeCategoryFor(item),
+        );
+        assignment.hours ??= "";
+        for (const key of [
+          "hours",
+          "productionHours",
+          "hoursProgram",
+        ] as const) {
+          if (assignment[key] === undefined || !origins[key]) continue;
+          if (
+            assignment.fieldOrigins?.[key] === "INHERITED" ||
+            isProtectedField(assignment.fieldOrigins?.[key])
+          )
+            continue;
+          if (origins[key] === "AUTO")
+            (assignment.fieldOrigins ??= {})[key] = "AUTO";
+          else if (
+            context.origins[key] &&
+            !input.items[row].assignments[column][key]
+          )
+            (assignment.fieldOrigins ??= {})[key] = "INHERITED";
+        }
       }
       if (draft.schemaVersion === 2) {
         const rule =
@@ -527,6 +735,33 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
     }
   for (const event of draft.events || []) {
     const context = eventContexts.get(event.id)!;
+    if (liveHours && !event.protocolTemplateId.startsWith("lms-")) {
+      const members = eventMembers.get(event.id) || [];
+      for (const key of ["hours", "productionHours"] as const) {
+        if (
+          !members.length ||
+          (context.origins[key] && context.origins[key] !== "AUTO")
+        )
+          continue;
+        const values = new Set(members.map((a) => a[key] || ""));
+        const value = values.size === 1 ? members[0][key] : undefined;
+        if (value) {
+          context.fields[key] = value;
+          (context.fields.fieldOrigins ??= {})[key] = "AUTO";
+        } else {
+          delete context.fields[key];
+          delete context.fields.fieldOrigins?.[key];
+        }
+      }
+      if (draft.schemaVersion === 2)
+        applyDateCalculation(
+          context.fields,
+          context.origins,
+          context.fields.trainingDateRule,
+          undefined,
+          false,
+        );
+    }
     if (
       draft.businessRuleVersion === "LIVE_V1" &&
       !context.fields.protocolDate &&

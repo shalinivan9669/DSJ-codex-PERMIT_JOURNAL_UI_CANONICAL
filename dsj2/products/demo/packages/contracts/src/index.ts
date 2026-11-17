@@ -1,5 +1,11 @@
 import { z } from "zod";
 import { BIOT_CATEGORIES, biotCategoryIds, biotValidUntil } from "./biot";
+import {
+  isPreviousBiotHoursProgram,
+  trainingHoursProgramIds,
+  trainingHoursPrograms,
+  trainingHoursRule,
+} from "./training-hours";
 import { dateOriginsSchema, trainingDateRuleSchema } from "./date-calculation";
 import {
   customerSchema,
@@ -12,10 +18,12 @@ import { isBlankText } from "./blank-text";
 export { isBlankText } from "./blank-text";
 export { z } from "zod";
 export * from "./biot";
+export * from "./training-hours";
 export * from "./date-calculation";
 export * from "./registration";
 export * from "./business-rules";
 export * from "./course-defaults";
+export * from "./service-rule-hours";
 export * from "./document-languages";
 export * from "./roles";
 export * from "./capabilities";
@@ -124,6 +132,7 @@ export const commonFieldsSchema = z
     educationEn: optionalText,
     externalBasisNumber: z.string().max(100).optional(),
     hours: z.string().max(30).optional(),
+    hoursProgram: z.enum(trainingHoursProgramIds).optional(),
     productionHours: z.string().max(30).optional(),
     biotCategory: z.enum(biotCategoryIds).optional(),
     biotCheckType: z.enum(["", "PERIODIC", "REPEAT"]).optional(),
@@ -284,6 +293,7 @@ export const assignmentSchema = z
     education: text,
     educationEn: optionalText,
     hours: z.string().max(30).default(""),
+    hoursProgram: z.enum(trainingHoursProgramIds).optional(),
     productionHours: z.string().max(30).optional(),
     biotCategory: z.enum(biotCategoryIds).optional(),
     biotManualFields: z
@@ -475,6 +485,7 @@ export const draftSchema = unfrozenDraftSchema.safeExtend({
             "COURSE",
             "CENTER",
             "PRESET",
+            "SERVICE_RULE",
             "REQUEST",
             "EVENT",
             "MANUAL",
@@ -929,6 +940,52 @@ export function validateDraft(
           "Выберите категорию обучения БиОТ: от неё зависят форма, часы и срок",
           item.id,
         );
+      const numericHours = (value: string | undefined) =>
+        value && /^\d+(?:[.,]\d+)?$/.test(value.trim())
+          ? Number(value.replace(",", "."))
+          : NaN;
+      if (
+        assignment.hoursProgram &&
+        !trainingHoursPrograms(assignment.templateId).some(
+          (option) => option.id === assignment.hoursProgram,
+        )
+      )
+        add(
+          "HOURS_PROGRAM_MISMATCH",
+          `${path}.hoursProgram`,
+          "Выберите программу часов для этого курса",
+          item.id,
+        );
+      if (
+        draft.businessRuleVersion === "LIVE_V1" &&
+        assignment.templateId.startsWith("pb-")
+      ) {
+        const rule = trainingHoursRule(
+          assignment.templateId,
+          item.employeeCategory,
+          assignment,
+        );
+        if (
+          rule.minimumHours &&
+          !(numericHours(assignment.hours) >= rule.minimumHours)
+        )
+          add(
+            "PB_HOURS_MIN",
+            `${path}.hours`,
+            `Промышленная безопасность: не менее ${rule.minimumHours} часов для этой категории`,
+            item.id,
+          );
+        if (
+          assignment.hoursProgram === "PB_RETRAINING" &&
+          numericHours(assignment.hours) !== Number(rule.hours)
+        )
+          add(
+            "PB_RETRAINING_HOURS",
+            `${path}.hours`,
+            "Программа переподготовки по п. 8 Правил № 332 рассчитана на 10 часов",
+            item.id,
+          );
+      }
       if (assignment.biotCategory) {
         const category = BIOT_CATEGORIES[assignment.biotCategory];
         const expectedTemplate =
@@ -954,18 +1011,26 @@ export function validateDraft(
             "Для этой категории требуется оригинал сертификата из ЕЦС. Safety Brief не присваивает номер ЕЦС и не заменяет выдачу в ЕЦС.",
             item.id,
           );
-        const numericHours = (value: string | undefined) =>
-          value && /^\d+(?:[.,]\d+)?$/.test(value.trim())
-            ? Number(value.replace(",", "."))
-            : NaN;
-        if (!(numericHours(assignment.hours) >= category.minimumHours))
+        const previous = isPreviousBiotHoursProgram(assignment.hoursProgram);
+        const minimum = previous
+          ? trainingHoursRule(
+              assignment.templateId,
+              item.employeeCategory,
+              assignment,
+            ).minimumHours
+          : category.minimumHours;
+        if (
+          minimum !== undefined &&
+          !(numericHours(assignment.hours) >= minimum)
+        )
           add(
             "BIOT_HOURS_MIN",
             `${path}.hours`,
-            `${category.hoursLabel}: не менее ${category.minimumHours}`,
+            `${category.hoursLabel}: не менее ${minimum}`,
             item.id,
           );
         if (
+          !previous &&
           category.minimumProductionHours &&
           !(
             numericHours(assignment.productionHours) >=

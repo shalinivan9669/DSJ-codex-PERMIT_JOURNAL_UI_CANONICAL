@@ -4,11 +4,14 @@ import { Notice } from "@demo/ui";
 import {
   BIOT_CATEGORIES,
   isSpecialBiotCategory,
-  resolveDraft,
+  isProtectedField,
+  type ProgrammeHoursRule,
+  type Draft as ResolvedDraft,
   resolveCommonDates,
   calculatedDateKeys,
   commonFieldKeys,
   courseProgramKeys,
+  employeeCategoryFor,
   courseResultText,
   hasAutomaticPositiveOutcome,
   positiveAssignmentDefaults,
@@ -47,7 +50,8 @@ import {
 } from "@/lib/preparation-storage";
 import { biotCategoryDescription } from "@/lib/validity-display";
 import { validCalendarCandidate } from "@/lib/calendar-preparation";
-import { updateCommonBiotCategory } from "@/lib/assignment-presets";
+import { eventCourseDefaults, updateCommonBiotCategory } from "@/lib/assignment-presets";
+import { TrainingHoursFields } from "./training-hours-fields";
 
 const directions = [
   {
@@ -96,8 +100,18 @@ function AdvancedTrainingSettings({
   );
 }
 
+export type EditorServiceRule = ProgrammeHoursRule & {
+  title: string;
+  version: number;
+  applicability: string;
+  definition: { compatibleTemplateIds: string[] };
+};
+
 export function EventContext({
   draft,
+  resolvedDraft,
+  programmeHours,
+  serviceRules,
   centerCommon = {},
   selectedIds,
   disabled: externalDisabled,
@@ -114,6 +128,9 @@ export function EventContext({
   focusPreparation,
 }: {
   draft: Draft;
+  resolvedDraft: ResolvedDraft;
+  programmeHours: ReadonlyMap<string, string>;
+  serviceRules: EditorServiceRule[];
   centerCommon?: CommonFields;
   selectedIds: string[];
   disabled: boolean;
@@ -219,26 +236,11 @@ export function EventContext({
     }[]
   >([]);
   const [profileError, setProfileError] = useState("");
-  const [rules, setRules] = useState<
-    {
-      id: string;
-      title: string;
-      version: number;
-      status: string;
-      applicability: string;
-      definition: { compatibleTemplateIds: string[] };
-    }[]
-  >([]);
+  const rules = serviceRules.filter((rule) => rule.status === "APPROVED");
   useEffect(() => {
     if (expanded)
-      void Promise.all([
-        api<{ items: typeof profiles }>("/settings/profiles"),
-        api<{ items: typeof rules }>("/service-rules"),
-      ])
-        .then(([p, r]) => {
-          setProfiles(p.items);
-          setRules(r.items.filter((rule) => rule.status === "APPROVED"));
-        })
+      void api<{ items: typeof profiles }>("/settings/profiles")
+        .then((p) => setProfiles(p.items))
         .catch((c) => setProfileError(errorText(c)));
   }, [expanded]);
   const events = draft.events || [];
@@ -388,9 +390,7 @@ export function EventContext({
     preparationOwner?.tenantId,
     preparationOwner?.userId,
   ]);
-  const resolvedForDisplay = expanded
-    ? resolveDraft(draft, centerCommon).draft
-    : undefined;
+  const resolvedForDisplay = expanded ? resolvedDraft : undefined;
   const displayedCommon =
     (expanded
       ? resolvedForDisplay?.events?.find((e) => e.id === activeEventId)
@@ -398,6 +398,12 @@ export function EventContext({
       : undefined) ||
     event?.commonFields ||
     {};
+  const usesProgrammeHours =
+    event?.serviceRuleVersionId &&
+    programmeHours.has(event.id) &&
+    displayedCommon.hours === programmeHours.get(event.id) &&
+    (!event.commonFields.hours || event.commonFields.fieldOrigins?.hours === "AUTO") &&
+    !isProtectedField(event.commonFields.fieldOrigins?.hours);
   const resolvedExpiryDates = [
     ...new Set(
       (resolvedForDisplay?.items || []).flatMap((item) =>
@@ -426,6 +432,9 @@ export function EventContext({
           .map((assignment) => ({ item, assignment })),
       )
     : [];
+  const memberCategories = new Set(
+    eventAssignments.map(({ item }) => employeeCategoryFor(item)),
+  );
   const selectedAssignments = eventAssignments.filter(({ item }) =>
     selectedIds.includes(item.id),
   );
@@ -702,24 +711,8 @@ export function EventContext({
       title: choice.label,
       protocolTemplateId: choice.protocol,
       revision: 0,
-      commonFields: {
-        ...(choice.key === "biot"
-          ? {
-              biotCategory: "WORKER" as const,
-              biotCheckType: "PERIODIC" as const,
-              hours: "10",
-              productionHours: "16",
-            }
-          : {}),
-      },
+      commonFields: eventCourseDefaults(choice.card),
     };
-    if (choice.key === "biot-itr")
-      next.commonFields = {
-        ...next.commonFields,
-        biotCategory: "ITR_STANDARD",
-        biotCheckType: "PERIODIC",
-        hours: "40",
-      };
     void apply({ schemaVersion: 2, events: [...events, next] });
     setActiveId(next.id);
   }
@@ -1384,9 +1377,36 @@ export function EventContext({
                 {bulkFields
                   .filter(
                     ([field]) =>
-                      !primary || ["trainingSubject", "hours"].includes(field),
+                      field !== "hours" && (!primary || field === "trainingSubject"),
                   )
                   .map(renderEventField)}
+                <TrainingHoursFields
+                  templateId={event.protocolTemplateId}
+                  category={memberCategories.size === 1 ? [...memberCategories][0] : undefined}
+                  mixed={event.protocolTemplateId === "pb-protocol" && memberCategories.size > 1}
+                  effective={displayedCommon}
+                  original={event.commonFields}
+                  origins={
+                    usesProgrammeHours
+                      ? { ...displayedCommon.fieldOrigins, hours: "SERVICE_RULE" }
+                      : displayedCommon.fieldOrigins
+                  }
+                  label="Объём обучения, часов"
+                  practiceLabel={primary ? "Производственное обучение, часов" : "Производственное обучение события, часов"}
+                  disabled={disabled}
+                  attributes={(key) => ({
+                    "data-field-path": `events.${eventIndex}.commonFields.${key}`,
+                    "aria-invalid": !!fieldHints[`events.${eventIndex}.commonFields.${key}`],
+                  })}
+                  feedback={fieldHint}
+                  onChange={changeEventCommon}
+                  onRestore={(key) => {
+                    const next = {...event.commonFields, fieldOrigins: {...event.commonFields.fieldOrigins}};
+                    delete next[key];
+                    delete next.fieldOrigins[key];
+                    updateEvent({commonFields: next});
+                  }}
+                />
                 <label>
                   Программа — отдельный KZ-вариант
                   <input
@@ -1524,23 +1544,6 @@ export function EventContext({
                     </select>
                     {fieldHint("biotCheckType")}
                   </label>
-                  {event.protocolTemplateId === "biot-protocol" && (
-                    <label>
-                      {primary
-                        ? "Производственное обучение, часов"
-                        : "Производственное обучение события, часов"}
-                      <input
-                        data-training-field="productionHours"
-                        data-field-path={`events.${eventIndex}.commonFields.productionHours`}
-                        disabled={disabled}
-                        value={event.commonFields.productionHours || ""}
-                        onChange={(e) =>
-                          changeEventCommon({ productionHours: e.target.value })
-                        }
-                      />
-                      {fieldHint("productionHours")}
-                    </label>
-                  )}
                   {event.protocolTemplateId === "biot-itr-protocol" &&
                     isSpecialBiotCategory(displayedCommon.biotCategory) && (
                       <>

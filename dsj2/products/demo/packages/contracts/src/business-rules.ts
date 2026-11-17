@@ -254,20 +254,27 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
           if (
             !isProtectedField(event.commonFields.fieldOrigins?.hours) &&
             (!event.commonFields.hours ||
-              event.commonFields.hours === String(previousPreset?.defaultHours))
-          )
+              (!!event.commonFields.fieldOrigins?.hours &&
+                event.commonFields.hours ===
+                  String(previousPreset?.defaultHours)))
+          ) {
             event.commonFields.hours = String(preset.defaultHours);
+            (event.commonFields.fieldOrigins ??= {}).hours = "AUTO";
+          }
           if (
             !isProtectedField(
               event.commonFields.fieldOrigins?.productionHours,
             ) &&
             (!event.commonFields.productionHours ||
-              event.commonFields.productionHours ===
-                String(previousPreset?.defaultProductionHours))
-          )
+              (!!event.commonFields.fieldOrigins?.productionHours &&
+                event.commonFields.productionHours ===
+                  String(previousPreset?.defaultProductionHours)))
+          ) {
             event.commonFields.productionHours = preset.defaultProductionHours
               ? String(preset.defaultProductionHours)
               : "";
+            (event.commonFields.fieldOrigins ??= {}).productionHours = "AUTO";
+          }
         }
         if (event.rootEventId && !event.lineageOwnContext)
           event.lineageOwnContext = trainingEventContext(event);
@@ -342,19 +349,25 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
           !primary.biotManualFields?.includes("hours") &&
           !isProtectedField(primary.fieldOrigins?.hours) &&
           (!primary.hours ||
-            primary.hours === String(previousPreset?.defaultHours))
-        )
+            (!!primary.fieldOrigins?.hours &&
+              primary.hours === String(previousPreset?.defaultHours)))
+        ) {
           primary.hours = String(preset.defaultHours);
+          (primary.fieldOrigins ??= {}).hours = "AUTO";
+        }
         if (
           !primary.biotManualFields?.includes("productionHours") &&
           !isProtectedField(primary.fieldOrigins?.productionHours) &&
           (!primary.productionHours ||
-            primary.productionHours ===
-              String(previousPreset?.defaultProductionHours))
-        )
+            (!!primary.fieldOrigins?.productionHours &&
+              primary.productionHours ===
+                String(previousPreset?.defaultProductionHours)))
+        ) {
           primary.productionHours = preset.defaultProductionHours
             ? String(preset.defaultProductionHours)
             : "";
+          (primary.fieldOrigins ??= {}).productionHours = "AUTO";
+        }
         primary.biotCheckType = "PERIODIC";
       }
       for (const templateId of templates) {
@@ -476,8 +489,6 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
         }
         if (direction === "BIOT") {
           assignment.biotCategory = primary.biotCategory;
-          assignment.hours = primary.hours;
-          assignment.productionHours = primary.productionHours;
           assignment.biotCheckType = primary.biotCheckType || "PERIODIC";
           assignment.fieldOrigins = {
             ...assignment.fieldOrigins,
@@ -485,6 +496,24 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
               primary.fieldOrigins?.biotCheckType ||
               (primary.biotCheckType ? "MANUAL" : "INHERITED"),
           };
+        }
+        if (assignment !== primary) {
+          for (const key of [
+            "hours",
+            "productionHours",
+            "hoursProgram",
+          ] as const) {
+            if (
+              old &&
+              (isProtectedField(old.fieldOrigins?.[key]) ||
+                (!old.fieldOrigins?.[key] &&
+                  old[key] &&
+                  old[key] !== primary[key]))
+            )
+              continue;
+            Object.assign(assignment, { [key]: primary[key] });
+            (assignment.fieldOrigins ??= {})[key] = "INHERITED";
+          }
         }
         applyBusinessValidity(assignment, category);
         normalized.push(assignment);

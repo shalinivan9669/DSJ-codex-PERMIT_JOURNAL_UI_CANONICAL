@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   BIOT_CATEGORIES,
+  employeeCategoryFor,
   isBlankText,
   isSpecialBiotCategory,
   trainingDirection,
@@ -24,6 +25,7 @@ import {
   type PersonStage,
 } from "@/lib/person-flow";
 import { RecipientDetails } from "./recipient-details";
+import { TrainingHoursFields } from "./training-hours-fields";
 import { TrainingPeriodFields } from "./training-period-fields";
 import { RecipientRecord } from "./recipient-record";
 import { TextQualityHint } from "./text-quality-hint";
@@ -158,7 +160,7 @@ function PersonFlow({
         );
         const inline =
           course &&
-          (["documentDate", "protocolDate", "hours", "biotCategory"].includes(
+          (["documentDate", "protocolDate", "hours", "productionHours", "hoursProgram", "biotCategory"].includes(
             match[2] || "",
           ) ||
             (assignment?.templateId.startsWith("ps-") &&
@@ -662,26 +664,21 @@ function PersonFlow({
                           `assignments.${course.assignmentIndex}.protocolDate`,
                         )}
                       </label>
-                      {direction !== "BIOT" && (
-                        <label>
-                          Часы программы
-                          <input
-                            aria-label="Часы программы"
-                            inputMode="decimal"
-                            disabled={blocked}
-                            {...field(
-                              `assignments.${course.assignmentIndex}.hours`,
-                            )}
-                            value={effective.hours || ""}
-                            onChange={(event) =>
-                              update({ hours: event.target.value })
-                            }
-                          />
-                          {feedback(
-                            `assignments.${course.assignmentIndex}.hours`,
-                          )}
-                        </label>
-                      )}
+                      <TrainingHoursFields
+                        templateId={assignment.templateId}
+                        category={employeeCategoryFor(person)}
+                        effective={effective}
+                        original={assignment}
+                        origins={props.provenance?.[`${person.id}:${assignment.id}`]}
+                        label="Часы программы"
+                        disabled={blocked}
+                        attributes={(key) => field(`assignments.${course.assignmentIndex}.${key}`)}
+                        feedback={(key) => feedback(`assignments.${course.assignmentIndex}.${key}`)}
+                        onChange={update}
+                        onRestore={(key) => onChangeRecipient(restoreTrainingAssignmentField(
+                          person, assignment.id, key, liveRules,
+                        ))}
+                      />
                     </div>
                     {direction === "PS" && (
                       <TrainingPeriodFields

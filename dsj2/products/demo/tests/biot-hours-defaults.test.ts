@@ -65,7 +65,7 @@ for (const kind of ["PERSON", "COMPANY"] as const) {
         );
         assert.equal(
           resolved.provenance[`${saved.items[0].id}:${assignment.id}`].hours,
-          "PRESET",
+          "AUTO",
         );
       }
       assert.deepEqual(
