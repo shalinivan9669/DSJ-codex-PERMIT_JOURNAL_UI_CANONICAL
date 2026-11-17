@@ -8,7 +8,7 @@ from zipfile import ZipFile
 from lxml import etree as E
 from test_archive_forms import W, snapshot
 from original_archive import match_original, render_original_document
-from original_archive_credentials import SOURCES
+from original_archive_credentials import SOURCES, credential_fields, credential_layout
 from template_validation import inspect_package
 
 
@@ -21,6 +21,11 @@ class CredentialTests(unittest.TestCase):
                 with self.subTest(template_id=template_id):
                     original = root / filename
                     self.assertTrue(match_original(original, template_id))
+                    fields = credential_fields(original, template_id)
+                    self.assertIn('FULL_NAME_RU', fields)
+                    if template_id == 'ps-witness':
+                        self.assertIn('REGISTRATION_NUMBER', fields)
+                        self.assertEqual(len(credential_layout(original, template_id)[1]), 2)
                     with ZipFile(original) as source:
                         before = E.fromstring(source.read('word/document.xml'))
                     state = snapshot(template_id)

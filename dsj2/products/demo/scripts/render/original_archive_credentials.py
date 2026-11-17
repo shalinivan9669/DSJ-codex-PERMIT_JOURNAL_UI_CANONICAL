@@ -4,6 +4,8 @@ from functools import lru_cache
 from hashlib import sha256
 from io import BytesIO
 from pathlib import Path
+import re
+from zipfile import ZipFile
 
 from lxml import etree as E
 
@@ -64,13 +66,29 @@ def _project(data, template_id):
     return inspect_package(stream), report
 
 
+@lru_cache(maxsize=1)
+def _inside_contract():
+    if sha256(WITNESS_INSIDE.read_bytes()).hexdigest() != WITNESS_INSIDE_SHA256:
+        raise ValueError('ARCHIVE_WITNESS_INSIDE_CHECKSUM')
+    with ZipFile(WITNESS_INSIDE) as source:
+        root = E.fromstring(source.read('word/document.xml'))
+    fields = re.findall(r'\{\{([A-Z][A-Z0-9_]*)\}\}', ''.join(root.itertext()))
+    return sorted(set(fields)), dict(next(root.iter(W + 'pgSz')).attrib)
+
+
 def credential_fields(path, template_id):
-    return list(_project(Path(path).read_bytes(), template_id)[1]['fields'])
+    _, report = _project(Path(path).read_bytes(), template_id)
+    # The cover is static. Its registered two-page form gets every variable
+    # field from the pinned personalized insert.
+    return list(_inside_contract()[0] if template_id == 'ps-witness' else report['fields'])
 
 
 def credential_layout(path, template_id):
     files, _ = _project(Path(path).read_bytes(), template_id)
-    return False, [dict(size.attrib) for size in E.fromstring(files['word/document.xml']).iter(W + 'pgSz')]
+    sections = [dict(size.attrib) for size in E.fromstring(files['word/document.xml']).iter(W + 'pgSz')]
+    if template_id == 'ps-witness':
+        sections.append(dict(_inside_contract()[1]))
+    return False, sections
 
 
 def _witness_inside(snapshot, item):
