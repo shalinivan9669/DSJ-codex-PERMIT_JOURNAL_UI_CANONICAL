@@ -271,7 +271,7 @@ export function ImportDialog({
         setTemplateId(card);
         setBiotCategory(sameDirection ? bundleEvent?.commonFields.biotCategory : undefined);
         setUseRequestTraining(false);
-      } else if (!result.archive && preview?.archive && !courseChosen) {
+      } else if (!result.archive && !courseChosen) {
         setTemplateId(
           existingDraft.trainingDefaults?.length ? "" : initialImportTemplate(bundleEvent),
         );
@@ -934,9 +934,10 @@ export function ImportDialog({
                   <select
                     aria-label="Категория БиОТ для импортируемых строк"
                     value={biotCategory}
-                    onChange={(event) =>
-                      setBiotCategory(event.target.value as BiotCategory)
-                    }
+                    onChange={(event) => {
+                      setCourseChosen(true);
+                      setBiotCategory(event.target.value as BiotCategory);
+                    }}
                   >
                     {biotCategoriesForTemplate(templateId).map((category) => (
                       <option key={category} value={category}>
