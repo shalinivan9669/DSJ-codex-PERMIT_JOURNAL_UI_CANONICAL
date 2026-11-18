@@ -49,6 +49,24 @@ def snapshot(tid='pb-card', count=1):
 
 
 class ArchiveFormsTests(unittest.TestCase):
+    def test_zero_assessment_and_missing_protocol_number_remain_factual(self):
+        data = snapshot('pb-protocol')
+        item = data['items'][0]
+        item.pop('protocolNumber')
+        item['assignment']['result'] = 0
+        item['assignment']['resultKz'] = None
+        fields = archive_fields(data, item)
+        self.assertEqual(fields['PROTOCOL_NUMBER'], '')
+        self.assertIn('0', fields['RESULT_RU'])
+        self.assertIn('0', fields['RESULT_KZ'])
+        item['protocolNumber'] = 0
+        item['assignment']['outcome'] = {'status': 'PASSED'}
+        item['assignment'].update(result=95, resultRu=0, resultKz=95)
+        fields = archive_fields(data, item)
+        self.assertEqual(fields['PROTOCOL_NUMBER'], '0')
+        self.assertEqual(fields['RESULT_RU'], '0')
+        self.assertEqual(fields['RESULT_KZ'], '95')
+
     def setUp(self):
         self.temp = TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
@@ -218,6 +236,27 @@ class ArchiveFormsTests(unittest.TestCase):
                 text = ''.join(row.itertext()); self.assertTrue(text.startswith(str(index)))
                 self.assertIn(('Получатель ' if language == 'RU' else 'Тыңдаушы ') + str(index), text)
                 self.assertNotIn('Общий заказчик', text)
+
+    def test_itr_roster_flows_and_commission_stays_together(self):
+        data = snapshot('biot-itr-protocol', 2)
+        data['groupEvent'] = {'contractVersion': 1}
+        result = render_archive_group(data, ROOT / 'assets/templates/biot-itr-protocol.v7.docx')
+        body = E.fromstring(result['word/document.xml']).find(W + 'body')
+        tables = body.findall(W + 'tbl')
+        self.assertEqual(len(tables), 1)
+        roster = tables[0]
+        self.assertEqual(len(roster.findall(W + 'tr')), 4)
+        self.assertEqual(len(list(roster.iter(W + 'tblHeader'))), 2)
+        for name in ['Получатель 1', 'Получатель 2']:
+            self.assertIn(name, ''.join(roster.itertext()))
+        self.assertFalse(list(roster.iter(W + 'pageBreakBefore')))
+        signoff = roster.findall(W + 'tr')[-1]
+        self.assertIsNotNone(signoff.find(W + 'trPr/' + W + 'cantSplit'))
+        last, commission = signoff.find(W + 'tc').findall(W + 'tbl')
+        self.assertIn('Получатель 2', ''.join(last.itertext()))
+        names = ''.join(commission.itertext())
+        for name in ['Иванов', 'Петров', 'Сидоров']:
+            self.assertIn(name, names)
 
     def test_group_requires_declared_roster_and_unique_members(self):
         path, _ = self.package('pb-protocol')

@@ -54,12 +54,16 @@ class PrintedProtocolTests(unittest.TestCase):
                 document = E.fromstring(inspect_package(self.out)['word/document.xml'])
                 body = document.find(W + 'body')
                 tables = body.findall(W + 'tbl')
-                self.assertEqual(len(tables), 2)
-                for table in tables:
+                self.assertEqual(len(tables), 1)
+                for table in tables[0].iter(W + 'tbl'):
                     self.assertIsNone(table.find(W + 'tblPr/' + W + 'tblpPr'))
-                # Word merges adjacent in-flow tables; retain a separating paragraph.
-                self.assertEqual(tables[0].getnext().tag, W + 'p')
                 self.assertEqual(len(tables[0].findall(W + 'tr')), count + 1)
+                signoff = tables[0].findall(W + 'tr')[-1]
+                self.assertIsNotNone(signoff.find(W + 'trPr/' + W + 'cantSplit'))
+                nested = signoff.find(W + 'tc').findall(W + 'tbl')
+                self.assertEqual(len(nested), 2)
+                self.assertIn(f'Получатель {count}', ''.join(nested[0].itertext()))
+                self.assertIn('Сидоров', ''.join(nested[1].itertext()))
 
     def test_frozen_participants_raw_geometry_and_both_language_pages(self):
         for (tid, digest), (plan, lang) in protocols.registry().items():
@@ -100,13 +104,27 @@ class PrintedProtocolTests(unittest.TestCase):
                     table = next(document.iter(W + 'tbl'))
                     original_table = next(original.iter(W + 'tbl'))
                     self.assertEqual(len(table.findall(W + 'tr')), plan['roster']['headerRows'] + len(s['items']))
-                    # Original page size, margins, grid widths and signature rows remain intact.
-                    for key in ('pgSz', 'pgMar', 'gridCol', 'tcW'):
+                    if tid != 'ps-protocol':
+                        self.assertEqual(len(list(table.iter(W + 'tblHeader'))), plan['roster']['headerRows'])
+                        self.assertFalse(list(table.iter(W + 'pageBreakBefore')))
+                        signoff = table.findall(W + 'tr')[-1]
+                        self.assertIsNotNone(signoff.find(W + 'trPr/' + W + 'cantSplit'))
+                        self.assertEqual(len(signoff.find(W + 'tc').findall(W + 'tbl')), 2)
+                    # Paper size, table grid and column widths stay aligned to source.
+                    for key in ('pgSz', 'gridCol', 'tcW'):
                         a = original if key.startswith('pg') else original_table.find(W + 'tr') if key == 'tcW' else original_table
                         b = document if key.startswith('pg') else table.find(W + 'tr') if key == 'tcW' else table
                         attrs = lambda root: [dict(node.attrib) for node in root.iter(W + key)]
                         expected = attrs(a)
                         self.assertEqual(attrs(b)[:len(expected)], expected)
+                    original_margin = next(original.iter(W + 'pgMar'))
+                    printed_margin = next(document.iter(W + 'pgMar'))
+                    for side in ('left', 'right', 'footer', 'gutter'):
+                        self.assertEqual(printed_margin.get(W + side), original_margin.get(W + side))
+                    self.assertLessEqual(int(printed_margin.get(W + 'bottom')), int(original_margin.get(W + 'bottom')))
+                    if tid != 'ps-protocol':
+                        self.assertGreaterEqual(int(printed_margin.get(W + 'header')), 240)
+                        self.assertGreaterEqual(int(printed_margin.get(W + 'top')) - int(printed_margin.get(W + 'header')), 1620)
                     if tid == 'ps-protocol':
                         self.assertIn('Оценка теоретических знаний', visible)
                         self.assertIn('Теориялық білім бағасы', visible)
@@ -146,6 +164,10 @@ class PrintedProtocolTests(unittest.TestCase):
             for table in tables:
                 rows = table.findall(W + 'tr')[1:]
                 cells = [[''.join(cell.itertext()).strip() for cell in row.findall(W + 'tc')] for row in rows]
+                self.assertEqual([row[0] for row in cells], ['1.', '2.'])
+                for row in rows:
+                    counter = row.find(W + 'tc/' + W + 'p/' + W + 'pPr/' + W + 'numPr/' + W + 'numId')
+                    self.assertEqual(counter.get(W + 'val'), '0')
                 self.assertEqual([row[2:5] for row in cells], expected)
             s['items'].reverse()
         s['items'][1]['assignment'].update(psTheoryResult='', psPracticalKnowledgeResult='64', psPracticalSkillsResult='')

@@ -215,7 +215,7 @@ export function RequestCommission({
             )}
             {!readonly && (
               <>
-                {!managesSystem && (
+                {!managesSystem && !complete && (
                   <p className="muted">
                     {tr(
                       "Попросите директора заполнить комиссию, затем обновите список.",

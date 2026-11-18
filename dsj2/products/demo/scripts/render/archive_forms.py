@@ -119,11 +119,19 @@ def archive_fields(snapshot, item, ordinal=1):
         kz += '; ' + actual_kz if actual_kz else ''
         assignment = {**assignment, 'result': ru + ' / ' + kz, 'resultRu': ru, 'resultKz': kz}
     values = validated_fields(snapshot, {**item, 'assignment': assignment})
+    # A credential number or an external basis is not a protocol registration
+    # number. Keep the printed slot empty when the protocol has none.
+    values['PROTOCOL_NUMBER'] = next((str(value).strip() for value in
+                                      (item.get('protocolNumber'), (item.get('numbers') or {}).get('protocol'))
+                                      if value is not None and str(value).strip()), '')
     for prefix, name in [('SUBJECT', 'trainingSubject'), ('RESULT', 'result'), ('REASON', 'reason')]:
-        scalar = str(assignment.get(name) or assignment.get(name + 'Ru') or assignment.get(name + 'Kz') or '').strip()
+        scalar = next((str(value).strip() for value in
+                       (assignment.get(name), assignment.get(name + 'Ru'), assignment.get(name + 'Kz'))
+                       if value is not None and str(value).strip()), '')
         if prefix == 'RESULT' and re.fullmatch(r'[\d\s/.,%+-]+', scalar) and re.search(r'\d', scalar):
             # A numeric score is one value, not a RU/KZ slash separator.
-            ru, kz = (str(assignment.get(name + lang) or scalar).strip() for lang in ['Ru', 'Kz'])
+            ru, kz = (str(value).strip() if value is not None and str(value).strip() else scalar
+                      for value in (assignment.get(name + 'Ru'), assignment.get(name + 'Kz')))
         else:
             ru, kz = bilingual_parts(assignment.get(name), assignment.get(name + 'Ru'), assignment.get(name + 'Kz'))
         values.update({prefix + '_RU': ru, prefix + '_KZ': kz,
@@ -411,8 +419,8 @@ def _prepare_layout(tree, marker, files):
                     indent.set(W + 'right', str(max(1520, int(indent.get(W + 'right', '0')))))
                 if front and template_id == 'ps-card' and '{{NUMBER}}' in label and not any(p.get('title') for p in paragraphs):
                     spacing = child(props, 'spacing')
-                    spacing.set(W + 'before', str(max(160, int(spacing.get(W + 'before', '0')))))
-                if front and template_id == 'ps-card' and '{{QUALIFICATION_STATUS_KZ}}' in label:
+                    spacing.set(W + 'before', str(max(440, int(spacing.get(W + 'before', '0')))))
+                if front and template_id == 'ps-card' and '{{QUALIFICATION_STATUS_KZ}}' in label and not marker.get('professionPanelFlow'):
                     indent.set(W + 'left', str(max(800, int(indent.get(W + 'left', '0')))))
                 if front and template_id == 'ps-card' and 'указать профессию' in label and not dynamic:
                     # This explanatory source caption otherwise crosses the fold.
@@ -584,7 +592,16 @@ def _trim_pb_card_empty_tail(tree):
 def render_archive_one(snapshot, item, path):
     fields = archive_fields(snapshot, item)
     files, marker, trees = _load(path, snapshot, fields)
+    pb_flow = _managed_pb_protocol(marker)
+    if pb_flow:
+        fields = joint_protocol_fields(fields)
+        _arrange_managed_pb(trees, marker, 1)
     for name, tree in trees.items():
+        card_flow = (name == 'word/document.xml' and marker.get('fieldLayoutPolicy') == LAYOUT_POLICY
+                     and snapshot['templateId'] in ('pb-card', 'ptm-card'))
+        if card_flow:
+            from original_card_flow import arrange_card_fields, fit_issuer_bands
+            fit_issuer_bands(tree, fields['ISSUER_RU'], bilingual_issuer=fields['ISSUER_BOTH'])
         if snapshot['templateId'] == 'pb-card' and name == 'word/document.xml':
             _trim_pb_card_empty_tail(tree)
             _pin_pb_photo_to_source_frame(tree, marker, files)
@@ -592,9 +609,15 @@ def render_archive_one(snapshot, item, path):
             if snapshot['templateId'].endswith('-protocol'):
                 _keep_signature_tables(tree, snapshot['templateId'])
             states = _prepare_layout(tree, marker, files)
+            if card_flow:
+                # In a marked managed copy the body starts below its header,
+                # while the original photo rectangle is anchored to the page.
+                arrange_card_fields(states, snapshot['templateId'], fields, photo_beside_name=True)
             _fill(tree, fields)
             if states:
                 _fit_archive_layout(states)
+            files[name] = _serialize(tree)
+        elif pb_flow:
             files[name] = _serialize(tree)
     _media(files, marker, snapshot, item)
     return files
@@ -663,10 +686,50 @@ def protocol_group_fields(snapshot):
     return header, fields
 
 
+def joint_protocol_fields(fields):
+    """Print an identical spelling only once in a bilingual cell."""
+    fields = dict(fields)
+    for key in ['FULL_NAME', 'POSITION', 'WORKPLACE', 'ISSUER']:
+        fields[key + '_BOTH'] = ' / '.join(dict.fromkeys(fields[key + '_' + lang] for lang in ('RU', 'KZ')
+                                                          if fields[key + '_' + lang]))
+    return fields
+
+
+def _managed_pb_protocol(marker):
+    if marker.get('templateId') != 'pb-protocol':
+        return False
+    from original_archive_protocols import registry
+    return ('pb-protocol', marker.get('sourceSha256')) in registry()
+
+
+def _arrange_managed_pb(trees, marker, count):
+    from protocol_layout import arrange_protocol
+    spec = marker['roster']
+    table = list(trees['word/document.xml'].iter(W + 'tbl'))[spec['tableIndex']]
+    # Preserve the archive's horizontal alignment when releasing its anchors.
+    props = table.find(W + 'tblPr')
+    align = props.find(W + 'jc')
+    if align is None:
+        align = E.SubElement(props, W + 'jc')
+    align.set(W + 'val', 'center')
+    signature = next(n for n in table.itersiblings() if n.tag == W + 'tbl')
+    caption = signature.getnext()
+    if caption is not None and caption.tag == W + 'p':
+        # Cached blank runs after the final two captions can span several
+        # lines. Keep the actual signature labels with the final participant.
+        runs = caption.findall(W + 'r')
+        while runs and not ''.join(runs[-1].itertext()).strip():
+            caption.remove(runs.pop())
+    arrange_protocol(trees, table, count)
+
+
 def render_archive_group(snapshot, path):
     items = snapshot['items']
     header, fields = protocol_group_fields(snapshot)
     files, marker, trees = _load(path, snapshot, fields)
+    pb_flow = _managed_pb_protocol(marker)
+    if pb_flow:
+        fields = joint_protocol_fields(fields)
     for tree in trees.values():
         _keep_signature_tables(tree, snapshot['templateId'])
     specs = marker.get('rosters', [marker['roster']] if 'roster' in marker else [])
@@ -689,9 +752,52 @@ def render_archive_group(snapshot, path):
     for table_index, (table, position, prototype) in enumerate(targets):
         for index, item in enumerate(items, 1):
             row = deepcopy(prototype)
-            _fill(row, archive_fields(snapshot, item, index))
+            values = archive_fields(snapshot, item, index)
+            if pb_flow or snapshot['templateId'] == 'biot-itr-protocol':
+                values = joint_protocol_fields(values)
+            _fill(row, values)
             _unique_ids(row, table_index * MAX_REQUEST_ROWS + index)
             table.insert(position + index - 1, row)
+    if pb_flow:
+        _arrange_managed_pb(trees, marker, len(items))
+    elif snapshot['templateId'] == 'biot-itr-protocol':
+        from group_protocol import flow_original_signatures
+        document = trees['word/document.xml']
+        roster = targets[0][0]
+        props = roster.find(W + 'tblPr')
+        for anchor in props.findall(W + 'tblpPr'):
+            props.remove(anchor)
+        alignment = props.find(W + 'jc')
+        if alignment is None:
+            alignment = E.SubElement(props, W + 'jc')
+        alignment.set(W + 'val', 'center')
+        flow_original_signatures(document, roster)
+        signature = next((node for node in roster.itersiblings() if node.tag == W + 'tbl'), None)
+        _require(signature is not None, 'ITR_SIGNATURE_TABLE')
+        between = []
+        next_node = roster.getnext()
+        while next_node is not signature:
+            _require(next_node is not None and next_node.tag == W + 'p' and
+                     not ''.join(next_node.itertext()).strip(), 'ITR_SIGNATURE_SEPARATOR')
+            between.append(next_node)
+            next_node = next_node.getnext()
+        for spacer in between[1:]:
+            spacer.getparent().remove(spacer)
+        if between:
+            between[0][:] = [E.Element(W + 'pPr')]
+            E.SubElement(between[0][0], W + 'spacing', {W + 'before': '0', W + 'after': '0',
+                                                       W + 'line': '20', W + 'lineRule': 'exact'})
+        tail = signature.getnext()
+        while tail is not None and tail.tag == W + 'p' and not ''.join(tail.itertext()).strip():
+            old = tail; tail = tail.getnext(); old.getparent().remove(old)
+        end = E.Element(W + 'p')
+        end_props = E.SubElement(end, W + 'pPr')
+        E.SubElement(end_props, W + 'spacing', {W + 'before': '0', W + 'after': '0',
+                                               W + 'line': '20', W + 'lineRule': 'exact'})
+        E.SubElement(E.SubElement(end_props, W + 'rPr'), W + 'sz', {W + 'val': '2'})
+        signature.addnext(end)
+        from protocol_layout import arrange_protocol
+        arrange_protocol(trees, roster, len(items))
     for name, tree in trees.items():
         files[name] = _serialize(tree)
     # A single common header has no meaningful per-person photo.

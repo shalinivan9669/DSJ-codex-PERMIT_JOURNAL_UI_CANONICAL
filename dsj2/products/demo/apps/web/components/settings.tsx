@@ -459,6 +459,12 @@ export function ProfileForm({
             <span>{tr("Организация комиссии")}: </span>
             <strong>{t(value.nameRu || value.nameKz || "", value.nameKz || value.nameRu || "") || tr("Укажите название учебного центра выше")}</strong>
           </p>
+          <details>
+            <summary>{tr("Как комиссия попадает в документы")}</summary>
+            <p className="muted">
+              {tr("Сохранение создаёт новую версию реквизитов центра. В открытой заявке примените нужную версию комиссии; у группы может быть свой состав. Выданные документы сохраняют прежние данные.")}
+            </p>
+          </details>
           <CommissionFields
             value={value.commission}
             onChange={(commission) => change({ commission })}
@@ -691,13 +697,22 @@ export function Templates({ initial }: { initial: Template[] }) {
       <h2>{tr("Формы документов")}</h2>
       <p className="muted">
         {tr("Подтвердите форму после проверки её применимости. Выданные документы не изменятся.")}</p>
+      <details>
+        <summary>{tr("Какая версия попадёт в комплект")}</summary>
+        <p className="muted">
+          {tr("В заявке выберите категорию и вид документа. При оформлении используется последняя добавленная подтверждённая версия подходящей формы, а не версия с наибольшим номером. Индивидуальные и групповые протоколы, обычные и специальные программы выбираются отдельно.")}
+        </p>
+        <p className="muted">
+          {tr("Образец показывает макет с тестовыми данными. Чтобы проверить данные человека и комиссию, откройте предпросмотр в заявке.")}
+        </p>
+      </details>
       {error && <Notice>{error}</Notice>}
       <TemplateManager onChanged={load} />
       <div className="template-list">
         {templates.map((template) => (
           <article key={template.id}>
             <div>
-              <h3>
+              <h3 id={`template-${template.id}`}>
                 {template.contract?.ownerKind === "GROUP"
                   ? `${({ "biot-protocol": tr("БиОТ рабочих"), "biot-itr-protocol": tr("БиОТ ИТР"), "pb-protocol": tr("ПБ"), "ptm-protocol": tr("ПТМ"), "ps-protocol": tr("ПС") } as Record<string, string>)[template.templateId || template.id] || tr("Событие")}${tr(" — групповой протокол")}`
                   : tr(templateLabels[template.templateId || template.id] || "") ||
@@ -752,6 +767,16 @@ export function Templates({ initial }: { initial: Template[] }) {
               </details>
             </div>
             <div>
+              <p>
+                <a
+                  href={`/api/settings/templates/${template.id}/sample?format=PDF`}
+                  download
+                  aria-describedby={`template-${template.id}`}
+                  aria-label={`${tr("Скачать образец PDF")} · ${tr("Версия")} ${template.version || "1"}`}
+                >
+                  {tr("Скачать образец PDF")}
+                </a>
+              </p>
               {template.approved ? (
                 <span className="status status-ready">{tr("Подтверждена")}</span>
               ) : (

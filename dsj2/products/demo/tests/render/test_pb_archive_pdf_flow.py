@@ -8,9 +8,39 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/render'))
 from original_archive import render_original_document
+from archive_forms import render_archive_document
 from original_archive_protocols import registry
 from renderer import convert_pdf
 from test_archive_forms import snapshot
+
+
+@unittest.skipUnless(os.environ.get('DEMO_SOFFICE'), 'pinned LibreOffice required')
+class ManagedPbProtocolTests(unittest.TestCase):
+    def test_single_listener_and_three_signatures_fit_on_one_sheet(self):
+        import pymupdf
+
+        for grouped, filename in ((False, 'pb-protocol.v14.docx'), (True, 'pb-protocol.group-v6.docx')):
+            with self.subTest(grouped=grouped), TemporaryDirectory() as tmp:
+                data = snapshot('pb-protocol')
+                data.update(demoMode=True)
+                if grouped:
+                    data['groupEvent'] = {'contractVersion': 1}
+                data['issuer'].update(nameRu='Синтетический учебный центр', nameKz='Синтетикалық оқу орталығы')
+                item = data['items'][0]
+                item.update(fullNameRu='Тестовый Арман Александрович', fullNameKz='Тестовый Арман Александрович',
+                            protocolNumber='PB-PROTOCOL-888888888888')
+                docx = Path(tmp) / 'issued.docx'
+                pdf = docx.with_suffix('.pdf')
+                render_archive_document(data, docx, ROOT / 'assets/templates' / filename)
+                convert_pdf(docx, pdf)
+                with pymupdf.open(pdf) as document:
+                    self.assertEqual(len(document), 1)
+                    text = ' '.join(document[0].get_text().split())
+                    self.assertEqual(text.count(item['fullNameRu']), 1)
+                    for member in data['issuer']['commission']:
+                        self.assertIn(member['name'], text)
+                    self.assertIn('М.П.', text)
+                    self.assertEqual(text.count('(подпись) (қолы)'), 3)
 
 
 @unittest.skipUnless(os.environ.get('DEMO_ORIGINAL_ARCHIVE_SOURCE') and os.environ.get('DEMO_SOFFICE'),

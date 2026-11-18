@@ -99,11 +99,13 @@ def original_card_fields(template_id, fields, item):
                           SOURCE_EXAM_SUBJECT_KZ=fields['SUBJECT_KZ'] if passed else '',
                           SOURCE_EXAM_TAIL_KZ='біліміне емтихан тапсырды' if passed else '')
     if template_id == 'ps-card':
+        if fields['FULL_NAME_RU'] == fields['FULL_NAME_KZ']:
+            result['FULL_NAME_BOTH'] = fields['FULL_NAME_RU']
         result.update(SOURCE_STUDIES_RU=(
             'В процессе обучения изучены дисциплины и сданы экзамены по следующим дисциплинам'
             if passed else 'Результаты проверки знаний по дисциплинам'),
                       SOURCE_STUDIES_KZ=(
-            'Оқыту процісінде пәндер зерделенді және келесі пәндер бойынша емтихандар тапсырылды'
+            'Оқыту процесінде пәндер зерделенді және келесі пәндер бойынша емтихандар тапсырылды'
             if passed else 'Пәндер бойынша білімді тексеру нәтижелері'))
     return result
 
@@ -165,6 +167,11 @@ def apply_original_card_slots(template_id, trees, blueprint):
                     _one(nodes, r'ТОО\s+«QNP-\s*Solutions»', '{{ISSUER_RU}}')
                     counts['issuer'] += 1
                 elif words.startswith('Оқу орталығының басшысы') and '_' in text:
+                    # The specimen allocates nineteen underscores ahead of the
+                    # director's name. That pushes a real name through the two
+                    # halves of the line. Retain a writable signature line and
+                    # give the complete name its own remaining width.
+                    _one(nodes, r'_{19}', '________')
                     _one(nodes, r'_(?!_)(\S.*?\S)\s*$', '{{HEAD_NAME}}', 1)
                     counts['head'] += 1
                 elif words.startswith('Действительно до') and '{{VALID_DAY_MONTH}}' in text:

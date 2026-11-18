@@ -364,7 +364,11 @@ export function FilesPanel({
         <div>
           <h2>{panelTitle}</h2>
           <p className="muted">
-            Готово {complete} из {jobs.length}.
+            {serverReview
+              ? `Готово ${complete} из ${jobs.length}.`
+              : loadError
+                ? "Не удалось проверить готовность документов."
+                : "Проверяем готовность документов…"}
             {missing.length > 0 && (
               <strong className="danger-text">
                 {" "}
@@ -376,7 +380,8 @@ export function FilesPanel({
         </div>
         <div className="file-actions">
           <button
-            disabled={!!busy || awaitingSignatures}
+            disabled={!!busy || !serverReview || awaitingSignatures}
+            aria-busy={busy === "registry"}
             title={
               awaitingSignatures
                 ? signaturesRequired
@@ -396,11 +401,12 @@ export function FilesPanel({
                 .finally(() => setBusy(""));
             }}
           >
-            Реестр XLSX
+            {busy === "registry" ? "Готовим реестр…" : "Реестр XLSX"}
           </button>
           {readonly && (
             <button
-              disabled={!!busy || awaitingSignatures}
+              disabled={!!busy || !serverReview || awaitingSignatures}
+              aria-busy={busy === "zip"}
               title={
                 awaitingSignatures
                   ? signaturesRequired
@@ -420,7 +426,11 @@ export function FilesPanel({
                   .finally(() => setBusy(""));
               }}
             >
-              {partialBundle ? "Скачать неполный ZIP" : "Скачать ZIP"}
+              {busy === "zip"
+                ? "Готовим ZIP…"
+                : partialBundle
+                  ? "Скачать неполный ZIP"
+                  : "Скачать ZIP"}
             </button>
           )}
           <button onClick={() => setReload((value) => value + 1)}>

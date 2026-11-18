@@ -11,7 +11,7 @@ import re
 from lxml import etree as E
 
 from archive_forms import (PART, W, _fill, _media, _tokens, _serialize, _unique_ids, archive_fields,
-                           combine_archive_parts, protocol_group_fields)
+                           combine_archive_parts, joint_protocol_fields, protocol_group_fields)
 from build_archive_templates import NS, namespaces, prepare_source, put_text
 from original_archive_slots import _replace, _runs
 from sanitize_templates import deterministic_zip
@@ -87,10 +87,18 @@ def _slots(plan, parts):
         if not paragraphs:
             raise ValueError('ORIGINAL_PROTOCOL_CELL')
         if i == 0:
-            # All five originals already number the rows in Word. Retain their
-            # list definition, indent and hanging punctuation; no second number.
-            if not cell.xpath('w:p/w:pPr/w:numPr/w:numId', namespaces=NS):
+            numbering = cell.xpath('w:p/w:pPr/w:numPr/w:numId', namespaces=NS)
+            if not numbering:
                 raise ValueError('ORIGINAL_PROTOCOL_NUMBERING')
+            if tid == 'ps-protocol':
+                counter = numbering[0]
+                counter.set(W + 'val', '0')
+                paragraph = next(counter.iterancestors(W + 'p'))
+                put_text(paragraph, '{{ROW_NUMBER}}.')
+                run = paragraph.find(W + 'r')
+                formatting = paragraph.find(W + 'pPr/' + W + 'rPr')
+                if formatting is not None and run.find(W + 'rPr') is None:
+                    run.insert(0, deepcopy(formatting))
             continue
         vals = [value] + [''] * (len(paragraphs) - 1)
         if value == '{{POSITION_BOTH}}' and len(vals) == 2:
@@ -114,15 +122,6 @@ def projection(data, template_id):
     if not fields or fields != set(report['fields']):
         raise ValueError('ORIGINAL_PROTOCOL_FIELDS')
     return files, report
-
-
-def _fields(fields):
-    # A single value in both languages only needs printing once in a joint cell.
-    fields = dict(fields)
-    for key in ['FULL_NAME', 'POSITION', 'WORKPLACE', 'ISSUER']:
-        fields[key + '_BOTH'] = ' / '.join(dict.fromkeys(fields[key + '_' + lang] for lang in ('RU', 'KZ')
-                                                          if fields[key + '_' + lang]))
-    return fields
 
 
 def _form(data, template_id, snapshot, items, header, fields):
@@ -157,10 +156,22 @@ def _form(data, template_id, snapshot, items, header, fields):
         # in-flow tables can otherwise be merged by Word. Preserve the source
         # roster's centred horizontal anchor and all original columns/type.
         signature = table.getnext()
+        separators = []
         while signature is not None and signature.tag == W + 'p':
+            separators.append(signature)
             signature = signature.getnext()
         if signature is None or signature.tag != W + 'tbl':
             raise ValueError('ORIGINAL_PB_SIGNATURE_TABLE')
+        if not separators or any(''.join(p.itertext()).strip() for p in separators):
+            raise ValueError('ORIGINAL_PB_SIGNATURE_SEPARATOR')
+        for spacer in separators[1:]:
+            spacer.getparent().remove(spacer)
+        for child in list(separators[0]):
+            separators[0].remove(child)
+        spacer_props = E.SubElement(separators[0], W + 'pPr')
+        E.SubElement(spacer_props, W + 'spacing', {W + 'before': '0', W + 'after': '0',
+                                                 W + 'line': '80', W + 'lineRule': 'exact'})
+        E.SubElement(E.SubElement(spacer_props, W + 'rPr'), W + 'sz', {W + 'val': '2'})
         # A single long participant can also reach the page boundary.
         row_props = prototype.find(W + 'trPr')
         if row_props is None:
@@ -200,14 +211,65 @@ def _form(data, template_id, snapshot, items, header, fields):
                 if props.find(W + 'keepNext') is None:
                     style = props.find(W + 'pStyle')
                     props.insert(props.index(style) + 1 if style is not None else 0, E.Element(W + 'keepNext'))
+        # The specimen has a line break followed by hundreds of padding spaces
+        # after the signature captions. In a flowing three-person table those
+        # invisible lines push the entire commission onto an almost empty page.
+        caption = signature.getnext()
+        if caption is not None and caption.tag == W + 'p':
+            runs = caption.findall(W + 'r')
+            while runs and not ''.join(runs[-1].itertext()).strip():
+                run = runs.pop()
+                caption.remove(run)
+            if runs:
+                for trailing in list(runs[-1]):
+                    if trailing.tag == W + 'br' and not (trailing.get(W + 'type') in ('page', 'column')):
+                        runs[-1].remove(trailing)
     for tree in trees.values():
-        _fill(tree, _fields(fields))
+        _fill(tree, joint_protocol_fields(fields))
     for i, item in enumerate(items):
         row = deepcopy(prototype)
-        _fill(row, _fields(archive_fields(snapshot, item, i + 1)))
+        _fill(row, joint_protocol_fields(archive_fields(snapshot, item, i + 1)))
         if i:
             _unique_ids(row, i)
         table.insert(pos + i, row)
+    if template_id == 'biot-protocol':
+        from group_protocol import flow_original_signatures
+        roster_props = table.find(W + 'tblPr')
+        for anchor in roster_props.findall(W + 'tblpPr'):
+            roster_props.remove(anchor)
+        alignment = roster_props.find(W + 'jc')
+        if alignment is None:
+            alignment = E.SubElement(roster_props, W + 'jc')
+        alignment.set(W + 'val', 'center')
+        flow_original_signatures(trees[DOC], table)
+        following = table.getnext()
+        spacers = []
+        while following is not None and following.tag == W + 'p' and not ''.join(following.itertext()).strip():
+            spacers.append(following)
+            following = following.getnext()
+        if following is None or following.tag != W + 'tbl':
+            raise ValueError('ORIGINAL_BIOT_SIGNATURE_TABLE')
+        if not spacers:
+            raise ValueError('ORIGINAL_BIOT_SIGNATURE_SEPARATOR')
+        for spacer in spacers[1:]:
+            spacer.getparent().remove(spacer)
+        spacers[0][:] = [E.Element(W + 'pPr')]
+        E.SubElement(spacers[0][0], W + 'spacing', {W + 'before': '0', W + 'after': '0',
+                                                   W + 'line': '20', W + 'lineRule': 'exact'})
+        tail = following.getnext()
+        while tail is not None and tail.tag == W + 'p' and not ''.join(tail.itertext()).strip():
+            old = tail
+            tail = tail.getnext()
+            old.getparent().remove(old)
+        end = E.Element(W + 'p')
+        end_props = E.SubElement(end, W + 'pPr')
+        E.SubElement(end_props, W + 'spacing', {W + 'before': '0', W + 'after': '0',
+                                               W + 'line': '20', W + 'lineRule': 'exact'})
+        E.SubElement(E.SubElement(end_props, W + 'rPr'), W + 'sz', {W + 'val': '2'})
+        following.addnext(end)
+    if template_id in {'biot-protocol', 'pb-protocol', 'ptm-protocol'}:
+        from protocol_layout import arrange_protocol
+        arrange_protocol(trees, table, len(items))
     for name, tree in trees.items():
         files[name] = _serialize(tree)
     _media(files, report, snapshot, header)

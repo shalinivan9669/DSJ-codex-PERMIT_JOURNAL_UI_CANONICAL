@@ -1,4 +1,24 @@
 {
+  "archivePrintAndChrome20261118": {
+    "date": "2026-11-18",
+    "status": "LOCAL_VERIFIED",
+    "evidence": "../print-cabinet-round2-20261118.md",
+    "comparedForms": 11,
+    "renderers": ["Microsoft Word", "LibreOffice 26.2.6.3"],
+    "browser": "Google Chrome 157.0.8103.51",
+    "signedBiotTestZip": "DOWNLOADED_VERIFIED",
+    "newPbTestRequest": "AWAITING_SIGNATURE",
+    "deployment": "NOT_PERFORMED"
+  },
+  "cabinetUx20261118": {
+    "date": "2026-11-18",
+    "status": "LOCAL_UI_BROWSER_VERIFIED_RENDER_BLOCKED_BY_PINNED_FONTS",
+    "evidence": "../cabinet-ux-20261118.md",
+    "deployment": "NOT_PERFORMED",
+    "browserRoles": ["DIRECTOR", "OPERATOR"],
+    "otherRoles": "CODE_REVIEW_ONLY",
+    "readyPdfAndSignedKit": "NOT_VERIFIED"
+  },
   "teacherCalendar20261108": {
     "date": "2026-11-08",
     "status": "LOCAL_TEACHER_CALENDAR_RECOVERY_VERIFIED_PRODUCTION_CONFIGURATION_REQUIRED",

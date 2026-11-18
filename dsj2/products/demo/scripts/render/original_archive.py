@@ -7,7 +7,7 @@ import json
 
 from lxml import etree as E
 
-from archive_forms import PART, _fill, _media, _serialize, _tokens, archive_fields, combine_archive_parts
+from archive_forms import PART, W, _fill, _media, _serialize, _tokens, archive_fields, combine_archive_parts
 from build_archive_templates import prepare_source
 from english_appendix import append_english_pages, validate_english
 from package_xml import normalize_package
@@ -94,6 +94,9 @@ def original_layout(path, template_id):
 
 def _render_card(snapshot, item, data):
     from original_archive_slots import original_card_fields
+    from original_card_flow import arrange_card_fields, fit_issuer_bands
+    from source_fidelity import prepare_layout, fit_layout
+    from archive_forms import _prepare_layout, _fit_archive_layout, _trim_pb_card_empty_tail, LAYOUT_POLICY
     template_id = snapshot['templateId']
     source, report = _projection(data, template_id, bool(item.get('photoAssetId')))
     files = dict(source)
@@ -102,7 +105,27 @@ def _render_card(snapshot, item, data):
         if PART.fullmatch(name):
             tree = E.fromstring(content)
             if _tokens(tree):
+                if name == 'word/document.xml':
+                    fit_issuer_bands(tree, fields['ISSUER_RU'])
+                if template_id == 'ps-card' and name == 'word/document.xml':
+                    from original_profession_card import arrange_exam_panel
+                    arrange_exam_panel(tree)
+                if template_id == 'pb-card' and name == 'word/document.xml':
+                    _trim_pb_card_empty_tail(tree)
+                archive_layout = template_id == 'ps-card'
+                layout = (_prepare_layout(tree, {'fieldLayoutPolicy': LAYOUT_POLICY,
+                                                 'professionPanelFlow': True,
+                                                 'templateId': template_id}, source)
+                          if archive_layout else
+                          prepare_layout(tree, template_id, bool(item.get('photoAssetId')),
+                                         source['word/styles.xml']))
+                if template_id in ('pb-card', 'ptm-card'):
+                    arrange_card_fields(layout, template_id, fields)
                 _fill(tree, fields)
+                (_fit_archive_layout if archive_layout else fit_layout)(layout)
+                if template_id == 'ps-card' and name == 'word/document.xml':
+                    from original_profession_card import position_grade_table
+                    position_grade_table(tree, layout)
                 files[name] = _serialize(tree)
     _media(files, report, snapshot, item)
     return files

@@ -3216,6 +3216,17 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 </button>
               </div>
               <div className="request-menu-group">
+                <button
+                  disabled={operationBusy}
+                  onClick={() => {
+                    closeExtraPanel();
+                    void (readonly ? Promise.resolve() : flush())
+                      .then(() => setCommissionIssue({ commissionRequired: true }))
+                      .catch((caught) => setError(errorText(caught)));
+                  }}
+                >
+                  Комиссия заявки
+                </button>
                 <button onClick={() => setExtraPanel("dates")}>
                   Общие даты и протоколы
                 </button>
