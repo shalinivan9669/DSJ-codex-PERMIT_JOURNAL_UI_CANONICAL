@@ -3,7 +3,7 @@ from original_card_flow import _paragraph
 from source_fidelity import W, child, measure
 
 
-def arrange_exam_panel(tree):
+def arrange_exam_panel(tree, *, managed=False):
     # One renewal strip in the original has two A4-wide cells. Its centre
     # anchor leaves half of each cell outside the paper in both renderers.
     for table in tree.iter(W + 'tbl'):
@@ -38,6 +38,11 @@ def arrange_exam_panel(tree):
         if '{{FULL_NAME_BOTH}}' in text:
             # Use both language variants when they differ. The original
             # separates the two parts of the Kazakh word for commission.
+            basis = [('Негіздеме / Основание: хаттама / протокол № {{PROTOCOL_NUMBER}}, {{PROTOCOL_DAY_MONTH}}.{{PROTOCOL_YEAR}}', 7.5, '', 3)]
+            if managed:
+                # Leave the full width for a numbered protocol reference.
+                basis = [('Негіздеме / Основание: хаттама / протокол', 7.5, '', 3),
+                         ('№ {{PROTOCOL_NUMBER}}  {{PROTOCOL_DAY_MONTH}}.{{PROTOCOL_YEAR}}', 7.5, '', 0)]
             lines = [
                 ('КУӘЛІК / УДОСТОВЕРЕНИЕ № {{NUMBER}}', 9, 'bold', 0),
                 ('Берілді / Выдано: {{FULL_NAME_BOTH}}', 9, 'bold', 4),
@@ -46,7 +51,7 @@ def arrange_exam_panel(tree):
                 ('{{QUALIFICATION_STATUS_RU}}', 7.5, '', 2),
                 ('{{POSITION_RU}}', 8.5, 'underline', 0),
                 ('(Мамандығы, разряды / профессия, разряд)', 6.5, '', 1),
-                ('Негіздеме / Основание: хаттама / протокол № {{PROTOCOL_NUMBER}}, {{PROTOCOL_DAY_MONTH}}.{{PROTOCOL_YEAR}}', 7.5, '', 3),
+                *basis,
                 ('Емтихан комиссиясының төрағасы / Председатель экзаменационной комиссии', 7, '', 3),
                 ('______________________   (қолы / подпись)', 7, '', 1),
                 ('Комиссия мүшелері / Члены комиссии', 7, '', 3),
@@ -58,6 +63,18 @@ def arrange_exam_panel(tree):
             for index, (phrase, size, style, gap) in enumerate(lines):
                 box.append(_paragraph([(phrase, size, style)], inset=6, right=8,
                                       align='center' if index == 0 else 'left', top=gap)['node'])
+            continue
+        if managed and 'Сведения о сданных экзаменах' in text:
+            # Retain the managed template's subject and grade captions. Its
+            # text box is on the right of the fold already.
+            paragraphs = [' '.join(''.join(p.itertext()).split()) for p in box.findall(W + 'p')]
+            for p in box.findall(W + 'p'):
+                box.remove(p)
+            for i, phrase in enumerate(filter(None, paragraphs)):
+                caption = phrase.startswith('(баға')
+                size = 8 if i < 2 else 6.5 if caption else 7
+                box.append(_paragraph([(phrase, size, 'bold' if i < 2 else '')],
+                                      inset=4, right=25, top=2 if i == 0 else 0)['node'])
             continue
         if '{{SOURCE_STUDIES_KZ}}' not in text:
             continue
@@ -78,14 +95,16 @@ def arrange_exam_panel(tree):
             box.append(_paragraph([line], inset=28, top=1 if i in (2, 4) else 0)['node'])
 
 
-def position_grade_table(tree, layout):
+def position_grade_table(tree, layout, *, managed=False):
     table = next(t for t in tree.iter(W + 'tbl')
                  if 'Наименование дисциплины' in ''.join(t.itertext())
                  and t.find(W + 'tblPr/' + W + 'tblBorders') is not None)
     state = next(s for s in layout if 'Сведения о сданных экзаменах' in ''.join(s['box'].itertext()))
     typography = state['typography']
     text_height = sum(measure(p['node'], state['width'], typography)[0] for p in state['paragraphs'])
-    top = max(112, 50 + text_height)
+    # Allow for the managed form's lower text-box anchor and leave 4 pt
+    # below the final grade caption before the table's top border.
+    top = max(112, (75 if managed else 50) + text_height)
     table_height = 0
     for row in table.findall(W + 'tr'):
         heights = []

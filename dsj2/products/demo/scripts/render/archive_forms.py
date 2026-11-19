@@ -28,6 +28,7 @@ MEDIA = re.compile(r'word/(?:archive-[0-9]+/)*media/[A-Za-z0-9_.-]+\.(?:png|jpe?
 IDS = frozenset({'biot-worker-card', 'biot-itr-certificate', 'biot-protocol',
     'biot-itr-protocol', 'ptm-card', 'ptm-protocol', 'pb-card', 'pb-protocol',
     'ps-card', 'ps-protocol', 'ps-witness'})
+MANAGED_PS_CARD_SOURCE = '8b0bfae6341b39cb6f6422d4a5a2297dba5e4aefb046d3f86a661496034ea793'
 
 
 def _require(value, code):
@@ -592,6 +593,13 @@ def _trim_pb_card_empty_tail(tree):
 def render_archive_one(snapshot, item, path):
     fields = archive_fields(snapshot, item)
     files, marker, trees = _load(path, snapshot, fields)
+    # Managed v20 and the directly uploaded PS card use different source
+    # drawings and offsets. Only this registered layout has these three panels.
+    profession_flow = snapshot['templateId'] == 'ps-card' and marker.get('sourceSha256') == MANAGED_PS_CARD_SOURCE
+    if profession_flow:
+        from original_archive_slots import original_card_fields
+        fields = original_card_fields('ps-card', fields, item)
+        marker = {**marker, 'professionPanelFlow': True}
     pb_flow = _managed_protocol(marker, 'pb-protocol')
     if pb_flow:
         fields = joint_protocol_fields(fields)
@@ -599,7 +607,15 @@ def render_archive_one(snapshot, item, path):
     for name, tree in trees.items():
         card_flow = (name == 'word/document.xml' and marker.get('fieldLayoutPolicy') == LAYOUT_POLICY
                      and snapshot['templateId'] in ('pb-card', 'ptm-card'))
-        if card_flow:
+        profession_body = profession_flow and name == 'word/document.xml'
+        if (name == 'word/document.xml' and snapshot['templateId'] == 'biot-worker-card' and
+                marker['sourceSha256'] == 'c4f4692682ce6de006129bc16baafb041f9543daf6e2692bda0b4df1c4c633e8'):
+            from original_card_flow import fit_biot_worker_issuer_bands
+            fit_biot_worker_issuer_bands(tree, fields['ISSUER_BOTH'])
+        if profession_body:
+            from original_profession_card import arrange_exam_panel, position_grade_table
+            arrange_exam_panel(tree, managed=True)
+        if card_flow or profession_body:
             from original_card_flow import arrange_card_fields, fit_issuer_bands
             fit_issuer_bands(tree, fields['ISSUER_RU'], bilingual_issuer=fields['ISSUER_BOTH'])
         if snapshot['templateId'] == 'pb-card' and name == 'word/document.xml':
@@ -616,6 +632,8 @@ def render_archive_one(snapshot, item, path):
             _fill(tree, fields)
             if states:
                 _fit_archive_layout(states)
+                if profession_body:
+                    position_grade_table(tree, states, managed=True)
             files[name] = _serialize(tree)
         elif pb_flow:
             files[name] = _serialize(tree)

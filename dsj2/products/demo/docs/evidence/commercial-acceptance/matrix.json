@@ -1,4 +1,13 @@
 {
+  "workingIssuerCards20261119": {
+    "professionCardTemplate": "ps-card 20",
+    "checkedNumberFormats": ["preview", "numbered"],
+    "professionCardPages": 2,
+    "workerCardTemplate": "biot-worker-card 22",
+    "workerCardReverseFrameLeftPt": 16.6,
+    "workerCardVisibleIssuerLeftBeforePt": 6.3,
+    "workerCardVisibleIssuerLeftAfterPt": 24.3
+  },
   "managedPtmProtocol20261119": {
     "sourceTemplate": "ptm-protocol 14-group-1",
     "baselineHostedPagesForTwoRecipients": 2,

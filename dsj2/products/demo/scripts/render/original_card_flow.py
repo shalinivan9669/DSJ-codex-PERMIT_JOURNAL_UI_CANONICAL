@@ -109,6 +109,34 @@ def arrange_card_fields(layout, template_id, fields, *, photo_beside_name=False)
             _ptm_head(state)
 
 
+def fit_biot_worker_issuer_bands(tree, issuer):
+    # The two front bands have a space inset. The single reverse band is
+    # anchored to the same wide table, but starts left of its own cut line.
+    for cell in tree.findall('./' + W+'body/' + W+'tbl/' + W+'tr/' + W+'tc'):
+        paragraph = cell.find(W+'p')
+        if paragraph is None:
+            continue
+        tokens = paragraph.findall('./' + W+'r/' + W+'t')
+        text = ''.join(token.text or '' for token in tokens)
+        if text.strip() != '{{ISSUER_BOTH}}':
+            continue
+        token = next(token for token in tokens if (token.text or '').strip())
+        run = token.getparent()
+        if text.startswith(' '):
+            available = 209  # From the specimen's inset to the centre fold, less 12 pt.
+        else:
+            # Insert the inset in the text run, leaving the floating drawing's anchor alone.
+            tabs = child(child(paragraph, 'pPr'), 'tabs')
+            E.SubElement(tabs, W+'tab', {W+'val': 'left', W+'pos': '360'})
+            token.addprevious(E.Element(W+'tab'))
+            available = 262
+        props = run.find(W+'rPr')
+        size = int(props.find(W+'sz').get(W+'val')) / 2
+        measured = cached_font('LiberationSerif-Regular.ttf', round(size * 10)).getlength(issuer) / 10
+        if measured > available:
+            child(props, 'w').set(W+'val', str(max(1, int(100 * available / measured))))
+
+
 def fit_issuer_bands(tree, issuer, *, bilingual_issuer=None):
     # The specimen's grey rectangle extends past both card borders. Disable
     # its paint in Word and in the VML fallback, preserving all anchor geometry.
