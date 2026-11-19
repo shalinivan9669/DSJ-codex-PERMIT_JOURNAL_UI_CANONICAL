@@ -1,4 +1,11 @@
 {
+  "managedPtmProtocol20261119": {
+    "sourceTemplate": "ptm-protocol 14-group-1",
+    "baselineHostedPagesForTwoRecipients": 2,
+    "fixedLocalPagesForIdenticalInput": 1,
+    "signatureCaptionPairsOnLastPage": 3,
+    "testedGroupSizes": [2, 25]
+  },
   "archivePrintAndChrome20261118": {
     "date": "2026-11-18",
     "status": "LOCAL_VERIFIED",

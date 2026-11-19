@@ -592,10 +592,10 @@ def _trim_pb_card_empty_tail(tree):
 def render_archive_one(snapshot, item, path):
     fields = archive_fields(snapshot, item)
     files, marker, trees = _load(path, snapshot, fields)
-    pb_flow = _managed_pb_protocol(marker)
+    pb_flow = _managed_protocol(marker, 'pb-protocol')
     if pb_flow:
         fields = joint_protocol_fields(fields)
-        _arrange_managed_pb(trees, marker, 1)
+        _arrange_managed_protocol(trees, marker, 1)
     for name, tree in trees.items():
         card_flow = (name == 'word/document.xml' and marker.get('fieldLayoutPolicy') == LAYOUT_POLICY
                      and snapshot['templateId'] in ('pb-card', 'ptm-card'))
@@ -695,14 +695,15 @@ def joint_protocol_fields(fields):
     return fields
 
 
-def _managed_pb_protocol(marker):
-    if marker.get('templateId') != 'pb-protocol':
+def _managed_protocol(marker, *template_ids):
+    template_id = marker.get('templateId')
+    if template_id not in template_ids:
         return False
     from original_archive_protocols import registry
-    return ('pb-protocol', marker.get('sourceSha256')) in registry()
+    return (template_id, marker.get('sourceSha256')) in registry()
 
 
-def _arrange_managed_pb(trees, marker, count):
+def _arrange_managed_protocol(trees, marker, count):
     from protocol_layout import arrange_protocol
     spec = marker['roster']
     table = list(trees['word/document.xml'].iter(W + 'tbl'))[spec['tableIndex']]
@@ -727,8 +728,8 @@ def render_archive_group(snapshot, path):
     items = snapshot['items']
     header, fields = protocol_group_fields(snapshot)
     files, marker, trees = _load(path, snapshot, fields)
-    pb_flow = _managed_pb_protocol(marker)
-    if pb_flow:
+    managed_flow = _managed_protocol(marker, 'pb-protocol', 'ptm-protocol')
+    if managed_flow:
         fields = joint_protocol_fields(fields)
     for tree in trees.values():
         _keep_signature_tables(tree, snapshot['templateId'])
@@ -753,13 +754,13 @@ def render_archive_group(snapshot, path):
         for index, item in enumerate(items, 1):
             row = deepcopy(prototype)
             values = archive_fields(snapshot, item, index)
-            if pb_flow or snapshot['templateId'] == 'biot-itr-protocol':
+            if managed_flow or snapshot['templateId'] == 'biot-itr-protocol':
                 values = joint_protocol_fields(values)
             _fill(row, values)
             _unique_ids(row, table_index * MAX_REQUEST_ROWS + index)
             table.insert(position + index - 1, row)
-    if pb_flow:
-        _arrange_managed_pb(trees, marker, len(items))
+    if managed_flow:
+        _arrange_managed_protocol(trees, marker, len(items))
     elif snapshot['templateId'] == 'biot-itr-protocol':
         from group_protocol import flow_original_signatures
         document = trees['word/document.xml']
